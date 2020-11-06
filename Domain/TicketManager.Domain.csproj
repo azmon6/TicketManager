@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="Ninject.MVC5" Version="3.3.0">
       <NoWarn>True</NoWarn>

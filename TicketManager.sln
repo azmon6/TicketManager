@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{22607184-FF80-4D60-A022-7B2C5152EEB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketManager.Domain", "Domain\TicketManager.Domain.csproj", "{22607184-FF80-4D60-A022-7B2C5152EEB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "WebUI\WebUI.csproj", "{1B31572C-DD82-4BD0-AA03-CD79E194B9F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.WebUI", "WebUI\TicketManager.WebUI.csproj", "{1B31572C-DD82-4BD0-AA03-CD79E194B9F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{9D7C689E-F4C5-46D4-9BA7-A95F066ACB88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketManager.UnitTests", "UnitTests\TicketManager.UnitTests.csproj", "{9D7C689E-F4C5-46D4-9BA7-A95F066ACB88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

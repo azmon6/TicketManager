@@ -1,0 +1,41 @@
+﻿@model TicketManager.Domain.Entities.Ticket
+
+@{
+    ViewBag.Title = "NewTicket";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    @using (Html.BeginForm("NewTicket", "Home", FormMethod.Post))
+    {
+        @Html.HiddenFor(p => p.TicketID)
+        foreach (var property in ViewData.ModelMetadata.Properties)
+        {
+            switch (property.PropertyName)
+            {
+                case "TicketID":
+                    break;
+                case "StartBuyTime":
+                case "EndBuyTime":
+                case "EventTime":
+                    <div>
+                        <label>@property.PropertyName</label>
+                        @Html.TextBox(property.PropertyName)
+                    </div>
+                    break;
+                default:
+                    <div>
+                        <label>@property.PropertyName</label>
+                        @Html.TextBox(property.PropertyName)
+                        @Html.ValidationMessage(property.PropertyName)
+                    </div>
+                    break;
+            }
+        }
+
+        <div>
+            <input type="submit" value="Save" />
+        </div>
+    }
+</div>
+

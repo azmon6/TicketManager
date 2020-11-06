@@ -1,0 +1,9 @@
+﻿.logo{
+    background-color:black;
+    color:red;
+}
+
+.logo h1{
+    margin: 0 ;
+    padding: 5px 0 20px 0;
+}

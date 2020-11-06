@@ -1,0 +1,43 @@
+﻿@model IEnumerable<TicketManager.Domain.Entities.Ticket>
+
+@{
+    ViewBag.Title = "ShowTickets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table table-bordered table-condensed table-striped">
+
+    <thead>
+        <tr>
+            <th>TicketName</th>
+            <th>Description</th>
+            <th>Organizer</th>
+            <th>StartBuyTime</th>
+            <th>EndBuyTime</th>
+            <th>EventTime</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tick in Model)
+        {
+            <tr>
+                <td>@tick.TicketName</td>
+                <td>@tick.Description</td>
+                <td>@tick.Organizer</td>
+                <td>@tick.StartBuyTime</td>
+                <td>@tick.EndBuyTime</td>
+                <td>@tick.EventTime</td>
+                <td>@tick.Price</td>
+                <td>@Html.ActionLink("Edit","NewTicket",new { tickID = tick.TicketID })</td>
+                <td>@Html.ActionLink("Delete","DeleteTicket", new { tickID = tick.TicketID })</td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<div>
+    @Html.ActionLink("Add Ticket", "Create", "Home")
+</div>
+

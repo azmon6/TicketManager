@@ -1,18 +1,30 @@
 ﻿
-@{
-    Layout = null;
-}
-
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <link href="~/Content/MyStyles.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
 </head>
 <body>
-    <div> 
-        <p>This works</p>
+
+    <div class="center text-center">
+        @Html.ActionLink("Show Tickets", "ShowTickets", "Home")
+    </div>
+
+    <div class="center text-center">
+        @Html.ActionLink("Add tickets", "Create", "Home")
+    </div>
+
+    @* TODO Make Login Button *@
+    <div class="center text-center">
+        @Html.ActionLink("Login", "Login", "Registration")
+    </div>
+
+    @* TODO Make Sign Up Button     *@
+    <div class="center text-center">
+        @Html.ActionLink("Sign Up", "SignUp", "Registration")
     </div>
 </body>
 </html>
