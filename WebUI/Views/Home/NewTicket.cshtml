@@ -21,6 +21,7 @@
                     <div>
                         <label>@property.PropertyName</label>
                         @Html.TextBox(property.PropertyName)
+                        @Html.ValidationMessage(property.PropertyName)
                     </div>
                     break;
                 default:
