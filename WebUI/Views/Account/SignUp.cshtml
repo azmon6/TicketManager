@@ -1,0 +1,33 @@
+﻿@model TicketManager.WebUI.Models.SignUpInformation
+
+@{
+    ViewBag.Title = "SignUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+
+    @using (Html.BeginForm("SignUp", "Account", FormMethod.Post))
+    {
+        @Html.ValidationSummary()
+        <div>
+            <label>User Name:</label>
+            @Html.TextBoxFor(m => m.Username)
+        </div>
+        <div>
+            <label>Password:</label>
+            @Html.PasswordFor(m => m.Password)
+        </div>
+        <div>
+            <label>ConfirmPassword:</label>
+            @Html.PasswordFor(m => m.ConfirmPassword)
+        </div>
+        <div>
+            <label>Name Shown to other users:</label>
+            @Html.TextBoxFor(m => m.Name)
+        </div>
+        <input type="submit" value="Sign Up" class="btn btn-primary" />
+    }
+
+</div>
+

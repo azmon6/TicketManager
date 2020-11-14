@@ -131,11 +131,21 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Attributes\RolesAuthorizeAttribute.cs" />
+    <Compile Include="Infrastructure\RolesAunth\MyRoleProvider.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
+    <Compile Include="Infrastructure\RolesAunth\RolePermissionManager.cs" />
+    <Compile Include="Infrastructure\Attributes\UsernameUniqueValidation.cs" />
+    <Compile Include="Models\LoginInfo.cs" />
+    <Compile Include="Models\SignUpInformation.cs" />
     <Compile Include="Models\TicketShowModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -150,14 +160,16 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\HomeScreen.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
     <Content Include="Views\Home\NotFound.cshtml" />
-    <Content Include="Views\Home\ShowTickets.cshtml" />
-    <Content Include="Views\Home\NewTicket.cshtml" />
+    <Content Include="Views\Admin\ShowTickets.cshtml" />
+    <Content Include="Views\Admin\ModifyTicket.cshtml" />
+    <Content Include="Views\Account\SignUp.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -167,6 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Cart\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\TicketManager.Domain.csproj">

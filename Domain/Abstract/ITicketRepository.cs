@@ -1,11 +1,11 @@
 ﻿using TicketManager.Domain.Entities;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace TicketManager.Domain.Abstract
 {
     public interface ITicketRepository
     {
-        IEnumerable<Ticket> Tickets { get; }
+        IQueryable<Ticket> Tickets { get; }
         void SaveTicket(Ticket tick);
         Ticket DeleteTicket(int tickId);
     }

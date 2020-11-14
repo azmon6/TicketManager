@@ -1,14 +1,15 @@
 ﻿@model TicketManager.Domain.Entities.Ticket
 
 @{
-    ViewBag.Title = "NewTicket";
+    ViewBag.Title = "ModifyTicket";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
-    @using (Html.BeginForm("NewTicket", "Home", FormMethod.Post))
+    @using (Html.BeginForm("ModifyTicket", "Admin", FormMethod.Post))
     {
         @Html.HiddenFor(p => p.TicketID)
+        @Html.ValidationSummary()
         foreach (var property in ViewData.ModelMetadata.Properties)
         {
             switch (property.PropertyName)
@@ -20,15 +21,13 @@
                 case "EventTime":
                     <div>
                         <label>@property.PropertyName</label>
-                        @Html.TextBox(property.PropertyName)
-                        @Html.ValidationMessage(property.PropertyName)
+                        @Html.TextBox(property.PropertyName, property.Description, new { type = "date" })
                     </div>
                     break;
                 default:
                     <div>
                         <label>@property.PropertyName</label>
                         @Html.TextBox(property.PropertyName)
-                        @Html.ValidationMessage(property.PropertyName)
                     </div>
                     break;
             }

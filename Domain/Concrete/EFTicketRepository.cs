@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Entities;
 
@@ -9,7 +8,7 @@ namespace TicketManager.Domain.Concrete
     {
         private EntityContext context = new EntityContext();
 
-        public IEnumerable<Ticket> Tickets
+        public IQueryable<Ticket> Tickets
         {
             get { return context.Tickets; }
         }

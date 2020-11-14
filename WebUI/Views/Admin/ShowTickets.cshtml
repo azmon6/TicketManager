@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TicketManager.Domain.Entities.Ticket>
+﻿@model IQueryable<TicketManager.Domain.Entities.Ticket>
 
 @{
     ViewBag.Title = "ShowTickets";
@@ -29,7 +29,7 @@
                 <td>@tick.EndBuyTime</td>
                 <td>@tick.EventTime</td>    
                 <td>@tick.Price</td>
-                <td>@Html.ActionLink("Edit","NewTicket",new { tickID = tick.TicketID })</td>
+                <td>@Html.ActionLink("Edit", "ModifyTicket", new { tickID = tick.TicketID })</td>
                 <td>@Html.ActionLink("Delete","DeleteTicket", new { tickID = tick.TicketID })</td>
             </tr>
         }
@@ -38,6 +38,6 @@
 </table>
 
 <div>
-    @Html.ActionLink("Add Ticket", "Create", "Home")
+    @Html.ActionLink("Add Ticket", "Create", "Admin")
 </div>
 

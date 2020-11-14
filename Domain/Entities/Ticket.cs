@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TicketManager.Domain.Entities
 {
+
     public class Ticket
     {
         //TODO ADD required but not with errormessage
@@ -9,7 +12,6 @@ namespace TicketManager.Domain.Entities
 
         [Required(ErrorMessage = "Enter a Ticket name")]
         public string TicketName { get; set; }
-
         [Required(ErrorMessage = "Enter a Description")]
         public string Description { get; set; }
         [Required(ErrorMessage = "Enter a Organizer")]
