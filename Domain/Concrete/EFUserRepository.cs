@@ -48,7 +48,15 @@ namespace TicketManager.Domain.Concrete
 
         public void ModifyUser(User tempUser)
         {
-            throw new NotImplementedException();
+            User foundUser = context.Users.FirstOrDefault(p => p.UserID == tempUser.UserID);
+            if(foundUser == null)
+            {
+                return;
+            }
+
+            foundUser.Name = tempUser.Name;
+            foundUser.Role = tempUser.Role;
+            context.SaveChanges();
         }
 
         public User DeleteUser(int UserId)

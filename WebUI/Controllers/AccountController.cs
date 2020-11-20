@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using System.Web;
 using TicketManager.WebUI.Models;
 using TicketManager.Domain.Abstract;
 using System.Web.Security;
@@ -22,11 +23,11 @@ namespace TicketManager.WebUI.Controllers
         [HttpPost]
         public ActionResult SignUp(SignUpInformation Info)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if(repository.AddUser(Info.getUser(), Info.GetLogin()))
                 {
-                    FormsAuthentication.SetAuthCookie(Info.GetLogin().Username, true);
+                    FormsAuthentication.SetAuthCookie(Info.GetLogin().Username, false);
                     return RedirectToAction("HomeScreen", "Home");
                 }
                 else
@@ -61,6 +62,12 @@ namespace TicketManager.WebUI.Controllers
                 }
             }
             return View();
+        }
+
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            return Redirect(Url.Action("HomeScreen", "Home"));
         }
 
     }

@@ -1,7 +1,8 @@
-﻿
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
+using TicketManager.WebUI.Infrastructure.RolesAunth;
 
 namespace TicketManager.WebUI.Infrastructure.Attributes
 {
@@ -19,8 +20,12 @@ namespace TicketManager.WebUI.Infrastructure.Attributes
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            //TODO This causes an error which prevents entering page
-            return base.AuthorizeCore(httpContext);
+            //TODO Split Roles so it works for multiple
+            if(httpContext.User.IsInRole("Admin"))
+            {
+                return true;
+            }    
+            return false;
         }
 
         public override void OnAuthorization(AuthorizationContext filterContext)
@@ -29,17 +34,17 @@ namespace TicketManager.WebUI.Infrastructure.Attributes
             if (filterContext.Result != null)
             {
 
-                var temp = filterContext.HttpContext.User.Identity;
-
                 if (filterContext.Result.GetType() == typeof(HttpUnauthorizedResult))
                 {
                     filterContext.Result = new RedirectToRouteResult(
                         new RouteValueDictionary
                         {
                             { "action", "Login" },
-                            { "controller", "Account" }
+                            { "controller", "Account" },
+                            { "returnUrl", filterContext.HttpContext.Request.Url.ToString() }
                         }
                     );
+                    filterContext.Controller.TempData["error"] = "You don't have permission.";
                 }
             }
         }

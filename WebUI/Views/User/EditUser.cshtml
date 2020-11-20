@@ -1,0 +1,31 @@
+﻿@model TicketManager.Domain.Entities.User
+
+@{
+    ViewBag.Title = "EditUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    @using (Html.BeginForm("EditUser", "User", FormMethod.Post))
+    {
+        @Html.HiddenFor(p => p.UserID)
+        @Html.HiddenFor(p => p.LoginID)
+        @Html.HiddenFor(p => p.LoginInformation)
+        @Html.ValidationSummary()
+
+        <div class="form-group">
+            <label>Name shown to other users</label>
+            @Html.TextBoxFor(m => m.Name)
+        </div>
+        
+        @* TODO Add More Roles*@
+        <div class="form-group">
+            <label>Name shown to other users</label>
+            @Html.DropDownListFor(m => m.Role, new SelectList(new[] { "Admin", "Normal" }))
+        </div>
+
+        <div>
+            <input type="submit" value="Save" />
+        </div>
+    }
+</div>

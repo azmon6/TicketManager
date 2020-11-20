@@ -12,8 +12,23 @@
         <div>
             @Html.ActionLink("Home","HomeScreen","Home")
         </div>
+        @if(User.Identity.IsAuthenticated)
+        {
+            <div>
+                @Html.ActionLink("View Cart","ShowCart","Cart")
+            </div>
+            <div>
+                @Html.ActionLink("Log Out","LogOut","Account")
+            </div>
+        }
         <h1> Ticket Manager</h1>
     </div>
+    @if(TempData["error"] != null)
+    {
+        <div>
+            @TempData["error"]
+        </div>
+    }
     @RenderBody()
 </body>
 </html>

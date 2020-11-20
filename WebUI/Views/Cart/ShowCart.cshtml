@@ -1,0 +1,37 @@
+﻿@model IQueryable<TicketManager.Domain.Entities.UserCartInformation>
+
+@{
+    ViewBag.Title = "ShowCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table table-bordered table-condensed table-striped">
+
+    <thead>
+        <tr>
+            <td>Ticket Name</td>
+            <td>Event Start Time</td>
+            <td>Quantity</td>
+            <td>Ticket Price</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tick in Model)
+        {
+            <tr>
+                <td>@tick.Ticket.TicketName</td>
+                <td>@tick.Ticket.EventTime</td>
+                <td>@tick.Quantity</td>
+                <td>@tick.Ticket.Price</td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<div>
+    Total Price: @Model.Sum(e => e.Quantity * e.Ticket.Price)
+</div>
+<div>
+    @Html.ActionLink("Checkout", "Checkout", "Cart")
+</div>

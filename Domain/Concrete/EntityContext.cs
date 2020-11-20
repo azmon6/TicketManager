@@ -1,6 +1,5 @@
 ﻿using TicketManager.Domain.Entities;
 using System.Data.Entity;
-using System.Diagnostics;
 
 namespace TicketManager.Domain.Concrete
 {
@@ -10,6 +9,7 @@ namespace TicketManager.Domain.Concrete
         public DbSet<LoginInformation> LoginInformations { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<UserCartInformation> CartInformation { get; set; }
 
         public EntityContext():base("name=EntityContext")
         {

@@ -15,7 +15,7 @@ namespace TicketManager.WebUI.Infrastructure.RolesAunth
         //for future easily adding feature
         public string[] ResolveRoleName(string loginName)
         {
-            User foundUser = context.Users.FirstOrDefault(x => context.LoginInformations.Where(y => (y.LoginID == x.LoginID)).ToList().Count() == 1);
+            User foundUser = context.Users.Where(x => x.LoginInformation.Username == loginName).FirstOrDefault();
             if(foundUser == null)
             {
                 return new string[0];

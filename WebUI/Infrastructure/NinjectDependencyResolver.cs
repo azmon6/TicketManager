@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Web.Mvc;
 using Ninject;
+using Ninject.Web.Common;
 using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Concrete;
 
@@ -30,9 +30,10 @@ namespace TicketManager.WebUI.Infrastructure
 
         private void AddBindings()
         {
-            kernel.Bind<EntityContext>().ToSelf().InSingletonScope();
-            kernel.Bind<ITicketRepository>().To<EFTicketRepository>();
-            kernel.Bind<IUsersRepository>().To<EFUserRepository>();
+            kernel.Bind<EntityContext>().ToSelf().InRequestScope();
+            kernel.Bind<ITicketRepository>().To<EFTicketRepository>().InTransientScope();
+            kernel.Bind<IUsersRepository>().To<EFUserRepository>().InTransientScope();
+            kernel.Bind<ICartRepository>().To<EFCartRepository>().InTransientScope();
         }
     }
 }
