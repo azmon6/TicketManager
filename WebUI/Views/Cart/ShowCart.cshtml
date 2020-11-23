@@ -1,9 +1,10 @@
-﻿@model IQueryable<TicketManager.Domain.Entities.UserCartInformation>
+﻿@model IEnumerable<TicketManager.WebUI.Models.CartViewInfo>
 
 @{
     ViewBag.Title = "ShowCart";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 <table class="table table-bordered table-condensed table-striped">
 
@@ -19,10 +20,10 @@
         @foreach (var tick in Model)
         {
             <tr>
-                <td>@tick.Ticket.TicketName</td>
-                <td>@tick.Ticket.EventTime</td>
+                <td>@tick.TicketName</td>
+                <td>@tick.EventTime</td>
                 <td>@tick.Quantity</td>
-                <td>@tick.Ticket.Price</td>
+                <td>@tick.TicketPrice</td>
             </tr>
         }
     </tbody>
@@ -30,7 +31,7 @@
 </table>
 
 <div>
-    Total Price: @Model.Sum(e => e.Quantity * e.Ticket.Price)
+    Total Price: @Model.Sum(e => e.Quantity * e.TicketPrice)
 </div>
 <div>
     @Html.ActionLink("Checkout", "Checkout", "Cart")

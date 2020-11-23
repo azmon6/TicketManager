@@ -6,6 +6,8 @@ namespace TicketManager.Domain.Abstract
     public interface ICartRepository
     {
         IQueryable<UserCartInformation> CartInformation { get; }
+        IQueryable<User> UserInfo { get; }
+        IQueryable<Ticket> TicketInfo { get; }
         void AddTicketToUser(User tempUser, Ticket tempTick, int quantity = 1);
         void AddTicketToUser(int userId, int tickId, int quantity = 1);
         IQueryable<UserCartInformation> RemoveItemFromCart(int userId,int tickId);

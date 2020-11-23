@@ -2,6 +2,10 @@
 using TicketManager.Domain.Entities;
 using TicketManager.Domain.Abstract;
 using System.Linq;
+using System.Collections.Generic;
+using TicketManager.WebUI.Models;
+using Ninject.Infrastructure.Language;
+using System.Security.Cryptography.X509Certificates;
 
 namespace TicketManager.WebUI.Controllers
 {
@@ -33,7 +37,26 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult ShowCart()
         {
-            return View(cartRepository.CartInformation);
+            int tempID = usersRepository.Users.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            // ASK IEnumerable vs IQueryable here
+            IQueryable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
+                x.UserID == tempID);
+            IEnumerable<CartViewInfo> temp = tempInfo.
+                Join(cartRepository.TicketInfo,
+                p => p.TicketID, c => c.TicketID, (p, c) =>
+                new CartViewInfo()
+                {
+                    EventTime = c.EventTime,
+                    Quantity = p.Quantity,  
+                    TicketPrice = c.Price,
+                    TicketName = c.TicketName
+                });
+            return View(temp);
+        }
+
+        public ActionResult Checkout()
+        {
+            return View();
         }
     }
 }

@@ -144,6 +144,7 @@
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\RolesAunth\RolePermissionManager.cs" />
     <Compile Include="Infrastructure\Attributes\UsernameUniqueValidation.cs" />
+    <Compile Include="Models\CartViewInfo.cs" />
     <Compile Include="Models\LoginInfo.cs" />
     <Compile Include="Models\SignUpInformation.cs" />
     <Compile Include="Models\TicketShowModel.cs" />
@@ -173,6 +174,7 @@
     <Content Include="Views\User\ViewUsers.cshtml" />
     <Content Include="Views\User\EditUser.cshtml" />
     <Content Include="Views\Cart\ShowCart.cshtml" />
+    <Content Include="Views\Cart\Checkout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

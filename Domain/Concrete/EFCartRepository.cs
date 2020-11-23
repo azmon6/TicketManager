@@ -9,11 +9,28 @@ namespace TicketManager.Domain.Concrete
     {
         EntityContext context = new EntityContext();
 
+        // ASK bad practice on context?
         public IQueryable<UserCartInformation> CartInformation
         {
             get
             {
                 return context.CartInformation;
+            }
+        }
+
+        public IQueryable<User> UserInfo
+        {
+            get
+            {
+                return context.Users;
+            }
+        }
+
+        public IQueryable<Ticket> TicketInfo
+        {
+            get
+            {
+                return context.Tickets;
             }
         }
 
