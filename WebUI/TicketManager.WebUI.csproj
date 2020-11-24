@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WebUI</RootNamespace>
-    <AssemblyName>WebUI</AssemblyName>
+    <RootNamespace>TicketManager.WebUI</RootNamespace>
+    <AssemblyName>TicketManager.WebUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -139,12 +139,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Attributes\CreditCardValidationAttribute.cs" />
     <Compile Include="Infrastructure\Attributes\RolesAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\RolesAunth\MyRoleProvider.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\RolesAunth\RolePermissionManager.cs" />
     <Compile Include="Infrastructure\Attributes\UsernameUniqueValidation.cs" />
     <Compile Include="Models\CartViewInfo.cs" />
+    <Compile Include="Models\CheckoutInfo.cs" />
     <Compile Include="Models\LoginInfo.cs" />
     <Compile Include="Models\SignUpInformation.cs" />
     <Compile Include="Models\TicketShowModel.cs" />

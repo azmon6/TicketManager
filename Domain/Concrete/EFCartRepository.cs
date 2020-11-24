@@ -9,7 +9,7 @@ namespace TicketManager.Domain.Concrete
     {
         EntityContext context = new EntityContext();
 
-        // ASK bad practice on context?
+        // TODO bad practice on context?
         public IQueryable<UserCartInformation> CartInformation
         {
             get
@@ -46,7 +46,7 @@ namespace TicketManager.Domain.Concrete
             }
             else
             {
-                //ASK why tempInfo.UserID = tempUser makes new User;
+                // TODO why tempInfo.UserID = tempUser makes new User;
                 tempInfo = new UserCartInformation();
                 tempInfo.Quantity = quantity;
                 tempInfo.Ticket = tempTick;
@@ -79,24 +79,56 @@ namespace TicketManager.Domain.Concrete
             context.SaveChanges();
         }
 
-        public IQueryable<UserCartInformation> RemoveAllFromCart(int userId, int tickId)
+        public void CheckoutUser(User tempUser)
         {
-            throw new System.NotImplementedException();
+            CheckoutUser(tempUser.UserID);
         }
 
-        public IQueryable<UserCartInformation> RemoveAllFromCart(User tempUser, Ticket tempTick)
+        public void CheckoutUser(int userId)
         {
-            throw new System.NotImplementedException();
+            int dealID =context.Transactions.Count() > 0 ? context.Transactions.Max(m => m.DealID) + 1 : 1;
+            string tempTime = DateTime.Now.ToString("dd/MM/yyyy");
+            IQueryable<UserCartInformation> temp = context.CartInformation.Where(m => m.UserID == userId);
+            foreach(var line in temp)
+            {
+                Transaction tempTrans = new Transaction()
+                {
+                    TicketID = line.TicketID,
+                    DateMade = tempTime,
+                    DealID = dealID,
+                    UserID = line.UserID,
+                    PricePaid = TicketInfo.First(x => x.TicketID == line.TicketID).Price * line.Quantity
+                };
+                context.Transactions.Add(tempTrans);
+            }
+            context.SaveChanges();
+            RemoveAllFromCart(userId);
         }
 
-        public IQueryable<UserCartInformation> RemoveItemFromCart(int userId, int tickId)
+        public IQueryable<UserCartInformation> RemoveAllFromCart(int userId)
         {
-            throw new System.NotImplementedException();
+
+            var temp = context.CartInformation.RemoveRange(CartInformation.Where(x => x.UserID == userId)).AsQueryable();
+            context.SaveChanges();
+            return temp;
         }
 
-        public IQueryable<UserCartInformation> RemoveItemFromCart(User tempUser, Ticket tempTick)
+        public IQueryable<UserCartInformation> RemoveAllFromCart(User tempUser)
         {
-            throw new System.NotImplementedException();
+            return RemoveAllFromCart(tempUser.UserID);
+        }
+
+        public UserCartInformation RemoveItemFromCart(int userId, int tickId)
+        {
+            var temp = context.CartInformation.Remove(
+                context.CartInformation.First(x => x.UserID == userId && x.TicketID == tickId));
+            context.SaveChanges();
+            return temp;
+        }
+
+        public UserCartInformation RemoveItemFromCart(User tempUser, Ticket tempTick)
+        {
+            return RemoveItemFromCart(tempUser.UserID, tempTick.TicketID);
         }
     }
 }

@@ -4,6 +4,9 @@ namespace TicketManager.WebUI.Infrastructure.RolesAunth
 {
     public class MyRoleProvider : RoleProvider
     {
+
+        //TODO Consider Roles as Enum with specifier if decending access works or not
+        // ASK if its a good idea
         public MyRoleProvider() { }
 
         public override string[] GetRolesForUser(string username)

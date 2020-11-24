@@ -1,8 +1,21 @@
-﻿@model IEnumerable<TicketManager.WebUI.Models.CartViewInfo>
+﻿@model TicketManager.WebUI.Models.CheckoutInfo
 
 @{
     ViewBag.Title = "Checkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Checkout</h2>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+
+    foreach (var property in ViewData.ModelMetadata.Properties)
+    {
+        <div>
+            <label>@(property.DisplayName ?? property.PropertyName)</label>
+            @Html.TextBox(property.PropertyName)
+        </div>
+    }
+
+    <input type="submit" value="Enter" class="btn btn-primary" />
+}

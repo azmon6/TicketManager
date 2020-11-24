@@ -4,8 +4,6 @@ using TicketManager.Domain.Abstract;
 using System.Linq;
 using System.Collections.Generic;
 using TicketManager.WebUI.Models;
-using Ninject.Infrastructure.Language;
-using System.Security.Cryptography.X509Certificates;
 
 namespace TicketManager.WebUI.Controllers
 {
@@ -46,6 +44,7 @@ namespace TicketManager.WebUI.Controllers
                 p => p.TicketID, c => c.TicketID, (p, c) =>
                 new CartViewInfo()
                 {
+                    TicketID = p.TicketID,
                     EventTime = c.EventTime,
                     Quantity = p.Quantity,  
                     TicketPrice = c.Price,
@@ -54,9 +53,27 @@ namespace TicketManager.WebUI.Controllers
             return View(temp);
         }
 
+        public ActionResult RemoveLine(int tickId)
+        {
+            int tempID = usersRepository.Users.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            cartRepository.RemoveItemFromCart( tempID , tickId);
+            return RedirectToAction("ShowCart");
+        }
+
         public ActionResult Checkout()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Checkout(CheckoutInfo tempInfo)
+        {
+            if(ModelState.IsValid)
+            {
+                cartRepository.CheckoutUser(usersRepository.Users.First(p => p.LoginInformation.Username == HttpContext.User.Identity.Name).UserID);
+                return RedirectToAction("HomeScreen","Home");
+            }
+            return View(tempInfo);
         }
     }
 }
