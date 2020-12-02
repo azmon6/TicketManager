@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using TicketManager.Domain.Entities;
 using TicketManager.Domain.Abstract;
+using TicketManager.WebUI.Models;
 using System.Linq;
 using TicketManager.WebUI.Infrastructure.Attributes;
 
@@ -9,31 +10,42 @@ namespace WebUI.Controllers
     public class AdminController : Controller
     {
         public ITicketRepository repository;
+        
+        public int PageSize { get; set; }
 
         public AdminController(ITicketRepository ticketRepository)
         {
             repository = ticketRepository;
+            PageSize = 5;
         }
 
         // TODO Add pagination
-        public ActionResult ShowTickets()
+        public ActionResult ShowTickets(int page = 1)
         {
-            return View(repository.Tickets);
+            TicketShowModel temp = new TicketShowModel()
+            {
+                Tickets = repository.GetSpecificPage(5, page),
+                PageNow = page,
+                TotalPages = (int)System.Math.Ceiling( (decimal)((decimal)repository.GetSize() / (decimal)PageSize))
+            };
+
+            return View(temp);
         }
 
         [RolesAuthorize(Mykeys ="Admin")]
         public ViewResult ModifyTicket(int tickID)
         {
             Ticket tick = repository.Tickets.FirstOrDefault(p => p.TicketID == tickID);
-            return View(tick);
+            ModifyTicketModel temp = new ModifyTicketModel(tick);
+            return View(temp);
         }
 
         [HttpPost]
-        public ActionResult ModifyTicket(Ticket tick)
+        public ActionResult ModifyTicket(ModifyTicketModel tick)
         {
             if (ModelState.IsValid)
             {
-                repository.SaveTicket(tick);
+                repository.SaveTicket(tick.GetTicket());
                 return RedirectToAction("ShowTickets");
             }
             return View(tick);
@@ -46,9 +58,9 @@ namespace WebUI.Controllers
         }
 
         [RolesAuthorize(Mykeys = "Admin")]
-        public ViewResult Create()
+        public ActionResult Create()
         {
-            return View("ModifyTicket", new Ticket());
+            return RedirectToAction("ModifyTicket", new { tickId = 0 });
         }
     }
 }

@@ -46,5 +46,15 @@ namespace TicketManager.Domain.Concrete
             }
             return Entry;
         }
+
+        public int GetSize()
+        {
+            return context.Tickets.Count();
+        }
+
+        public IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber)
+        {
+            return context.Tickets.OrderBy(p => p.TicketID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        }
     }
 }

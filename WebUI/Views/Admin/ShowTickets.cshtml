@@ -1,4 +1,4 @@
-﻿@model IQueryable<TicketManager.Domain.Entities.Ticket>
+﻿@model TicketManager.WebUI.Models.TicketShowModel
 
 @{
     ViewBag.Title = "ShowTickets";
@@ -19,7 +19,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var tick in Model)
+        @foreach (var tick in Model.Tickets )
         {
             <tr>
                 <td>@tick.TicketName</td>
@@ -40,6 +40,13 @@
     </tbody>
 
 </table>
+
+<div>
+    @for(int i=1; i<=Model.TotalPages; i++)
+    {
+        <div style="float:left;margin: 0 5px 0 5px">@i</div>
+    }
+</div>
 
 <div>
     @Html.ActionLink("Add Ticket", "Create", "Admin")

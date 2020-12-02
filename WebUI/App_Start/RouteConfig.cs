@@ -11,6 +11,7 @@ namespace WebUI
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            //TODO Fix routes and parameters
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(

@@ -35,7 +35,6 @@ namespace TicketManager.WebUI.Controllers
                     ModelState.AddModelError("Username", "This username already exists!");
                     return View(Info);
                 }
-
             }
             return View(Info);
         }

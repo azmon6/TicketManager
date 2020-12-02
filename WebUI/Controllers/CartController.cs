@@ -9,15 +9,10 @@ namespace TicketManager.WebUI.Controllers
 {
     public class CartController : Controller
     {
-
-        public ITicketRepository tickRepository;
-        public IUsersRepository usersRepository;
         public ICartRepository cartRepository;
 
-        public CartController(ITicketRepository ticket, IUsersRepository users, ICartRepository cart)
+        public CartController(ICartRepository cart)
         {
-            tickRepository = ticket;
-            usersRepository = users;
             cartRepository = cart;
         }
 
@@ -28,15 +23,15 @@ namespace TicketManager.WebUI.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            User tempUser = usersRepository.Users.FirstOrDefault(p => p.LoginInformation.Username == HttpContext.User.Identity.Name);
+            User tempUser = cartRepository.UserInfo.FirstOrDefault(p => p.LoginInformation.Username == HttpContext.User.Identity.Name);
             cartRepository.AddTicketToUser(tempUser.UserID, tickID);
             return RedirectToAction("ShowTickets", "Admin");
         }
 
         public ActionResult ShowCart()
         {
-            int tempID = usersRepository.Users.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            // ASK IEnumerable vs IQueryable here
+            //TODO Move Functionality to Models/Entities
+            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
             IQueryable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
                 x.UserID == tempID);
             IEnumerable<CartViewInfo> temp = tempInfo.
@@ -49,13 +44,13 @@ namespace TicketManager.WebUI.Controllers
                     Quantity = p.Quantity,  
                     TicketPrice = c.Price,
                     TicketName = c.TicketName
-                });
+                }).ToList();
             return View(temp);
         }
 
         public ActionResult RemoveLine(int tickId)
         {
-            int tempID = usersRepository.Users.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
             cartRepository.RemoveItemFromCart( tempID , tickId);
             return RedirectToAction("ShowCart");
         }
@@ -70,7 +65,7 @@ namespace TicketManager.WebUI.Controllers
         {
             if(ModelState.IsValid)
             {
-                cartRepository.CheckoutUser(usersRepository.Users.First(p => p.LoginInformation.Username == HttpContext.User.Identity.Name).UserID);
+                cartRepository.CheckoutUser(cartRepository.UserInfo.First(p => p.LoginInformation.Username == HttpContext.User.Identity.Name).UserID);
                 return RedirectToAction("HomeScreen","Home");
             }
             return View(tempInfo);

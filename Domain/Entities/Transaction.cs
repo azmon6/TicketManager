@@ -10,6 +10,6 @@ namespace TicketManager.Domain.Entities
         public Ticket Ticket { get; set; }
         public string DateMade { get; set; }
         public double PricePaid { get; set; }
-        public int DealID { get; set; }
+        public string DealID { get; set; }
     }
 }

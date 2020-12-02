@@ -8,5 +8,7 @@ namespace TicketManager.Domain.Abstract
         IQueryable<Ticket> Tickets { get; }
         void SaveTicket(Ticket tick);
         Ticket DeleteTicket(int tickId);
+        int GetSize();
+        IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber);
     }
 }

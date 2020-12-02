@@ -7,9 +7,9 @@ namespace TicketManager.Domain.Concrete
 {
     public class EFCartRepository : ICartRepository
     {
-        EntityContext context = new EntityContext();
+        //TODO Context in constructors
+        private EntityContext context = new EntityContext();
 
-        // TODO bad practice on context?
         public IQueryable<UserCartInformation> CartInformation
         {
             get
@@ -36,25 +36,7 @@ namespace TicketManager.Domain.Concrete
 
         public void AddTicketToUser(User tempUser, Ticket tempTick, int quantity = 1)
         {
-            if(quantity < 1) { return; }
-
-            UserCartInformation tempInfo = CartInformation.FirstOrDefault(
-                p => (p.UserID == tempUser.UserID && p.TicketID == tempTick.TicketID));
-            if(tempInfo != null)
-            {
-                tempInfo.Quantity += quantity;
-            }
-            else
-            {
-                // TODO why tempInfo.UserID = tempUser makes new User;
-                tempInfo = new UserCartInformation();
-                tempInfo.Quantity = quantity;
-                tempInfo.Ticket = tempTick;
-                tempInfo.User = tempUser;
-                tempInfo.DateAdded = DateTime.Now.Date.ToString("dd/MM/yyyy");
-                context.CartInformation.Add(tempInfo);
-            }
-            context.SaveChanges();
+            AddTicketToUser(tempUser.UserID, tempTick.TicketID, quantity);
         }
 
         public void AddTicketToUser(int userId, int tickId, int quantity = 1)
@@ -86,7 +68,7 @@ namespace TicketManager.Domain.Concrete
 
         public void CheckoutUser(int userId)
         {
-            int dealID =context.Transactions.Count() > 0 ? context.Transactions.Max(m => m.DealID) + 1 : 1;
+            Guid testGuid = Guid.NewGuid();
             string tempTime = DateTime.Now.ToString("dd/MM/yyyy");
             IQueryable<UserCartInformation> temp = context.CartInformation.Where(m => m.UserID == userId);
             foreach(var line in temp)
@@ -95,7 +77,7 @@ namespace TicketManager.Domain.Concrete
                 {
                     TicketID = line.TicketID,
                     DateMade = tempTime,
-                    DealID = dealID,
+                    DealID = testGuid.ToString(),
                     UserID = line.UserID,
                     PricePaid = TicketInfo.First(x => x.TicketID == line.TicketID).Price * line.Quantity
                 };

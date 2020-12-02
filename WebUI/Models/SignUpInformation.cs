@@ -6,10 +6,8 @@ namespace TicketManager.WebUI.Models
 {
     public class SignUpInformation
     {
-        //TODO Username Regex
         [Required(ErrorMessage ="Enter Username")]
-        //[RegularExpression("(?!.*[^a-zA-Z0-9])", ErrorMessage ="Username mustn't contain special characters")]
-        //[UsernameUniqueValidation(ErrorMessage ="This username exists already")]
+        [RegularExpression("^[a-zA-z0-9]*$", ErrorMessage ="Username mustn't contain special characters")]
         public string Username { get; set; }
         
         [Required(ErrorMessage = "Enter Password")]
@@ -22,7 +20,7 @@ namespace TicketManager.WebUI.Models
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Enter Name")]
-        //[RegularExpression("(?!.*[^a-zA-Z0-9])", ErrorMessage = "Name mustn't contain special characters")]
+        [RegularExpression("^[a-zA-z0-9]*$", ErrorMessage = "Name mustn't contain special characters")]
         public string Name { get; set; }
 
 

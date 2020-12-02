@@ -6,7 +6,6 @@ namespace TicketManager.Domain.Entities
     public class UserCartInformation
     {
 
-        [HiddenInput(DisplayValue = false)]
         [Key]
         public int BoughtID { get; set; }
 
