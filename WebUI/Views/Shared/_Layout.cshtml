@@ -3,27 +3,42 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/HeadStyle.css" rel="stylesheet" type="text/css" />
-    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/HeadStyle.css" rel="stylesheet" />
+    <link href="~/Content/MyStyles.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="logo text-center">
-        <div>
-            @Html.ActionLink("Home","HomeScreen","Home")
+
+    <div class="page_header">
+        <div class="logo">
+            Ticket Manager
         </div>
-        @if(User.Identity.IsAuthenticated)
-        {
-            <div>
-                @Html.ActionLink("View Cart","ShowCart","Cart")
-            </div>
-            <div>
-                @Html.ActionLink("Log Out","LogOut","Account")
-            </div>
-        }
-        <h1> Ticket Manager</h1>
+        @*TODO Dropdown when small screen*@
+        <ul>
+            <li>
+                @Html.ActionLink("Home", "HomeScreen", "Home")
+            </li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>
+                    @Html.ActionLink("View Cart", "ShowCart", "Cart")
+                </li>
+                <li>
+                    @Html.ActionLink("Log Out", "LogOut", "Account")
+                </li>
+            }
+            else
+            {
+                <li>
+                    @Html.ActionLink("Login", "Login", "Account")
+                </li>
+                <li>
+                    @Html.ActionLink("Sign Up", "SignUp", "Account")
+                </li>
+            }
+        </ul>
     </div>
-    @if(TempData["error"] != null)
+    @if (TempData["error"] != null)
     {
         <div>
             @TempData["error"]

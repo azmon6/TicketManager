@@ -5,50 +5,69 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table class="table table-bordered table-condensed table-striped">
+@*TODO SEARCH/FILTER*@
 
-    <thead>
-        <tr>
-            <th>TicketName</th>
-            <th>Description</th>
-            <th>Organizer</th>
-            <th>StartBuyTime</th>
-            <th>EndBuyTime</th>
-            <th>EventTime</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var tick in Model.Tickets )
-        {
+<div class="center">
+    <table>
+        <thead>
             <tr>
-                <td>@tick.TicketName</td>
-                <td>@tick.Description</td>
-                <td>@tick.Organizer</td>
-                <td>@tick.StartBuyTime</td>
-                <td>@tick.EndBuyTime</td>
-                <td>@tick.EventTime</td>
-                <td>@tick.Price</td>
-                <td>@Html.ActionLink("Buy Ticket", "BuyTicket", "Cart", new { tickID = tick.TicketID }, null)</td>
+                <th>TicketName</th>
+                <th>Description</th>
+                <th>Organizer</th>
+                <th>StartBuyTime</th>
+                <th>EndBuyTime</th>
+                <th>EventTime</th>
+                <th>Price</th>
+                <th>Buy</th>
                 @if (this.User.IsInRole("Admin"))
                 {
-                    <td>@Html.ActionLink("Edit", "ModifyTicket", new { tickID = tick.TicketID })</td>
-                    <td>@Html.ActionLink("Delete", "DeleteTicket", new { tickID = tick.TicketID })</td>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 }
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var tick in Model.Tickets)
+            {
+                <tr>
+                    <td>@tick.TicketName</td>
+                    <td>@tick.Description</td>
+                    <td>@tick.Organizer</td>
+                    <td>@tick.StartBuyTime</td>
+                    <td>@tick.EndBuyTime</td>
+                    <td>@tick.EventTime</td>
+                    <td>@tick.Price</td>
+                    <td>@Html.ActionLink("Buy Ticket", "BuyTicket", "Cart", new { tickID = tick.TicketID, tempPage = Model.PageNow }, null)</td>
+                    @if (this.User.IsInRole("Admin"))
+                    {
+                        <td>@Html.ActionLink("Edit", "ModifyTicket", new { tickID = tick.TicketID })</td>
+                        <td>@Html.ActionLink("Delete", "DeleteTicket", new { tickID = tick.TicketID })</td>
+                    }
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+    <div style="float:left">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.PageNow)
+            {
+                <div style="float:left;margin: 0 5px 0 5px;">
+                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i }, new { style = "color: red" })
+                </div>
+            }
+            else
+            {
+                <div style="float:left;margin: 0 5px 0 5px">
+                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i })
+                </div>
+            }
         }
-    </tbody>
+    </div>
 
-</table>
-
-<div>
-    @for(int i=1; i<=Model.TotalPages; i++)
-    {
-        <div style="float:left;margin: 0 5px 0 5px">@i</div>
-    }
+    <div style="clear:both">
+        @Html.ActionLink("Add Ticket", "Create", "Admin")
+    </div>
 </div>
-
-<div>
-    @Html.ActionLink("Add Ticket", "Create", "Admin")
-</div>
-

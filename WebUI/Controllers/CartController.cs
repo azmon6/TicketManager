@@ -16,7 +16,7 @@ namespace TicketManager.WebUI.Controllers
             cartRepository = cart;
         }
 
-        public ActionResult BuyTicket(int tickID)
+        public ActionResult BuyTicket(int tickID, int tempPage = 1)
         {
             if(!this.User.Identity.IsAuthenticated)
             {
@@ -25,7 +25,7 @@ namespace TicketManager.WebUI.Controllers
 
             User tempUser = cartRepository.UserInfo.FirstOrDefault(p => p.LoginInformation.Username == HttpContext.User.Identity.Name);
             cartRepository.AddTicketToUser(tempUser.UserID, tickID);
-            return RedirectToAction("ShowTickets", "Admin");
+            return RedirectToAction("ShowTickets", "Admin",new { page = tempPage });
         }
 
         public ActionResult ShowCart()
