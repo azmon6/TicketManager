@@ -31,6 +31,10 @@ namespace TicketManager.WebUI.Controllers
         public ActionResult ShowCart()
         {
             //TODO Move Functionality to Models/Entities
+            if(HttpContext.User.Identity == null)
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
             int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
             IQueryable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
                 x.UserID == tempID);

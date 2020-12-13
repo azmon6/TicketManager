@@ -8,42 +8,54 @@
     <link href="~/Content/MyStyles.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="HGparent">
+        <header class="HGheader">
+            <div class="page_header">
+                <div class="logo">
+                    Ticket Manager
+                </div>
+                @*TODO Dropdown when small screen*@
+                <ul>
+                    <li>
+                        @Html.ActionLink("Home", "HomeScreen", "Home")
+                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            @Html.ActionLink("View Cart", "ShowCart", "Cart")
+                        </li>
+                        <li>
+                            @Html.ActionLink("Log Out", "LogOut", "Account")
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            @Html.ActionLink("Login", "Login", "Account")
+                        </li>
+                        <li>
+                            @Html.ActionLink("Sign Up", "SignUp", "Account")
+                        </li>
+                    }
+                </ul>
+            </div>
+            @if (TempData["error"] != null)
+            {
+                <div>
+                    @TempData["error"]
+                </div>
+            }
+        </header>
 
-    <div class="page_header">
-        <div class="logo">
-            Ticket Manager
+        <div class="HGleft">
         </div>
-        @*TODO Dropdown when small screen*@
-        <ul>
-            <li>
-                @Html.ActionLink("Home", "HomeScreen", "Home")
-            </li>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <li>
-                    @Html.ActionLink("View Cart", "ShowCart", "Cart")
-                </li>
-                <li>
-                    @Html.ActionLink("Log Out", "LogOut", "Account")
-                </li>
-            }
-            else
-            {
-                <li>
-                    @Html.ActionLink("Login", "Login", "Account")
-                </li>
-                <li>
-                    @Html.ActionLink("Sign Up", "SignUp", "Account")
-                </li>
-            }
-        </ul>
+
+        <div class="HGmain">
+            @RenderBody()
+        </div>
+
+        <div class="HGright">
+        </div>
     </div>
-    @if (TempData["error"] != null)
-    {
-        <div>
-            @TempData["error"]
-        </div>
-    }
-    @RenderBody()
 </body>
 </html>

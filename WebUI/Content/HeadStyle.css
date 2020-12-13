@@ -1,4 +1,29 @@
-﻿
+﻿body {
+    background-color: whitesmoke;
+}
+
+.HGparent {
+    display: grid;
+    grid-template: auto 1fr auto / minmax(100px,15%) 1fr minmax(100px,15%);
+}
+
+.HGheader {
+    grid-column: 1 / -1;
+    background-color: chartreuse;
+}
+
+.HGmain {
+    grid-column: 2 / 3;
+}
+
+.HGleft {
+    grid-column: 1 / 2;
+}
+
+.HGright {
+    grid-column: 3 / 4;
+}
+
 .page_header {
     display: flex;
     flex-direction:row;

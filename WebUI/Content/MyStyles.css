@@ -1,30 +1,104 @@
-﻿.center {
-    margin: auto;
-    width: 50%;
+﻿#ShowTicketsTable {
+    display: grid;
+    grid-template-columns: minmax(150px, 1.5fr) minmax(150px, 1.5fr) repeat(6, minmax(100px, 1fr));
+    margin-top: 15px;
+    border: 1px solid black;
+    border-radius: 6px;
+}
+
+#ShowTicketsTable a {
+    background-color: yellow;
+    border: 3px solid #8a6204;
+    color: #8a0e1a;
+    padding: 8px 8px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 15px;
+}
+
+#ShowTicketsTable a:hover {
+    text-decoration:none;
+}
+
+.My_th {
+    text-align: center;
+    color: #00ad5f;
+    background-color: #393939;
+    font-size: 15px;
+    text-transform: uppercase;
+    padding: 18px 10px;
+}
+
+.My_td {
+    font-size: 14px;
+    display: grid;
+    place-items: center;
+    color: floralwhite;
+    background-color: #222;
+    text-align: center;
     padding: 10px;
+    border-top: 1px solid gray;
 }
 
-table{
-    font-size:14px;
-    background-color:white;
-    border:solid 1px black;
+.fontsize18 {
+    font-size: 18px;
 }
 
-th, td {
-    padding: 8px 30px 8px 30px;
-    text-align:center;
+.wordbreak {
+    word-break: break-word;
 }
 
-thead th{
-    color: black;
-    background-color: lightgreen;
+.homescreenbuttons {
+    margin-top: 30px;
 }
 
-thead th:nth-child(odd) {
-    color: #ffffff;
-    background-color: #324960;
+.homescreenbuttons a {
+    background-color: #81db27;
+    color: #175587;
+    font-size: 20px;
+    padding: 5px 45px 3px 45px;
+    border-radius: 15px;
+    text-decoration: none;
+    transition-duration: 0.2s;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #F8F8F8;
+.homescreenbuttons a:hover{
+    text-decoration: none;
+    color: #87171d;
 }
+
+.addbutton {
+    background-color: #e05151;
+    color: white;
+    padding: 15px;
+    border: 1px solid #a13838;
+    box-shadow: 5px 5px red;
+}
+
+/*
+    .userColor > .My_td:nth-of-type( 16n ),
+.userColor > .My_td:nth-of-type( 16n - 1 ),
+.userColor > .My_td:nth-of-type( 16n - 2 ),
+.userColor > .My_td:nth-of-type( 16n - 3 ),
+.userColor > .My_td:nth-of-type( 16n - 4 ),
+.userColor > .My_td:nth-of-type( 16n - 5 ),
+.userColor > .My_td:nth-of-type( 16n - 6 ),
+.userColor > .My_td:nth-of-type( 16n - 7 ) {
+    color: #00a4ad;
+    background-color: #222;
+}
+
+.adminColor > .My_td:nth-of-type( 20n ),
+.adminColor > .My_td:nth-of-type( 20n - 1 ),
+.adminColor > .My_td:nth-of-type( 20n - 2 ),
+.adminColor > .My_td:nth-of-type( 20n - 3 ),
+.adminColor > .My_td:nth-of-type( 20n - 4 ),
+.adminColor > .My_td:nth-of-type( 20n - 5 ),
+.adminColor > .My_td:nth-of-type( 20n - 6 ),
+.adminColor > .My_td:nth-of-type( 20n - 7 ),
+.adminColor > .My_td:nth-of-type( 20n - 8 ),
+.adminColor > .My_td:nth-of-type( 20n - 9 ) {
+    color: #00a4ad;
+    background-color: #222;
+}
+*/

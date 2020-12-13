@@ -24,7 +24,7 @@ namespace WebUI.Controllers
         {
             TicketShowModel temp = new TicketShowModel()
             {
-                Tickets = repository.GetSpecificPage(5, page),
+                Tickets = repository.GetSpecificPage(PageSize, page),
                 PageNow = page,
                 TotalPages = (int)System.Math.Ceiling( (decimal)((decimal)repository.GetSize() / (decimal)PageSize))
             };

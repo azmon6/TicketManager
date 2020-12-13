@@ -1,24 +1,14 @@
-﻿
-<!DOCTYPE html>
+﻿<body>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <link href="~/Content/MyStyles.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-</head>
-<body>
-
-    <div class="center text-center">
+    <div class="text-center homescreenbuttons">
         @Html.ActionLink("Show Tickets", "ShowTickets", "Admin")
     </div>
 
-    <div class="center text-center">
+    <div class="text-center homescreenbuttons">
         @Html.ActionLink("Add tickets", "Create", "Admin")
     </div>
 
-    <div class="center text-center">
+    <div class="text-center homescreenbuttons">
         @Html.ActionLink("Show Users", "ViewUsers", "User")
     </div>
 </body>
-</html>
