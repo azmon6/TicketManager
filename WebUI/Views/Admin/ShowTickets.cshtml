@@ -46,22 +46,24 @@
         }
     </div>
 
-    <div style="float:left">
+    <div class="tablenav">
+        <i class="fas fa-arrow-left fontsize18"></i>
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             if (i == Model.PageNow)
             {
-                <div style="float:left;margin: 0 5px 0 5px;">
-                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i }, new { style = "color: red" })
+                <div>
+                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i }, new { style = "color: red", @class = "navbutton" })
                 </div>
             }
             else
             {
-                <div style="float:left;margin: 0 5px 0 5px">
-                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i })
+                <div>
+                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i }, new { @class = "navbutton" })
                 </div>
             }
         }
+        <i class="fas fa-arrow-right fontsize18"></i>
     </div>
 
     <div style="clear: both;

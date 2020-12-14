@@ -4,7 +4,7 @@
 
 .HGparent {
     display: grid;
-    grid-template: auto 1fr auto / minmax(100px,15%) 1fr minmax(100px,15%);
+    grid-template: auto 1fr auto / minmax(50px,15%) 1fr minmax(50px,15%);
 }
 
 .HGheader {

@@ -60,6 +60,7 @@
     border-radius: 15px;
     text-decoration: none;
     transition-duration: 0.2s;
+    white-space: wrap;
 }
 
 .homescreenbuttons a:hover{
@@ -72,7 +73,34 @@
     color: white;
     padding: 15px;
     border: 1px solid #a13838;
-    box-shadow: 5px 5px red;
+    border-radius: 10px;
+    border-bottom: 3px solid #a13838;
+}
+
+.addbutton:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #a13838;
+}
+
+.navbutton,
+.navbutton:hover{
+    border: 2px solid black;
+    padding: 3px 10px 3px 10px;
+    border-radius: 50px;
+    font-weight:700;
+    text-decoration: none;
+}
+
+.tablenav {
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.tablenav div:nth-child(n),
+.tablenav i:nth-child(n){
+    margin-right: 10px;
 }
 
 /*

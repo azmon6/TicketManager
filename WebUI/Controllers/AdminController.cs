@@ -16,7 +16,7 @@ namespace WebUI.Controllers
         public AdminController(ITicketRepository ticketRepository)
         {
             repository = ticketRepository;
-            PageSize = 5;
+            PageSize = 1;
         }
 
         // TODO Add pagination
