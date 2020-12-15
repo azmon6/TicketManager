@@ -47,7 +47,9 @@
     </div>
 
     <div class="tablenav">
-        <i class="fas fa-arrow-left fontsize18"></i>
+        <a href="/Admin/ShowTickets?page=1">
+            <i class="fas fa-backward fontsize18"></i>
+        </a>
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             if (i == Model.PageNow)
@@ -63,7 +65,9 @@
                 </div>
             }
         }
-        <i class="fas fa-arrow-right fontsize18"></i>
+        <a href="/Admin/ShowTickets?page=@Model.TotalPages.ToString()">
+            <i class="fas fa-forward fontsize18"></i>
+        </a>
     </div>
 
     <div style="clear: both;

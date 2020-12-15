@@ -10,16 +10,25 @@ namespace WebUI.Controllers
     public class AdminController : Controller
     {
         public ITicketRepository repository;
-        
-        public int PageSize { get; set; }
+
+        private int _pageSize = 5;
+        public int PageSize { 
+            get { return _pageSize; }
+            set
+            {
+                if (value < 1 || value > 50)
+                    _pageSize = 5;
+                else
+                    _pageSize = value;
+            }
+        }
 
         public AdminController(ITicketRepository ticketRepository)
         {
             repository = ticketRepository;
-            PageSize = 1;
+            PageSize = 2;
         }
 
-        // TODO Add pagination
         public ActionResult ShowTickets(int page = 1)
         {
             TicketShowModel temp = new TicketShowModel()
