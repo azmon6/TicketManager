@@ -26,7 +26,7 @@ namespace WebUI.Controllers
         public AdminController(ITicketRepository ticketRepository)
         {
             repository = ticketRepository;
-            PageSize = 2;
+            PageSize = 5;
         }
 
         public ActionResult ShowTickets(int page = 1)
@@ -70,6 +70,16 @@ namespace WebUI.Controllers
         public ActionResult Create()
         {
             return RedirectToAction("ModifyTicket", new { tickId = 0 });
+        }
+
+        public ActionResult SingleTicket(int id = 0)
+        {
+            if(id <= 0)
+            {
+                return RedirectToAction("ShowTickets");
+            }
+
+            return View("ShowTicket");
         }
     }
 }

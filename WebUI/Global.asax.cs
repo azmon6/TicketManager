@@ -1,8 +1,8 @@
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Data;
 using System.Data.Entity;
 using TicketManager.Domain.Concrete;
+using System.Web.Optimization;
 
 namespace WebUI
 {
@@ -13,6 +13,7 @@ namespace WebUI
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Database.SetInitializer<EntityContext>(null);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
 }
