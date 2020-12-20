@@ -3,6 +3,11 @@
 @{
     ViewBag.Title = "ShowTickets";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "ShowTicketsTable",
+        HttpMethod = "GET"
+    };
 }
 
 @*TODO SEARCH/FILTER*@
@@ -11,54 +16,10 @@
 
     <script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
 
-    <div id="ShowTicketsTable" class="userColor">
-        <div class="My_th">Ticket Name</div>
-        <div class="My_th">Organizer</div>
-        <div class="My_th">Event Time</div>
-        <div class="My_th">Price</div>
-        <div class="My_th">Actions</div>
-        <div class="My_th"></div>
-        @foreach (var tick in Model.Tickets)
-        {
-            <div class="My_td wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
-            <div class="My_td wordbreak fontsize18">@tick.Organizer</div>
-            <div class="My_td">@tick.EventTime</div>
-            <div class="My_td">@tick.Price</div>
-            <div class="My_td">
-                @Html.ActionLink("Buy Ticket", "BuyTicket", "Cart", new { tickID = tick.TicketID, tempPage = Model.PageNow }, new { @class = "buybtn" })
-            </div>
-            <div class="My_td">
-                <i class="fas fa-backward fontsize18" style="float:right"></i>
-            </div>
-        }
-    </div>
-
-    <div class="tablenav">
-        <a href="/Admin/ShowTickets?page=1">
-            <i class="fas fa-backward fontsize18"></i>
-        </a>
-        @for (int i = 1; i <= Model.TotalPages; i++)
-        {
-            if (i == Model.PageNow)
-            {
-                <div>
-                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i }, new { style = "color: red", @class = "navbutton" })
-                </div>
-            }
-            else
-            {
-                <div>
-                    @Html.ActionLink(i.ToString(), "ShowTickets", new { page = i }, new { @class = "navbutton" })
-                </div>
-            }
-        }
-        <a href="/Admin/ShowTickets?page=@Model.TotalPages.ToString()">
-            <i class="fas fa-forward fontsize18"></i>
-        </a>
-    </div>
+    @Html.Action("GetTicketTable", new { page = Model.PageNow })
 
     <div style="clear: both;
-        margin-top: 45px;">
+    margin-top: 45px;">
         @Html.ActionLink("Add Ticket", "Create", "Admin", new { @class = "addbutton" })
     </div>
 </div>

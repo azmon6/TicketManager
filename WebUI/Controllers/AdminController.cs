@@ -29,15 +29,26 @@ namespace WebUI.Controllers
             PageSize = 5;
         }
 
-        public ActionResult ShowTickets(int page = 1)
+        public ActionResult GetTicketTable(int page = 1)
         {
             TicketShowModel temp = new TicketShowModel()
             {
                 Tickets = repository.GetSpecificPage(PageSize, page),
                 PageNow = page,
-                TotalPages = (int)System.Math.Ceiling( (decimal)((decimal)repository.GetSize() / (decimal)PageSize))
+                TotalPages = (int)System.Math.Ceiling((decimal)((decimal)repository.GetSize() / (decimal)PageSize))
             };
 
+            return PartialView( "_GetTicketTable" ,temp);
+        }       
+
+        public ActionResult ShowTickets(int page = 1)
+        {
+            TicketShowModel temp = new TicketShowModel()
+            {
+                Tickets = null,
+                PageNow = page,
+                TotalPages = (int)System.Math.Ceiling((decimal)((decimal)repository.GetSize() / (decimal)PageSize))
+            };
             return View(temp);
         }
 

@@ -1,4 +1,13 @@
-﻿#ShowTicketsTable {
+﻿
+#ShowTicketsPage a:hover {
+    text-decoration: none;
+}
+
+#ShowTicketsPage .fas {
+    margin-top: 2px;
+}
+
+#ShowTicketsTable {
     display: grid;
     grid-template-columns: minmax(150px,2fr) minmax(150px,2fr) minmax(150px,1fr) minmax(100px,1fr) minmax(100px,1fr) 50px;
     margin-top: 15px;

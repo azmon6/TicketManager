@@ -1,0 +1,62 @@
+﻿@model TicketManager.WebUI.Models.TicketShowModel
+
+@{
+    AjaxOptions ajaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "ShowTicketsPage",
+        HttpMethod = "GET"
+    };
+}
+
+@using (Ajax.BeginForm("GetTicketTable", ajaxOpts))
+{
+
+    <div id="ShowTicketsPage">
+
+        <div id="ShowTicketsTable">
+            <div class="My_th" onclick="test('@Url.Action("GetTicketTable", new { page = 1 })')">Ticket Name</div>
+            <div class="My_th">Organizer</div>
+            <div class="My_th">Event Time</div>
+            <div class="My_th">Price</div>
+            <div class="My_th">Actions</div>
+            <div class="My_th"></div>
+            @foreach (var tick in Model.Tickets)
+            {
+                <div class="My_td wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
+                <div class="My_td wordbreak fontsize18">@tick.Organizer</div>
+                <div class="My_td">@tick.EventTime</div>
+                <div class="My_td">@tick.Price</div>
+                <div class="My_td">
+                    @Html.ActionLink("Buy Ticket", "BuyTicket", "Cart", new { tickID = tick.TicketID, tempPage = Model.PageNow }, new { @class = "buybtn" })
+                </div>
+                <div class="My_td">
+                    <i class="fas fa-align-justify fontsize18" style="float:right"></i>
+                </div>
+            }
+        </div>
+
+        <div class="tablenav">
+
+            @Ajax.ActionLink(" ", "GetTicketTable", new { page = 1 }, ajaxOpts, new { @class = "fas fa-backward fontsize18" })
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == Model.PageNow)
+                {
+                    <div>
+                        @Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { style = "color: red", @class = "navbutton" })
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        @Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { @class = "navbutton" })
+                    </div>
+                }
+            }
+
+            @Ajax.ActionLink(" ", "GetTicketTable", new { page = Model.TotalPages }, ajaxOpts, new { @class = "fas fa-forward fontsize18" })
+        </div>
+
+    </div>
+}
