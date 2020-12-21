@@ -52,9 +52,19 @@ namespace TicketManager.Domain.Concrete
             return context.Tickets.Count();
         }
 
-        public IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber)
+        public IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber, string orderByWhat = "EventTime", string asc = "False")
         {
-            return context.Tickets.OrderBy(p => p.TicketID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            switch(orderByWhat)
+            {
+                case "TicketName":
+                    return context.Tickets.OrderBy(p => p.TicketName).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                case "Price":
+                    return context.Tickets.OrderBy(p => p.Price).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                case "Organizer":
+                    return context.Tickets.OrderBy(p => p.Organizer).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                default:
+                    return context.Tickets.OrderBy(p => p.EventTime).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            }
         }
     }
 }

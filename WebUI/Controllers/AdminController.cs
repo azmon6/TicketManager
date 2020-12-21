@@ -33,7 +33,8 @@ namespace WebUI.Controllers
         {
             TicketShowModel temp = new TicketShowModel()
             {
-                Tickets = repository.GetSpecificPage(PageSize, page),
+                Tickets = repository.GetSpecificPage(PageSize, page,
+                    HttpContext.Request.Cookies["TicketOrderColumn"].Value, HttpContext.Request.Cookies["TicketOrderAsc"].Value),
                 PageNow = page,
                 TotalPages = (int)System.Math.Ceiling((decimal)((decimal)repository.GetSize() / (decimal)PageSize))
             };

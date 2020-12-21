@@ -8,16 +8,22 @@
     };
 }
 
+
 @using (Ajax.BeginForm("GetTicketTable", ajaxOpts))
 {
-
+    <script>
+        $(document).ready(function () {
+            $('.fa-angle-double-down').hide();
+            $('#' + whichColumn + 'Icon').show();
+        })
+    </script>
     <div id="ShowTicketsPage">
 
         <div id="ShowTicketsTable">
-            <div class="My_th" onclick="test('@Url.Action("GetTicketTable", new { page = 1 })')">Ticket Name</div>
-            <div class="My_th">Organizer</div>
-            <div class="My_th">Event Time</div>
-            <div class="My_th">Price</div>
+            <div class="My_th" onclick="orderColumn('TicketName', false)">Ticket Name <i id="TicketNameIcon" class="fas fa-angle-double-down"></i> </div>
+            <div class="My_th" onclick="orderColumn('Organizer', false)">Organizer <i  id="OrganizerIcon" class="fas fa-angle-double-down"></i></div>
+            <div class="My_th" onclick="orderColumn('EventTime', false)">Event Time <i id="EventTimeIcon" class="fas fa-angle-double-down"></i></div>
+            <div class="My_th" onclick="orderColumn('Price', false)">Price <i id="PriceIcon" class="fas fa-angle-double-down"></i></div>
             <div class="My_th">Actions</div>
             <div class="My_th"></div>
             @foreach (var tick in Model.Tickets)

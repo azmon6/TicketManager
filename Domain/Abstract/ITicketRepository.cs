@@ -9,6 +9,6 @@ namespace TicketManager.Domain.Abstract
         void SaveTicket(Ticket tick);
         Ticket DeleteTicket(int tickId);
         int GetSize();
-        IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber);
+        IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber, string orderByWhat = "EventTime", string asc = "False");
     }
 }

@@ -1,15 +1,27 @@
-﻿
-function test(myurl) {
+﻿var whichColumn = "EventTime";
+
+function RefreshTable() {
     $.ajax(
         {
-            url: myurl,
+            url: '/Admin/GetTicketTable',
             data: { page: 1 },
             success: function (data) {
                 $('#ShowTicketsPage').parent().replaceWith(data);
             }
         } 
     );
-    document.cookie = "test=hue";
-    document.cookie = "testing=pe";
-    console.log(document.cookie);
+}
+
+function orderColumn(value1 , value2) {
+    $.ajax(
+        {
+            url: '/Cookie/TicketOrder',
+            data: {column: value1 , asc: value2},
+            success: function (data) {
+                console.log("TicketOrder Ajax has completed.");
+                whichColumn = data;
+                RefreshTable();
+            }
+        }
+    );
 }
