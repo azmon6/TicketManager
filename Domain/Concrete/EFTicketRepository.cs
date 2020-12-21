@@ -56,6 +56,8 @@ namespace TicketManager.Domain.Concrete
         {
             switch(orderByWhat)
             {
+                case null:
+                    return context.Tickets.OrderBy(p => p.EventTime).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 case "TicketName":
                     return context.Tickets.OrderBy(p => p.TicketName).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 case "Price":

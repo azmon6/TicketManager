@@ -31,6 +31,11 @@ namespace WebUI.Controllers
 
         public ActionResult GetTicketTable(int page = 1)
         {
+            if(HttpContext.Request.Cookies["TicketOrderColumn"] == null || HttpContext.Request.Cookies["TicketOrderAsc"] == null)
+            {
+                HttpContext.Response.Cookies["TicketOrderColumn"].Value = "nothing";
+                HttpContext.Response.Cookies["TicketOrderAsc"].Value = "nothing";
+            }
             TicketShowModel temp = new TicketShowModel()
             {
                 Tickets = repository.GetSpecificPage(PageSize, page,
@@ -38,7 +43,6 @@ namespace WebUI.Controllers
                 PageNow = page,
                 TotalPages = (int)System.Math.Ceiling((decimal)((decimal)repository.GetSize() / (decimal)PageSize))
             };
-
             return PartialView( "_GetTicketTable" ,temp);
         }       
 
