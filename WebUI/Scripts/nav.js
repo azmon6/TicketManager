@@ -1,4 +1,6 @@
-﻿var whichColumn = "EventTime";
+﻿
+var whichColumn;
+var ascOrder;
 
 function RefreshTable() {
     $.ajax(
@@ -12,14 +14,15 @@ function RefreshTable() {
     );
 }
 
-function orderColumn(value1 , value2) {
+function orderColumn(value1) {
+
     $.ajax(
         {
             url: '/Cookie/TicketOrder',
-            data: {column: value1 , asc: value2},
+            data: {column: value1},
             success: function (data) {
-                console.log("TicketOrder Ajax has completed.");
-                whichColumn = data;
+                whichColumn = data.col;
+                ascOrder = data.direc;
                 RefreshTable();
             }
         }

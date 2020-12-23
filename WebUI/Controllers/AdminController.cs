@@ -33,13 +33,13 @@ namespace WebUI.Controllers
         {
             if(HttpContext.Request.Cookies["TicketOrderColumn"] == null || HttpContext.Request.Cookies["TicketOrderAsc"] == null)
             {
-                HttpContext.Response.Cookies["TicketOrderColumn"].Value = "nothing";
-                HttpContext.Response.Cookies["TicketOrderAsc"].Value = "nothing";
+                HttpContext.Response.Cookies["TicketOrderColumn"].Value = "EventTime";
+                HttpContext.Response.Cookies["TicketOrderAsc"].Value = "True";
             }
             TicketShowModel temp = new TicketShowModel()
             {
                 Tickets = repository.GetSpecificPage(PageSize, page,
-                    HttpContext.Request.Cookies["TicketOrderColumn"].Value, HttpContext.Request.Cookies["TicketOrderAsc"].Value),
+                    HttpContext.Request.Cookies["TicketOrderColumn"].Value , HttpContext.Request.Cookies["TicketOrderAsc"].Value),
                 PageNow = page,
                 TotalPages = (int)System.Math.Ceiling((decimal)((decimal)repository.GetSize() / (decimal)PageSize))
             };

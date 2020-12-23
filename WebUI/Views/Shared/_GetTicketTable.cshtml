@@ -15,15 +15,19 @@
         $(document).ready(function () {
             $('.fa-angle-double-down').hide();
             $('#' + whichColumn + 'Icon').show();
+            if (ascOrder == "1") {
+                $('#' + whichColumn + 'Icon').addClass("fa-angle-double-up");
+                $('#' + whichColumn + 'Icon').removeClass("fa-angle-double-down");
+            }
         })
     </script>
     <div id="ShowTicketsPage">
 
         <div id="ShowTicketsTable">
-            <div class="My_th" onclick="orderColumn('TicketName', false)">Ticket Name <i id="TicketNameIcon" class="fas fa-angle-double-down"></i> </div>
-            <div class="My_th" onclick="orderColumn('Organizer', false)">Organizer <i  id="OrganizerIcon" class="fas fa-angle-double-down"></i></div>
-            <div class="My_th" onclick="orderColumn('EventTime', false)">Event Time <i id="EventTimeIcon" class="fas fa-angle-double-down"></i></div>
-            <div class="My_th" onclick="orderColumn('Price', false)">Price <i id="PriceIcon" class="fas fa-angle-double-down"></i></div>
+            <div class="My_th" onclick="orderColumn('TicketName')">Ticket Name <i id="TicketNameIcon" class="fas fa-angle-double-down"></i> </div>
+            <div class="My_th" onclick="orderColumn('Organizer')">Organizer <i  id="OrganizerIcon" class="fas fa-angle-double-down"></i></div>
+            <div class="My_th" onclick="orderColumn('EventTime')">Event Time <i id="EventTimeIcon" class="fas fa-angle-double-down"></i></div>
+            <div class="My_th" onclick="orderColumn('Price')">Price <i id="PriceIcon" class="fas fa-angle-double-down"></i></div>
             <div class="My_th">Actions</div>
             <div class="My_th"></div>
             @foreach (var tick in Model.Tickets)

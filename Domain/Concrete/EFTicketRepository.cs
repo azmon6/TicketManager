@@ -54,19 +54,50 @@ namespace TicketManager.Domain.Concrete
 
         public IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber, string orderByWhat = "EventTime", string asc = "False")
         {
-            switch(orderByWhat)
+            var temp = context.Tickets.AsQueryable();
+            if (asc == "True")
             {
-                case null:
-                    return context.Tickets.OrderBy(p => p.EventTime).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                case "TicketName":
-                    return context.Tickets.OrderBy(p => p.TicketName).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                case "Price":
-                    return context.Tickets.OrderBy(p => p.Price).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                case "Organizer":
-                    return context.Tickets.OrderBy(p => p.Organizer).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                default:
-                    return context.Tickets.OrderBy(p => p.EventTime).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                switch (orderByWhat)
+                {
+                    case null:
+                        temp = temp.OrderBy(p => p.EventTime);
+                        break;
+                    case "TicketName":
+                        temp = temp.OrderBy(p => p.TicketName);
+                        break;
+                    case "Price":
+                        temp = temp.OrderBy(p => p.Price);
+                        break;
+                    case "Organizer":
+                        temp = temp.OrderBy(p => p.Organizer);
+                        break;
+                    default:
+                        temp = temp.OrderBy(p => p.EventTime);
+                        break;
+                }
             }
+            else
+            {
+                switch (orderByWhat)
+                {
+                    case null:
+                        temp = temp.OrderByDescending(p => p.EventTime);
+                        break;
+                    case "TicketName":
+                        temp = temp.OrderByDescending(p => p.TicketName);
+                        break;
+                    case "Price":
+                        temp = temp.OrderByDescending(p => p.Price);
+                        break;
+                    case "Organizer":
+                        temp = temp.OrderByDescending(p => p.Organizer);
+                        break;
+                    default:
+                        temp = temp.OrderByDescending(p => p.EventTime);
+                        break;
+                }
+            }
+            return temp.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
     }
 }
