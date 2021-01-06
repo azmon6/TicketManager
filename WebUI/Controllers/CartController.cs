@@ -74,5 +74,10 @@ namespace TicketManager.WebUI.Controllers
             }
             return View(tempInfo);
         }
+
+        public ActionResult CartIcon()
+        {
+            return PartialView();
+        }
     }
 }

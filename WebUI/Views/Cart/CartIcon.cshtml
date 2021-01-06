@@ -1,0 +1,35 @@
+﻿
+<script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
+
+<script>
+    var mooved = 0;
+
+    $(function () {
+
+        var test = $('#cartIcon');
+        test.click(function () {
+            if (mooved == 0) {
+                test.animate({ left: '0%' });
+                
+                mooved = 1;
+            }
+            else {
+                test.animate({ left: '100%' });
+                mooved = 0;
+            }
+        })
+
+    })
+</script>
+
+<div id="cartIcon">
+    <i class="fas fa-caret-square-left fontsize18"></i>
+    <h3>This is Testing</h3>
+    <div id="ScrollBox" style="height:300px;width:200px">
+        <p>Hey</p>
+        <p>Testing</p>
+        <p>Hey</p>
+        <p>Testing</p>
+        <p>Hey</p>
+    </div>
+</div>
