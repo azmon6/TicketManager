@@ -1,35 +1,67 @@
 ﻿
 <script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
 
-<script>
-    var mooved = 0;
+<style>
+    .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
 
-    $(function () {
+        .active, .collapsible:hover {
+            background-color: #555;
+        }
 
-        var test = $('#cartIcon');
-        test.click(function () {
-            if (mooved == 0) {
-                test.animate({ left: '0%' });
-                
-                mooved = 1;
-            }
-            else {
-                test.animate({ left: '100%' });
-                mooved = 0;
-            }
-        })
+        .active{
+            display:none;
+        }
 
-    })
-</script>
+        .collapsible:after {
+            content: '\002B';
+            color: white;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
 
-<div id="cartIcon">
-    <i class="fas fa-caret-square-left fontsize18"></i>
-    <h3>This is Testing</h3>
-    <div id="ScrollBox" style="height:300px;width:200px">
-        <p>Hey</p>
-        <p>Testing</p>
-        <p>Hey</p>
-        <p>Testing</p>
-        <p>Hey</p>
-    </div>
+    .active:after {
+        content: "\2212";
+    }
+
+    .content {
+        padding: 0 18px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        background-color: #f1f1f1;
+    }
+</style>
+
+<button class="collapsible">Open Section 3</button>
+<div class="content">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 </div>
+
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxWidth) {
+                content.style.maxWidth = null;
+            } else {
+                content.style.maxWidth = content.scrollHeight + "px";
+            }
+        });
+    }
+</script>
