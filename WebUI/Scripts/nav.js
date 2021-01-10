@@ -28,3 +28,32 @@ function orderColumn(value1) {
         }
     );
 }
+
+function BuyTicket(data) {
+    $.ajax(
+        {
+            url: "/Cart/BuyTicket",
+            data: { tickId: data },
+            success: function (test) {
+                if (test == "") {
+                    GetSideCart();
+                }
+                else {
+                    window.location.href = test.redirectToUrl;
+                }
+            }
+        }
+    );
+}
+
+function GetSideCart() {
+    $.ajax(
+        {
+            url: "/Cart/GetSideCart",
+            data: { },
+            success: function (result) {
+                $(".dynamicCart").html(result);
+            }
+        }
+    );
+}

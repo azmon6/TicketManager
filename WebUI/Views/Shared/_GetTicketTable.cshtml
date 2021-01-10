@@ -37,7 +37,7 @@
                 <div class="My_td">@tick.EventTime</div>
                 <div class="My_td">@tick.Price</div>
                 <div class="My_td">
-                    @Html.ActionLink("Buy Ticket", "BuyTicket", "Cart", new { tickID = tick.TicketID, tempPage = Model.PageNow }, new { @class = "buybtn" })
+                    <a class="buybtn" onclick="BuyTicket(@tick.TicketID)"> Testing </a>
                 </div>
                 <div class="My_td">
                     <i class="fas fa-align-justify fontsize18" style="float:right"></i>

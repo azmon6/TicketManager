@@ -1,0 +1,17 @@
+﻿@model IEnumerable<TicketManager.WebUI.Models.CartViewInfo>
+
+@if (Model == null || Model.Count() == 0)
+{
+    <span> Your cart is empty.</span>
+}
+else
+{
+    foreach (var tick in Model)
+    {
+        <div class="item">
+            <div class="title"> @tick.Quantity X @tick.TicketName</div>
+            <div class="price"> @((tick.TicketPrice*tick.Quantity).ToString("c"))</div>
+            <a class="btn" href="#">X</a>
+        </div>
+    }
+}

@@ -20,12 +20,12 @@ namespace TicketManager.WebUI.Controllers
         {
             if(!this.User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Login", "Account");
+                return Json(new { redirectToUrl = Url.Action("Login", "Account") }, JsonRequestBehavior.AllowGet);
             }
 
             User tempUser = cartRepository.UserInfo.FirstOrDefault(p => p.LoginInformation.Username == HttpContext.User.Identity.Name);
             cartRepository.AddTicketToUser(tempUser.UserID, tickID);
-            return RedirectToAction("ShowTickets", "Admin",new { page = tempPage });
+            return new EmptyResult();
         }
 
         public ActionResult ShowCart()
@@ -45,13 +45,37 @@ namespace TicketManager.WebUI.Controllers
                 {
                     TicketID = p.TicketID,
                     EventTime = c.EventTime,
-                    Quantity = p.Quantity,  
+                    Quantity = p.Quantity,
                     TicketPrice = c.Price,
                     TicketName = c.TicketName
                 }).ToList();
             return View(temp);
         }
 
+        public ActionResult GetSideCart()
+        {
+            if (HttpContext.User.Identity.Name == "")
+            {
+                IEnumerable<CartViewInfo> end = null;
+                return PartialView("_GetSideCart", end );
+            }
+            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            IQueryable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
+                x.UserID == tempID);
+            IEnumerable<CartViewInfo> temp = tempInfo.
+                Join(cartRepository.TicketInfo,
+                p => p.TicketID, c => c.TicketID, (p, c) =>
+                new CartViewInfo()
+                {
+                    TicketID = p.TicketID,
+                    EventTime = c.EventTime,
+                    Quantity = p.Quantity,
+                    TicketPrice = c.Price,
+                    TicketName = c.TicketName
+                }).ToList();
+            return PartialView("_GetSideCart",temp);
+        }
+        
         public ActionResult RemoveLine(int tickId)
         {
             int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
