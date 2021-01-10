@@ -14,11 +14,12 @@
         font-size: 14px;
         font-weight: 400;
         background-color: orange;
+        z-index: 2;
     }
 
     .testingIcon {
         position: absolute;
-        left: -42px;
+        left: -39px;
         font-size: 24px;
         color: black;
         padding: 9px;
@@ -26,6 +27,7 @@
         border: 3px solid black;
         border-right: 0;
         border-radius: 20px 0px 0px 10px;
+        z-index: 4;
     }
 
     #cartSidePanel {
@@ -97,6 +99,7 @@
 
     .cartTitle {
         text-align:center;
+        padding: 5px 0px 5px 0px;
     }
 
 </style>
@@ -116,6 +119,7 @@
 
     function openNav() {
         document.getElementById("mySidepanel").style.width = "300px";
+        document.getElementById("mySidepanel").style.border = "3px solid black"
         var temp = document.getElementById("openIcon");
         temp.onclick = closeNav;
         $(temp).toggleClass("fa-angle-double-left fa-angle-double-right");
@@ -123,6 +127,7 @@
 
     function closeNav() {
         document.getElementById("mySidepanel").style.width = "0";
+        document.getElementById("mySidepanel").style.border = "0px solid black"
         var temp = document.getElementById("openIcon");
         temp.onclick = openNav;
         $(temp).toggleClass("fa-angle-double-left fa-angle-double-right");
