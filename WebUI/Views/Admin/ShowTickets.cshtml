@@ -23,4 +23,7 @@
         @Html.ActionLink("Add Ticket", "Create", "Admin", new { @class = "addbutton" })
     </div>
 
+    <aside>
+        @{ Html.RenderAction("CartIcon", "Cart");}
+    </aside>
 </div>

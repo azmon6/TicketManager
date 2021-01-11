@@ -31,7 +31,7 @@ namespace TicketManager.WebUI.Controllers
         public ActionResult ShowCart()
         {
             //TODO Move Functionality to Models/Entities
-            if(HttpContext.User.Identity == null)
+            if(HttpContext.User.Identity.Name == "")
             {
                 return RedirectToAction("HomeScreen", "Home");
             }
@@ -76,10 +76,14 @@ namespace TicketManager.WebUI.Controllers
             return PartialView("_GetSideCart",temp);
         }
         
-        public ActionResult RemoveLine(int tickId)
+        public ActionResult RemoveLine(int tickId, bool ajax = false)
         {
             int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
             cartRepository.RemoveItemFromCart( tempID , tickId);
+            if(ajax == true)
+            {
+                return new EmptyResult();
+            }
             return RedirectToAction("ShowCart");
         }
 

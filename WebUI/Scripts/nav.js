@@ -46,6 +46,7 @@ function BuyTicket(data) {
     );
 }
 
+// TODO Move to Cart JS
 function GetSideCart() {
     $.ajax(
         {
@@ -53,7 +54,41 @@ function GetSideCart() {
             data: { },
             success: function (result) {
                 $(".dynamicCart").html(result);
+            },
+            complete: function () {
+                $("#openIcon").css("visibility", "visible");
             }
         }
     );
+}
+
+
+// TODO Move to Cart JS
+function DeleteSideCartItem(tickId) {
+    $.ajax(
+        {
+            url: "/Cart/RemoveLine",
+            data: { tickId: tickId , ajax: true },
+            success: function () {
+                GetSideCart();
+            }
+        }
+    );  
+}
+
+function DropActions(dropID) {
+    $('#' + dropID).toggleClass("show");
+}
+
+window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdownActions");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
 }

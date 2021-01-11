@@ -8,6 +8,17 @@
     };
 }
 
+@*//TODO Move to Css file*@
+<style>
+    .dropdownActions {
+        display: none;
+        position:absolute;
+    }
+
+    .show {
+        display: block;
+    }
+</style>
 
 @using (Ajax.BeginForm("GetTicketTable", ajaxOpts))
 {
@@ -35,12 +46,17 @@
                 <div class="My_td wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
                 <div class="My_td wordbreak fontsize18">@tick.Organizer</div>
                 <div class="My_td">@tick.EventTime</div>
-                <div class="My_td">@tick.Price</div>
+                <div class="My_td">@tick.Price.ToString("c")</div>
                 <div class="My_td">
-                    <a class="buybtn" onclick="BuyTicket(@tick.TicketID)"> Testing </a>
+                    <a class="buybtn" onclick="BuyTicket(@tick.TicketID)"> Buy Ticket </a>
                 </div>
                 <div class="My_td">
-                    <i class="fas fa-align-justify fontsize18" style="float:right"></i>
+                    <i class="fas fa-align-justify fontsize18 dropbtn" style="float:right" onclick="DropActions('@("drop" +tick.TicketID.ToString())')"></i>
+                    <div id="@("drop" +tick.TicketID.ToString())" class="dropdownActions">
+                        <a href="#">Show</a>
+                        <a href="#">Edit</a>
+                        <a href="#">Delete</a>
+                    </div>
                 </div>
             }
         </div>

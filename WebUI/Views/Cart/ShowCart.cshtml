@@ -24,7 +24,7 @@
                 <td>@tick.TicketName</td>
                 <td>@tick.EventTime</td>
                 <td>@tick.Quantity</td>
-                <td>@tick.TicketPrice</td>
+                <td>@tick.TicketPrice.ToString("c")</td>
                 <td>@Html.ActionLink("Remove", "RemoveLine", "Cart", new { tickId = tick.TicketID }, null)</td>
             </tr>
         }
