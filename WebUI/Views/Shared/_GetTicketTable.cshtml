@@ -1,4 +1,4 @@
-﻿@model TicketManager.WebUI.Models.TicketShowModel
+﻿    @model TicketManager.WebUI.Models.TicketShowModel
 
 @{
     AjaxOptions ajaxOpts = new AjaxOptions
@@ -13,6 +13,7 @@
     .dropdownActions {
         display: none;
         position:absolute;
+        right: -70px;
     }
 
     .show {
@@ -50,12 +51,12 @@
                 <div class="My_td">
                     <a class="buybtn" onclick="BuyTicket(@tick.TicketID)"> Buy Ticket </a>
                 </div>
-                <div class="My_td">
+                <div class="My_td" style="position:relative">
                     <i class="fas fa-align-justify fontsize18 dropbtn" style="float:right" onclick="DropActions('@("drop" +tick.TicketID.ToString())')"></i>
                     <div id="@("drop" +tick.TicketID.ToString())" class="dropdownActions">
-                        <a href="#">Show</a>
-                        <a href="#">Edit</a>
-                        <a href="#">Delete</a>
+                        <a href=@Url.Content("~/ticket/" + tick.TicketID)>Show</a>
+                        <a href=@Url.Action("ModifyTicket","Admin",new { tickID = tick.TicketID})>Edit</a>
+                        <a href=@Url.Action("DeleteTicket","Admin",new { tickID = tick.TicketID})>Delete</a>
                     </div>
                 </div>
             }

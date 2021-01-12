@@ -76,6 +76,7 @@ namespace WebUI.Controllers
             return View(tick);
         }
 
+        [RolesAuthorize(Mykeys = "Admin")]
         public ActionResult DeleteTicket(int tickID)
         {
             repository.DeleteTicket(tickID);

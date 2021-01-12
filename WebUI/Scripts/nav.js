@@ -77,6 +77,12 @@ function DeleteSideCartItem(tickId) {
 }
 
 function DropActions(dropID) {
+    var dropdowns = document.getElementsByClassName("dropdownActions");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        openDropdown.classList.remove('show');
+    }
     $('#' + dropID).toggleClass("show");
 }
 

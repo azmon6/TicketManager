@@ -65,7 +65,6 @@ a:hover{
     border: 2px solid #2ecc71;
     border-radius: 10px;
     background-color: #27ae60;
-    transition-duration: 0.2s;
 }
 
 .page_header a:hover{
