@@ -132,6 +132,8 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\HeadStyle.css" />
     <Content Include="Content\MyStyles.css" />
+    <Content Include="Content\ShowTickesStyle.css" />
+    <Content Include="Content\SideCart.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -172,6 +174,7 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\SideCartJS.js" />
     <Content Include="Scripts\src\index.js" />
     <Content Include="Scripts\src\methods\defaults.js" />
     <Content Include="Scripts\src\methods\destroy.js" />

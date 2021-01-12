@@ -8,18 +8,6 @@
     };
 }
 
-@*//TODO Move to Css file*@
-<style>
-    .dropdownActions {
-        display: none;
-        position:absolute;
-        right: -70px;
-    }
-
-    .show {
-        display: block;
-    }
-</style>
 
 @using (Ajax.BeginForm("GetTicketTable", ajaxOpts))
 {
@@ -51,12 +39,15 @@
                 <div class="My_td">
                     <a class="buybtn" onclick="BuyTicket(@tick.TicketID)"> Buy Ticket </a>
                 </div>
-                <div class="My_td" style="position:relative">
+                <div class="My_td" style="position:relative;">
                     <i class="fas fa-align-justify fontsize18 dropbtn" style="float:right" onclick="DropActions('@("drop" +tick.TicketID.ToString())')"></i>
                     <div id="@("drop" +tick.TicketID.ToString())" class="dropdownActions">
-                        <a href=@Url.Content("~/ticket/" + tick.TicketID)>Show</a>
-                        <a href=@Url.Action("ModifyTicket","Admin",new { tickID = tick.TicketID})>Edit</a>
-                        <a href=@Url.Action("DeleteTicket","Admin",new { tickID = tick.TicketID})>Delete</a>
+                        <a class="optionsbtn" href=@Url.Content("~/ticket/" + tick.TicketID)>Show</a>
+                        @if (HttpContext.Current.User.IsInRole("Admin"))
+                        {
+                            <a class="optionsbtn" href=@Url.Action("ModifyTicket","Admin",new { tickID = tick.TicketID})>Edit</a>
+                            <a class="optionsbtn" href=@Url.Action("DeleteTicket","Admin",new { tickID = tick.TicketID})>Delete</a>
+                        }
                     </div>
                 </div>
             }

@@ -46,36 +46,6 @@ function BuyTicket(data) {
     );
 }
 
-// TODO Move to Cart JS
-function GetSideCart() {
-    $.ajax(
-        {
-            url: "/Cart/GetSideCart",
-            data: { },
-            success: function (result) {
-                $(".dynamicCart").html(result);
-            },
-            complete: function () {
-                $("#openIcon").css("visibility", "visible");
-            }
-        }
-    );
-}
-
-
-// TODO Move to Cart JS
-function DeleteSideCartItem(tickId) {
-    $.ajax(
-        {
-            url: "/Cart/RemoveLine",
-            data: { tickId: tickId , ajax: true },
-            success: function () {
-                GetSideCart();
-            }
-        }
-    );  
-}
-
 function DropActions(dropID) {
     var dropdowns = document.getElementsByClassName("dropdownActions");
     var i;
