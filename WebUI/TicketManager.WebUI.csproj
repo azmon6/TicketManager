@@ -130,7 +130,10 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Chart.css" />
+    <Content Include="Content\Chart.min.css" />
     <Content Include="Content\HeadStyle.css" />
+    <Content Include="Content\LoginStyles.css" />
     <Content Include="Content\MyStyles.css" />
     <Content Include="Content\ShowTickesStyle.css" />
     <Content Include="Content\SideCart.css" />
@@ -141,6 +144,8 @@
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -253,6 +258,8 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CookieController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ServerController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -266,6 +273,7 @@
     <Compile Include="Models\CheckoutInfo.cs" />
     <Compile Include="Models\LoginInfo.cs" />
     <Compile Include="Models\ModifyTicketModel.cs" />
+    <Compile Include="Models\ProfileInfo.cs" />
     <Compile Include="Models\SignUpInformation.cs" />
     <Compile Include="Models\TicketShowModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -305,6 +313,9 @@
     <Content Include="Scripts\jquery-3.5.1.min.map" />
     <Content Include="Views\Cart\CartIcon.cshtml" />
     <Content Include="Views\Cart\_GetSideCart.cshtml" />
+    <Content Include="Views\Test\TestUserRole.cshtml" />
+    <Content Include="Views\User\ShowProfile.cshtml" />
+    <Content Include="Views\Server\ServerStats.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

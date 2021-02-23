@@ -1,0 +1,45 @@
+﻿@model TicketManager.WebUI.Models.ProfileInfo
+
+@{
+    ViewBag.Title = "ShowProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div>
+    @Model.DisplayName
+</div>
+
+<div>
+    Edit Profile: *INSERT HERE LINK TO EDIT PROFILE*
+</div>
+
+@if (HttpContext.Current.User.IsInRole("Admin"))
+{
+    <div>
+        Edit Users: *INSERT HERE LINK TO EDIT USERS*
+    </div>
+}
+
+@*TODO MAKE IT SUPER ADMIN OR SMT*@
+@if (HttpContext.Current.User.IsInRole("Admin"))
+{
+    <div>
+        @Html.ActionLink("Server Info", "ServerStats", "Server")
+    </div>
+}
+
+@if (HttpContext.Current.User.IsInRole("Admin") || HttpContext.Current.User.IsInRole("Organizer"))
+{
+    @Html.ActionLink("Add Ticket", "Create", "Admin")
+}
+
+@foreach (var temp in Model.Roles)
+{
+    <p>@temp</p>
+}
+
+@foreach(var temp in Model.UserTransactions)
+{
+    <p>@temp.Item2.TicketName @temp.Item1.TransactionID</p>
+}

@@ -4,5 +4,39 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ShowTicket</h2>
+@*TODO IMAGES*@
 
+<div>
+    TICKET NAME
+</div>
+
+<div>
+    TICKET DESCRIPTION
+</div>
+
+<div> EVENT TIME</div>
+
+<div>
+    BUY TIME "START - END"
+</div>
+
+<div>
+    PRICE
+</div>
+
+<div>
+    AVALIABLE NUMBER OF TICKETS
+</div>
+
+<div>
+    ADD TO CART BUTTON
+    AND FIELD FOR NUMBER OF TICKETS
+</div>
+
+<aside>
+    @{ Html.RenderAction("CartIcon", "Cart");}
+</aside>
+
+<div>
+    OTHER TICKETS FROM ORGANIZER / TYPE OF EVENT
+</div>

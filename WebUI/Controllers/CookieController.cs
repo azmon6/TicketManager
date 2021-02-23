@@ -7,6 +7,7 @@ namespace TicketManager.WebUI.Controllers
         public ActionResult TicketOrder(string column = "EventTime")
         {
             //TODO Simplify this if possible
+            //TODO Try to implement without cookies
             bool asc = false;
             if (HttpContext.Request.Cookies["TicketOrderColumn"] != null)
                 if (HttpContext.Request.Cookies["TicketOrderColumn"].Value == column)

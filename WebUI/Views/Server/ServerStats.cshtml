@@ -1,0 +1,290 @@
+﻿
+@{
+    ViewBag.Title = "ServerStats";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/Chart.js"></script>
+<h2>ServerStats</h2>
+
+<a onclick="setChartWeek()"> Get Weekly</a>
+<a onclick="setChartMonth()"> Get Monthly</a>
+<a onclick="setChartYear()">Get Yearly</a>
+
+<p id="ChartTitle"> Earnings weekly</p>
+<canvas id="ServerCanvas" height="450" width="550">
+
+</canvas>
+
+<script>
+
+    var Months = ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    function Last7Days() {
+        var result = [];
+        for (var i = 6; i >= 0; i--) {
+            var d = new Date();
+            d.setDate(d.getDate() - i);
+            result.push(d)
+        }
+
+        return (result);
+    }
+
+    function Last8Weeks() {
+        var result = [];
+        for (var i = 7; i >= 0; i--) {
+            var d = new Date();
+            d.setDate(d.getDate() - (i*7));
+            result.push(d)
+        }
+
+        return (result);
+    }
+
+    function Last12Months() {
+        var result = [];
+        for (var i = 11; i >= 0; i--) {
+            var d = new Date();
+            d.setMonth(d.getMonth() - i);
+            result.push(d);
+        }
+        return result;
+    }
+
+    function diff_days(dt1, dt2) {
+        
+        var Difference_In_Time = dt2.getTime() - dt1.getTime();
+        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
+        
+        return Difference_In_Days;
+    }
+
+
+    function sameDay(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate();
+    }
+
+    function sameMonth(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() ;
+    }
+
+    function sameWeek(d1, d2) {
+        var temp = diff_days(d1, d2);
+        return (temp >= 0 && temp <= 7);
+    }
+
+
+    function setChartWeek() {
+        $.ajax(
+            {
+                url: '/Server/GetFinancialStat',
+                data: {},
+                success: function (result) {
+                    var Dates = new Array();
+                    var Money = new Array();
+                    for (const temp of Last7Days()) {
+
+                        var sum = 0;
+                        Dates.push(''.concat(temp.getFullYear(), '-', temp.getMonth()+1, '-', temp.getDate()));
+
+                        for (const temp2 of result) {
+
+                            var dateParts = temp2.Date.split("/");
+
+                            var dateObject = new Date(+dateParts[2], dateParts[1]-1, +dateParts[0]);
+                            if (sameDay(dateObject, temp))
+                            {
+                                sum = sum + temp2.Money;
+                            }
+                        }
+                        Money.push(sum);
+                    }
+
+                    var DataSets = [{
+                        data: Money,
+                        label: "Money Get",
+                        pointBorderWidth: 0,
+                        pointBackgroundColor: '#319ede',
+                        pointRadius: 0,
+                        backgroundColor: '#319ede',
+                        borderColor: '#319ede'
+                    }];
+                    
+                    MakeChart(Dates, DataSets);
+                }
+            }
+        );
+    }
+
+    function setChartMonth() {
+        $.ajax(
+            {
+                url: '/Server/GetFinancialStat',
+                data: {},
+                success: function (result) {
+                    var Dates = new Array();
+                    var Money = new Array();
+                    for (const temp of Last8Weeks()) {
+
+                        var sum = 0;
+                        Dates.push(''.concat(temp.getFullYear(), '-', temp.getMonth()+1, '-', temp.getDate()));
+
+                        for (const temp2 of result) {
+
+                            var dateParts = temp2.Date.split("/");
+
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1 , +dateParts[0]);
+                            if (sameWeek(dateObject, temp)) {
+                                sum = sum + temp2.Money;
+                            }
+                        }
+                        Money.push(sum);
+                    }
+
+                    var DataSets = [{
+                        data: Money,
+                        label: "Money Get",
+                        pointBorderWidth: 0,
+                        pointBackgroundColor: '#319ede',
+                        pointRadius: 0,
+                        backgroundColor: '#319ede',
+                        borderColor: '#319ede',
+                        borderWidth: 3,
+                        fill: false
+                    }];
+
+                    MakeChart(Dates, DataSets);
+                }
+            }
+        );
+    }
+
+    function setChartYear() {
+        $.ajax(
+            {
+                url: '/Server/GetFinancialStat',
+                data: {},
+                success: function (result) {
+                    var Dates = new Array();
+                    var Money = new Array();
+                    for (const temp of Last12Months()) {
+
+                        var sum = 0;
+                        Dates.push(Months[temp.getMonth()]);
+
+                        for (const temp2 of result) {
+
+                            var dateParts = temp2.Date.split("/");
+
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                            if (sameMonth(dateObject, temp)) {
+                                sum = sum + temp2.Money;
+                            }
+                        }
+                        Money.push(sum);
+                    }
+
+                    var DataSets = [{
+                        data: Money,
+                        label: "Money Get",
+                        pointBorderWidth: 0,
+                        pointBackgroundColor: '#319ede',
+                        pointRadius: 0,
+                        backgroundColor: '#319ede',
+                        borderColor: '#319ede',
+                        borderWidth: 3,
+                        fill: false
+                    }];
+
+                    MakeChart(Dates, DataSets);
+                }
+            }
+        );
+    }
+
+</script>
+
+<script>
+
+    var myChart = null;
+
+    Chart.defaults.LineWithLine = Chart.defaults.line;
+    Chart.controllers.LineWithLine = Chart.controllers.line.extend({
+        draw: function (ease) {
+            Chart.controllers.line.prototype.draw.call(this, ease);
+
+            if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+                var activePoint = this.chart.tooltip._active[0],
+                    ctx = this.chart.ctx,
+                    x = activePoint.tooltipPosition().x,
+                    topY = this.chart.legend.bottom,
+                    bottomY = this.chart.chartArea.bottom;
+
+                // draw line
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, topY);
+                ctx.lineTo(x, bottomY);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#07C';
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    });
+
+    function MakeChart(ChartLabels, ChartDatasets) {
+        
+        var ctx = document.getElementById("ServerCanvas");
+        if (!(myChart === null)) {
+            myChart.destroy();
+        }
+        myChart = new Chart(ctx, {
+            type: 'LineWithLine',
+            data: {
+                labels: ChartLabels,
+                datasets: ChartDatasets
+            },
+            options: {
+                responsive: false,
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 0,
+                            minRotation: 30
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                },
+                legend: {
+                    display: false,
+                    labels: {
+                        defaultFontSize: 16
+                    }
+                }
+            },
+        });
+    }
+
+
+    //MakeChart(["Tesst", "Tesing", "Tesing", "Tesing", "Tesing"], [{
+    //    label: "Testing",
+    //    data: [10, 20,-25, 30, 40]
+    //}]);
+
+</script>

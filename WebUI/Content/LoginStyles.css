@@ -1,0 +1,119 @@
+﻿body {
+    background-color: whitesmoke;
+    color: white;
+    display: grid;
+    place-content: center;
+}
+
+a {
+    color: white;
+}
+
+.LogInBox {
+    background-color: #6b1094;
+    width: 400px;
+    height: 500px;
+    min-width: 400px;
+    min-height: 500px;
+    border-radius: 12px;
+    box-shadow: 5px 5px #9413eb;
+}
+
+.SignUpBox {
+    background-color: #6b1094;
+    width: 400px;
+    height: 700px;
+    min-width: 400px;
+    min-height: 700px;
+    border-radius: 12px;
+    box-shadow: 5px 5px #9413eb;
+}
+
+.LogInBox * ,
+.SignUpBox * {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.homeButton {
+    position: relative;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+}
+
+.homeButton i {
+    font-size: 17px;
+}
+
+.homeButton a {
+    text-decoration: none;
+}
+
+.LogInBox form {
+    display: grid;
+    grid-template-rows: 25% 15% 15% 15% 30%;
+    align-items: center;
+    width: inherit;
+    height: inherit;
+}
+
+.SignUpBox form {
+    display: grid;
+    grid-template-rows: 15% 20% 10% 10% 10% 10% 25%;
+    align-items: center;
+    width: inherit;
+    height: inherit;
+}
+
+h3 {
+    margin-top: 30px;
+    font-size: 28px;
+}
+
+
+input {
+    height: 40px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    background-color: white;
+    color: black;
+}
+
+input[type = "submit"] {
+    padding-left: 40px;
+    padding-right: 40px;
+    background-color: deepskyblue;
+}
+
+.enterField {
+    padding: 20px;
+    height: 40px;
+}
+
+i {
+    padding-right: 5px;
+}
+
+.validation-summary-errors ul {
+    list-style-type: none;
+    padding: 0px;
+    font-size: 18px;
+}
+
+.validation-summary-errors ul li {
+    margin-bottom: 6px;
+}
+
+input[type = "submit"]:hover {
+    cursor: pointer;
+    background-color: steelblue;
+}
+
+input[type = "submit"],
+.enterField:active,
+.enterField:focus {
+    border: none;
+    outline: none;
+}

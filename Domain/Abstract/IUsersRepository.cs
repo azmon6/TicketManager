@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TicketManager.Domain.Entities;
 
 namespace TicketManager.Domain.Abstract
@@ -11,5 +13,9 @@ namespace TicketManager.Domain.Abstract
         bool IsValidUser(string Username, string Password);
         User DeleteUser(int UserId);
         void ModifyUser(User tempUser);
+        User GetUser(int userID);
+        User GetUser(string tempUsername);
+        IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(string tempUsername);
+        IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(int userID);
     }
 }

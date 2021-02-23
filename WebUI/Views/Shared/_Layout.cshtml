@@ -12,16 +12,16 @@
     <div class="HGparent">
         <header class="HGheader">
             <div class="page_header">
-                <div class="logo">
-                    Ticket Manager
+                <div class="logo" >
+                    <a href="/">Ticket Manager</a>
                 </div>
                 @*TODO Dropdown when small screen*@
                 <ul>
-                    <li>
-                        @Html.ActionLink("Home", "HomeScreen", "Home")
-                    </li>
                     @if (User.Identity.IsAuthenticated)
                     {
+                        <li>
+                            @Html.ActionLink("Profile", "ShowProfile", "User")
+                        </li>
                         <li>
                             @Html.ActionLink("View Cart", "ShowCart", "Cart")
                         </li>
@@ -49,6 +49,12 @@
         </header>
 
         <div class="HGleft">
+            <div class="TESTINFOROLE">
+
+                Your Roles are:
+                @{Html.RenderAction("TestUserRole", "Test", new { tempName = HttpContext.Current.User.Identity.Name }); }
+
+            </div>
         </div>
 
         <div class="HGmain">
@@ -56,7 +62,7 @@
         </div>
 
         <div class="HGright">
-            
+
         </div>
     </div>
 </body>

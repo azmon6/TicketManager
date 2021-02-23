@@ -55,7 +55,7 @@ a:hover{
     display:table-cell;
 }
 
-.page_header a {
+.page_header ul li a {
     text-decoration: none;
     color: #ecf0f1;
     font-size: 20px;
@@ -72,3 +72,10 @@ a:hover{
     text-decoration:none;
 }
 
+.TESTINFOROLE {
+    position:fixed;
+    height: 300px;
+    width: 200px;
+    top:400px;
+
+}

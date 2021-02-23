@@ -3,6 +3,7 @@ using System.Linq;
 using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Entities;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 using System.Text;
 
 namespace TicketManager.Domain.Concrete
@@ -59,8 +60,19 @@ namespace TicketManager.Domain.Concrete
             context.SaveChanges();
         }
 
+        public User GetUser(int userID)
+        {
+            return Users.FirstOrDefault(p => p.UserID == userID);
+        }
+
+        public User GetUser(string tempUsername)
+        {
+            return Users.FirstOrDefault(p => p.LoginInformation.Username == tempUsername);
+        }
+
         public User DeleteUser(int UserId)
         {
+            //TODO DELETE USERS
             throw new NotImplementedException();
             //return new User();
         } 
@@ -80,5 +92,27 @@ namespace TicketManager.Domain.Concrete
             return byte2String;
         }
 
+        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(string tempUsername)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(int userID)
+        {
+            
+            var temp = context.Transactions.Where(x => x.UserID == userID).Join(context.Tickets, tran => tran.TicketID, tick => tick.TicketID,
+                (tran, tick) => new { Trtemp = tran, TickTemp = tick }
+                ).ToList().Select(x => new Tuple<Transaction, Ticket> (x.Trtemp,x.TickTemp) );
+            
+            //TODO WHY LINQ WHY
+            /*
+            var temp = (from trans in context.Transactions
+                       join tick in context.Tickets on trans.TicketID equals tick.TicketID
+                       select new { Trtemp = trans, TickTemp = tick }).ToList().Select(
+                    x => new Transaction { TransactionID = x.Trtemp.TransactionID}
+                );
+            */
+            return temp;
+        }
     }
 }

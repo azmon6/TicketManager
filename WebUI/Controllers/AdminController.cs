@@ -4,6 +4,7 @@ using TicketManager.Domain.Abstract;
 using TicketManager.WebUI.Models;
 using System.Linq;
 using TicketManager.WebUI.Infrastructure.Attributes;
+using TicketManager.Logging;
 
 namespace WebUI.Controllers
 {
@@ -29,9 +30,10 @@ namespace WebUI.Controllers
             PageSize = 5;
         }
 
+        //TODO Make it work with data in html tags
         public ActionResult GetTicketTable(int page = 1)
         {
-            if(HttpContext.Request.Cookies["TicketOrderColumn"] == null || HttpContext.Request.Cookies["TicketOrderAsc"] == null)
+            if (HttpContext.Request.Cookies["TicketOrderColumn"] == null || HttpContext.Request.Cookies["TicketOrderAsc"] == null)
             {
                 HttpContext.Response.Cookies["TicketOrderColumn"].Value = "EventTime";
                 HttpContext.Response.Cookies["TicketOrderAsc"].Value = "True";

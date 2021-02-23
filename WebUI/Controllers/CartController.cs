@@ -18,6 +18,8 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult BuyTicket(int tickID, int tempPage = 1)
         {
+            double test = 50.0;
+            test = test / 0;
             if(!this.User.Identity.IsAuthenticated)
             {
                 return Json(new { redirectToUrl = Url.Action("Login", "Account") }, JsonRequestBehavior.AllowGet);
