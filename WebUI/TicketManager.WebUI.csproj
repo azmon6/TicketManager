@@ -316,6 +316,7 @@
     <Content Include="Views\Test\TestUserRole.cshtml" />
     <Content Include="Views\User\ShowProfile.cshtml" />
     <Content Include="Views\Server\ServerStats.cshtml" />
+    <Content Include="Views\Server\ServerLog.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -27,6 +27,10 @@
     <div>
         @Html.ActionLink("Server Info", "ServerStats", "Server")
     </div>
+
+    <div>
+        @Html.ActionLink("Server Logs", "ServerLog", "Server")
+    </div>
 }
 
 @if (HttpContext.Current.User.IsInRole("Admin") || HttpContext.Current.User.IsInRole("Organizer"))
@@ -39,7 +43,7 @@
     <p>@temp</p>
 }
 
-@foreach(var temp in Model.UserTransactions)
+@foreach (var temp in Model.UserTransactions)
 {
     <p>@temp.Item2.TicketName @temp.Item1.TransactionID</p>
 }

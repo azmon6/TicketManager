@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "ServerLog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
+
+<style>
+    #LogContainer {
+        display: grid;
+        grid-template-columns: 2fr 4fr 1fr 2fr 2fr;
+    }
+
+    #LoadingIcon {
+        height:50px;
+        width:50px;
+        margin:0 auto;
+        display:block;
+    }
+
+    #LoadingIcon i {
+        color: black;
+        font-size: 32px;
+    }
+
+    .dataLog{
+        padding: 3px 6px 3px 8px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+    }
+
+    .errorCode {
+        background-color: red;
+        color: white;
+    }
+
+    .warningCode{
+        background-color: yellow;
+        color: blue;
+    }
+
+    .LogHeader {
+        text-align:center;
+    }
+
+</style>
+
+<h2>ServerLog</h2>
+
+<div>
+    <a onclick="loadLogPage()">TESTING</a>
+    <a onclick="DownloadCSV()">Download CSV</a>
+</div>
+
+<div id="LogContainer">
+    <div class="LogHeader"> LogType </div>
+    <div class="LogHeader"> Message </div>
+    <div class="LogHeader"> Priority </div>
+    <div class="LogHeader"> TimeMade </div>
+    <div class="LogHeader"> Object </div>
+</div>
+
+<div id="LoadingIcon">
+    <i class="fas fa-spinner fa-spin"></i>
+</div>
+
+<script>
+
+    var LogStartingFrom = 0;
+    var LogGetHowMany = 42;
+
+    $(document).ready(function () {
+        //TODO FIGURE OUT WHY THIS WORKS
+        //OTHERWISE ICON NOT SHOWING FIRST TIME LOADING THE PAGE
+        $('#LoadingIcon').hide();
+        //$('#LoadingIcon').show();
+        //$('#LoadingIcon').hide();
+    });
+
+    var temp = document.getElementById("LogContainer");
+
+    function sleep(milliseconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+    }
+
+    function AddElement() {
+        $.ajax(
+            {
+                url: '/Server/GetLogs',
+                data: { startFrom: LogStartingFrom, howMany: LogGetHowMany },
+                beforeSend: function () {
+                    console.log("MILEB");
+                    $('#LoadingIcon').show();
+                },
+                success: function (result) {
+                    sleep(5000);
+                    if (result.length == 0) {
+                        window.removeEventListener('scroll', AddMoreLogsToPage);
+                    }
+
+                    var contain = $('#LogContainer');
+                    for (var Logs of result) {
+                        for (var LogInfo in Logs) {
+                            if (LogInfo == "LogID") { continue; }
+
+                            var dataEntry = document.createElement("div");
+                            dataEntry.innerHTML = Logs[LogInfo];
+                            dataEntry.classList.add("dataLog");
+
+                            if (LogInfo == "LogType") {
+                                dataEntry.classList.add(Logs[LogInfo].toLowerCase().concat("Code"));
+                            }
+
+                            contain.append(dataEntry);
+
+                        }
+                    }
+
+                    console.log(result);
+
+                    LogStartingFrom = LogStartingFrom + LogGetHowMany;
+                },
+                complete: function () {
+                    $('#LoadingIcon').hide();
+                }
+            }
+        );
+    }
+
+
+    function AddMoreLogsToPage() {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 75) {
+            AddElement();
+        }
+    }
+
+    function DownloadCSV() {
+        $.ajax(
+            {
+                url: '/Server/GetAllLogs',
+                data: { },
+                success: function (result) {
+                    var csvResult = 'data:text/csv;charset=utf-8,';
+                    for (var temp of result) {
+                        var tempString = '';
+                        for (var temp2 of Object.values(temp)) {
+                            tempString = tempString.concat("\"",temp2,"\"", ',');
+                        }
+                        tempString = tempString.slice(0, -1);
+                        tempString = tempString.concat('\n');
+                        csvResult =  csvResult.concat(tempString);
+                    }
+                    var encodedUri = encodeURI(csvResult);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "my_data.csv");
+                    document.body.appendChild(link);
+                    link.click();
+                }
+            }
+        );
+    }
+
+    function loadLogPage() {
+        AddElement();
+    }
+
+    window.addEventListener('scroll', AddMoreLogsToPage);
+</script>
