@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace TicketManager.Domain.Entities
 {
 
@@ -16,10 +17,10 @@ namespace TicketManager.Domain.Entities
 
         //TODO Make Dates from string to DateTime
         //Use Jquerry for date picker
-        public string StartBuyTime { get; set; }
+        public DateTime StartBuyTime { get; set; }
         
-        public string EndBuyTime { get; set; }
+        public DateTime EndBuyTime { get; set; }
 
-        public string EventTime { get; set; }
+        public DateTime EventTime { get; set; }
     }
 }

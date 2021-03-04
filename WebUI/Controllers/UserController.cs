@@ -42,6 +42,10 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult ShowProfile()
         {
+            if(HttpContext.User.Identity.Name == "")
+            {
+                return RedirectToAction("HomeScreen", "Home");
+            }
             ProfileInfo tempInfo = new ProfileInfo();
             User tempUser = repository.GetUser(HttpContext.User.Identity.Name);
             MyRoleProvider tempRoleProvider = new MyRoleProvider();

@@ -10,6 +10,7 @@
     #LogContainer {
         display: grid;
         grid-template-columns: 2fr 4fr 1fr 2fr 2fr;
+        margin-bottom:50px;
     }
 
     #LoadingIcon {
@@ -66,17 +67,13 @@
     <i class="fas fa-spinner fa-spin"></i>
 </div>
 
-<script>
+<script defer>
 
     var LogStartingFrom = 0;
     var LogGetHowMany = 42;
 
-    $(document).ready(function () {
-        //TODO FIGURE OUT WHY THIS WORKS
-        //OTHERWISE ICON NOT SHOWING FIRST TIME LOADING THE PAGE
+    $(window).ready(function () {
         $('#LoadingIcon').hide();
-        //$('#LoadingIcon').show();
-        //$('#LoadingIcon').hide();
     });
 
     var temp = document.getElementById("LogContainer");
@@ -89,21 +86,25 @@
         } while (currentDate - date < milliseconds);
     }
 
+    //TODO Multiple event calls are made if logs take time to come from the server
+
+    var requestRunning = false;
+
     function AddElement() {
         $.ajax(
             {
                 url: '/Server/GetLogs',
                 data: { startFrom: LogStartingFrom, howMany: LogGetHowMany },
                 beforeSend: function () {
-                    console.log("MILEB");
                     $('#LoadingIcon').show();
+                    requestRunning = true;
                 },
                 success: function (result) {
-                    sleep(5000);
                     if (result.length == 0) {
                         window.removeEventListener('scroll', AddMoreLogsToPage);
                     }
-
+                    var MapGrid = { "LogType": 0, "LogMessage": 1, "Priority": 2, "TimeMade": 3, "Object": 4 };
+                    var ArrayDivs = new Array(5);
                     var contain = $('#LogContainer');
                     for (var Logs of result) {
                         for (var LogInfo in Logs) {
@@ -117,10 +118,14 @@
                                 dataEntry.classList.add(Logs[LogInfo].toLowerCase().concat("Code"));
                             }
 
-                            contain.append(dataEntry);
+                            ArrayDivs[MapGrid[LogInfo]] = dataEntry;
 
                         }
+                        for (var i of ArrayDivs) {
+                            contain.append(i);
+                        }
                     }
+
 
                     console.log(result);
 
@@ -128,14 +133,17 @@
                 },
                 complete: function () {
                     $('#LoadingIcon').hide();
+                    requestRunning = false;
                 }
             }
         );
     }
 
-
     function AddMoreLogsToPage() {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 75) {
+        if (requestRunning) {
+            return;
+        }
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 75 ) {
             AddElement();
         }
     }

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using TicketManager.Domain.Abstract;
 using TicketManager.Logging;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace TicketManager.WebUI.Controllers
 {
@@ -18,7 +19,15 @@ namespace TicketManager.WebUI.Controllers
 
         public JsonResult GetLogs(int startFrom = 0, int howMany = 1)
         {
-            return Json(MyLoggingServices.GetLogs(startFrom, howMany), JsonRequestBehavior.AllowGet);
+            var temp = MyLoggingServices.GetLogs(startFrom, howMany).Select(x => new { 
+                LogID = x.LogID,
+                LogMessage = x.LogMessage,
+                LogType = x.LogType,
+                Object = x.Object,
+                Priority = x.Priority,
+                TimeMade = x.TimeMade.ToString("dd/MM/yyyy HH:mm:ss")
+            });
+            return Json(temp, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetAllLogs()
@@ -35,6 +44,7 @@ namespace TicketManager.WebUI.Controllers
         [RolesAuthorize(Mykeys = "Admin")]
         public ActionResult ServerLog()
         {
+            MyLoggingServices.TestLog();
             return View();
         }
 
