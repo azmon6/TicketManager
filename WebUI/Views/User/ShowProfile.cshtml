@@ -33,6 +33,10 @@
     </div>
 }
 
+<div>
+    @Html.ActionLink("Refresh Old Shopping Carts", "RefreshOldCarts","Cart")
+</div>
+
 @if (HttpContext.Current.User.IsInRole("Admin") || HttpContext.Current.User.IsInRole("Organizer"))
 {
     @Html.ActionLink("Add Ticket", "Create", "Admin")

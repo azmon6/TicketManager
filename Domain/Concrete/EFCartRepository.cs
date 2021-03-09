@@ -144,13 +144,14 @@ namespace TicketManager.Domain.Concrete
             }
 
             templine.Ticket.AmountRemaining -= templine.Quantity;
-            templine.CheckOutTime = DateTime.Now;
+            templine.CheckOutTime = DateTime.UtcNow;
 
-            //TODO SaveChanges to controller?
             context.SaveChanges();
 
             return "";
         }
+
+
 
         public void ClearCart(int userID)
         {
@@ -163,6 +164,24 @@ namespace TicketManager.Domain.Concrete
                 }
             }
             context.CartInformation.RemoveRange(CartInformation.Where(x => x.UserID == userID));
+            context.SaveChanges();
+        }
+
+        public void RefreshOldCarts()
+        {
+            var tempTime = DateTime.Now;
+            foreach (var i in CartInformation)
+            {
+                if (i.CheckOutTime != null)
+                {
+                    var tempI = i.CheckOutTime.Value;
+                    if ((tempTime-tempI).TotalMinutes >= 1)
+                    {
+                        i.Ticket.AmountRemaining += i.Quantity;
+                        i.CheckOutTime = null;
+                    }
+                }
+            }
             context.SaveChanges();
         }
     }

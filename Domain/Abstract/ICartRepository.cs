@@ -18,6 +18,7 @@ namespace TicketManager.Domain.Abstract
         void CheckoutUser(int userId);
         void ClearCart(int userID);
 
+        void RefreshOldCarts();
         string SubtractTicket(UserCartInformation templine);
     }
 }

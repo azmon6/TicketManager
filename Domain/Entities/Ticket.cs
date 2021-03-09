@@ -6,6 +6,8 @@ namespace TicketManager.Domain.Entities
 
     public class Ticket
     {
+        //TO DO RENAME FIELD/TABLES
+
         public int TicketID { get; set; }
 
         public string TicketName { get; set; }

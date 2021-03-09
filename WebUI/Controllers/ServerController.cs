@@ -19,6 +19,7 @@ namespace TicketManager.WebUI.Controllers
 
         public JsonResult GetLogs(int startFrom = 0, int howMany = 1)
         {
+            //TO DO JSON Serialization
             var temp = MyLoggingServices.GetLogs(startFrom, howMany).Select(x => new { 
                 LogID = x.LogID,
                 LogMessage = x.LogMessage,
@@ -32,7 +33,15 @@ namespace TicketManager.WebUI.Controllers
 
         public JsonResult GetAllLogs()
         {
-            return Json(MyLoggingServices.GetAllLogs(), JsonRequestBehavior.AllowGet);
+            var temp = MyLoggingServices.GetAllLogs().Select(x => new {
+                LogID = x.LogID,
+                LogMessage = x.LogMessage,
+                LogType = x.LogType,
+                Object = x.Object,
+                Priority = x.Priority,
+                TimeMade = x.TimeMade.ToString("dd/MM/yyyy HH:mm:ss")
+            });
+            return Json(temp, JsonRequestBehavior.AllowGet);
         }
 
         [RolesAuthorize(Mykeys = "Admin")]

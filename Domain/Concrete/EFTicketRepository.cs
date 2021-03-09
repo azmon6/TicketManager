@@ -15,6 +15,7 @@ namespace TicketManager.Domain.Concrete
 
         public bool SaveTicket( Ticket tick)
         {
+            //TODO Try catch online implementation
             if(tick.TicketID == 0)
             {
                 context.Tickets.Add(tick);
@@ -41,6 +42,7 @@ namespace TicketManager.Domain.Concrete
                     
                 }
             }
+
             context.SaveChanges();
             return true;
         }

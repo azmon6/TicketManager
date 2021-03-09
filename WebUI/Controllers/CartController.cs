@@ -95,6 +95,7 @@ namespace TicketManager.WebUI.Controllers
             IEnumerable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
                 x.UserID == tempID).ToList();
 
+            //TODO Move to Repository
             bool isEverythingAvailable = true;
             string returnedMessage = "";
             string resultMessage = "";
@@ -138,6 +139,12 @@ namespace TicketManager.WebUI.Controllers
             int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
             cartRepository.ClearCart(tempID);
             return RedirectToAction("ShowCart");
+        }
+
+        public ActionResult RefreshOldCarts(string returnUrl = null)
+        {
+            cartRepository.RefreshOldCarts();
+            return RedirectToAction("HomeScreen", "Home");
         }
     }
 }
