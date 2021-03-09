@@ -47,7 +47,12 @@ namespace TicketManager.Domain.Concrete
                 p => (p.UserID == userId && p.TicketID == tickId));
             if (tempInfo != null)
             {
+                if(tempInfo.CheckOutTime != null)
+                {
+                    TicketInfo.First(x => x.TicketID == tickId).AmountRemaining += tempInfo.Quantity;
+                }
                 tempInfo.Quantity += quantity;
+                tempInfo.CheckOutTime = null;
             }
             else
             {
@@ -55,7 +60,7 @@ namespace TicketManager.Domain.Concrete
                 tempInfo.Quantity = quantity;
                 tempInfo.Ticket = context.Tickets.Find(tickId);
                 tempInfo.User = context.Users.Find(userId);
-                tempInfo.DateAdded = DateTime.Now.Date.ToString("dd/MM/yyyy");
+                tempInfo.DateAdded = DateTime.Now;
                 context.CartInformation.Add(tempInfo);
             }
             context.SaveChanges();
@@ -69,14 +74,16 @@ namespace TicketManager.Domain.Concrete
         public void CheckoutUser(int userId)
         {
             Guid testGuid = Guid.NewGuid();
-            string tempTime = DateTime.Now.ToString("dd/MM/yyyy");
-            IQueryable<UserCartInformation> temp = context.CartInformation.Where(m => m.UserID == userId);
+            
+            IQueryable<UserCartInformation> temp = CartInformation.Where(m => m.UserID == userId);
+            
             foreach(var line in temp)
             {
+
                 Transaction tempTrans = new Transaction()
                 {
                     TicketID = line.TicketID,
-                    DateMade = tempTime,
+                    DateMade = DateTime.Now,
                     DealID = testGuid.ToString(),
                     UserID = line.UserID,
                     PricePaid = TicketInfo.First(x => x.TicketID == line.TicketID).Price * line.Quantity
@@ -102,15 +109,61 @@ namespace TicketManager.Domain.Concrete
 
         public UserCartInformation RemoveItemFromCart(int userId, int tickId)
         {
-            var temp = context.CartInformation.Remove(
-                context.CartInformation.First(x => x.UserID == userId && x.TicketID == tickId));
+
+            //TO DO Lazy loading does not work
+            var temp = context.CartInformation.First(x => x.UserID == userId && x.TicketID == tickId);
+            var temptick = context.Tickets.Find(tickId);
+            context.CartInformation.Remove(temp);
+            if(temp.CheckOutTime != null)
+            {
+                temptick.AmountRemaining += temp.Quantity;
+            }
             context.SaveChanges();
             return temp;
         }
 
         public UserCartInformation RemoveItemFromCart(User tempUser, Ticket tempTick)
-        {
+        {   
             return RemoveItemFromCart(tempUser.UserID, tempTick.TicketID);
+        }
+
+
+        public string SubtractTicket(UserCartInformation templine)
+        {
+
+            //TO DO Bad practice to return the string? Make it side effect?
+
+            if(templine.CheckOutTime != null)
+            {
+                return "";
+            }
+
+            if(templine.Ticket.AmountRemaining < templine.Quantity)
+            {
+                return templine.Ticket.TicketName;
+            }
+
+            templine.Ticket.AmountRemaining -= templine.Quantity;
+            templine.CheckOutTime = DateTime.Now;
+
+            //TODO SaveChanges to controller?
+            context.SaveChanges();
+
+            return "";
+        }
+
+        public void ClearCart(int userID)
+        {
+            var temp = CartInformation.Where(x => x.UserID == userID);
+            foreach(var i in temp)
+            {
+                if(i.CheckOutTime != null)
+                {
+                    i.Ticket.AmountRemaining += i.Quantity;
+                }
+            }
+            context.CartInformation.RemoveRange(CartInformation.Where(x => x.UserID == userID));
+            context.SaveChanges();
         }
     }
 }

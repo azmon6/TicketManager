@@ -6,6 +6,14 @@
 }
 
 
+@if(TempData["UnavailableTicketMessage"] != null)
+{
+    <div>
+        @TempData["UnavailableTicketMessage"]
+    </div>
+}
+
+
 <table class="table table-bordered table-striped" style="margin-top:50px;">
 
     <thead class="thead-dark">
@@ -37,4 +45,7 @@
 </div>
 <div>
     @Html.ActionLink("Checkout", "Checkout", "Cart")
+</div>
+<div>
+    @Html.ActionLink("Empty Cart", "ClearCart", "Cart")
 </div>

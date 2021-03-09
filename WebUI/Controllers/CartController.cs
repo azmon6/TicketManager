@@ -18,8 +18,7 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult BuyTicket(int tickID, int tempPage = 1)
         {
-            double test = 50.0;
-            test = test / 0;
+
             if(!this.User.Identity.IsAuthenticated)
             {
                 return Json(new { redirectToUrl = Url.Action("Login", "Account") }, JsonRequestBehavior.AllowGet);
@@ -91,6 +90,30 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult Checkout()
         {
+
+            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            IEnumerable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
+                x.UserID == tempID).ToList();
+
+            bool isEverythingAvailable = true;
+            string returnedMessage = "";
+            string resultMessage = "";
+            foreach(var tempLine in tempInfo)
+            {
+                returnedMessage = cartRepository.SubtractTicket(tempLine);
+                if(returnedMessage != "")
+                {
+                    resultMessage = resultMessage + returnedMessage;
+                    isEverythingAvailable = false;
+                }
+            }
+
+            if(!isEverythingAvailable)
+            {
+                TempData["UnavailableTicketMessage"] = resultMessage;
+                return RedirectToAction("ShowCart");
+            }
+
             return View();
         }
 
@@ -108,6 +131,13 @@ namespace TicketManager.WebUI.Controllers
         public ActionResult CartIcon()
         {
             return PartialView();
+        }
+
+        public ActionResult ClearCart()
+        {
+            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            cartRepository.ClearCart(tempID);
+            return RedirectToAction("ShowCart");
         }
     }
 }

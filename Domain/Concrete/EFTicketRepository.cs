@@ -13,7 +13,7 @@ namespace TicketManager.Domain.Concrete
             get { return context.Tickets; }
         }
 
-        public void SaveTicket( Ticket tick)
+        public bool SaveTicket( Ticket tick)
         {
             if(tick.TicketID == 0)
             {
@@ -24,6 +24,12 @@ namespace TicketManager.Domain.Concrete
                 Ticket Entry = context.Tickets.Find(tick.TicketID);
                 if(Entry != null)
                 {
+                    if (!Entry.RowVersion.SequenceEqual(tick.RowVersion))
+                    {
+                        tick.RowVersion = Entry.RowVersion;
+                        return false;
+                    }
+
                     Entry.TicketName = tick.TicketName;
                     Entry.Description = tick.Description;
                     Entry.Organizer = tick.Organizer;
@@ -31,9 +37,12 @@ namespace TicketManager.Domain.Concrete
                     Entry.StartBuyTime = tick.StartBuyTime;
                     Entry.EndBuyTime = tick.EndBuyTime;
                     Entry.Price = tick.Price;
+                    Entry.AmountRemaining = tick.AmountRemaining;
+                    
                 }
             }
             context.SaveChanges();
+            return true;
         }
 
         public Ticket DeleteTicket(int tickId)
@@ -100,4 +109,5 @@ namespace TicketManager.Domain.Concrete
             return temp.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
     }
+
 }

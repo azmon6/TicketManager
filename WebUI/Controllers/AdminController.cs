@@ -72,7 +72,13 @@ namespace WebUI.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.SaveTicket(tick.GetTicket());
+                var tempTick = tick.GetTicket();
+                if (!repository.SaveTicket(tempTick))
+                {
+                    tick.RowVersion = tempTick.RowVersion;
+                    TempData["TicketModifiedError"] = "The ticket has been modified since you started editing it";
+                    return View(tick);
+                }
                 return RedirectToAction("ShowTickets");
             }
             return View(tick);

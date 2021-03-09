@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TicketManager.Domain.Entities
 {
@@ -22,5 +23,10 @@ namespace TicketManager.Domain.Entities
         public DateTime EndBuyTime { get; set; }
 
         public DateTime EventTime { get; set; }
+
+        public int AmountRemaining { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

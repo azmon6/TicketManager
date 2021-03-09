@@ -16,5 +16,8 @@ namespace TicketManager.Domain.Abstract
         IQueryable<UserCartInformation> RemoveAllFromCart(User tempUser);
         void CheckoutUser(User tempUser);
         void CheckoutUser(int userId);
+        void ClearCart(int userID);
+
+        string SubtractTicket(UserCartInformation templine);
     }
 }

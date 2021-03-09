@@ -5,38 +5,78 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["TicketModifiedError"] != null)
+{
+    <div>
+        @TempData["TicketModifiedError"]
+    </div>
+}
+
 <div>
     @using (Html.BeginForm("ModifyTicket", "Admin", FormMethod.Post))
     {
         @Html.HiddenFor(p => p.TicketID)
+        @Html.HiddenFor(p => p.RowVersion)
         @Html.ValidationSummary()
-        foreach (var property in ViewData.ModelMetadata.Properties)
-        {
-            switch (property.PropertyName)
-            {
-                case "TicketID":
-                    break;
-                case "StartBuyTime":
-                case "EndBuyTime":
-                case "EventTime":
-                    <div>
-                        <label>@property.PropertyName</label>
-                        @Html.TextBox(property.PropertyName, property.Description, new { type = "date" })
-                    </div>
-                    break;
-                default:
-                    <div>
-                        <label>@property.PropertyName</label>
-                        @Html.TextBox(property.PropertyName)
-                    </div>
-                    break;
-            }
-        }
+        <div>
+            <label>
+                Ticket Name
+            </label>
+            @Html.TextBoxFor(p => p.TicketName)
+        </div>
+        <div>
+            <label>
+                Organizer
+            </label>
+            @Html.TextBoxFor(p => p.Organizer)
+        </div>
+        <div>
+            <label>
+                Description
+            </label>
+            @Html.TextBoxFor(p => p.Description)
+        </div>
+        <div>
+            <label>
+                Ticket Price
+            </label>
+            @Html.TextBoxFor(p => p.Price)
+        </div>
+
+        <div>
+            <label>
+                Amount Remaining
+            </label>
+            @Html.TextBoxFor(p => p.AmountRemaining, new { type = "number" })
+        </div>
+
+        <div>
+            <label>
+                Ticket Event Time
+            </label>
+            @Html.TextBoxFor(p => p.EventTime, Model.EventTime.ToString("yyyy-MM-dd"), new { type = "date" })
+        </div>
+
+        <div>
+            <label>
+                Start of Buy Time
+            </label>
+            @Html.TextBoxFor(p => p.StartBuyTime, Model.StartBuyTime.ToString("yyyy-MM-dd"), new { type = "date" })
+        </div>
+
+        <div>
+            <label>
+                End of Buy Time
+            </label>
+            @Html.TextBoxFor(p => p.EndBuyTime, Model.EndBuyTime.ToString("yyyy-MM-dd"), new { type = "date" })
+        </div>
+
+
 
         <div>
             <input type="submit" value="Save" />
         </div>
-        
+
     }
 </div>
 
