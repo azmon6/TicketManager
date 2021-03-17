@@ -20,17 +20,17 @@ namespace TicketManager.Domain.Concrete
             }
         }
 
-        public bool AddUser(User tempUser, LoginInformation loginInformation)
+        public bool AddUser(User newCustomer, LoginInformation newLoginInformation)
         {
 
-            var temp = context.LoginInformations.Where(x => x.Username == loginInformation.Username).ToList();
+            var usersWithUsername = context.LoginInformations.Where(x => x.Username == newLoginInformation.Username).ToList();
 
-            if(tempUser.UserID == 0 && loginInformation.LoginID == 0 && temp.Count == 0)
+            if(newCustomer.UserID == 0 && newLoginInformation.LoginID == 0 && usersWithUsername.Count == 0)
             {
-                loginInformation.Password = GetMD5(loginInformation.Password);
-                tempUser.LoginInformation = context.LoginInformations.Add(loginInformation);
-                tempUser.Role = "Normal";
-                context.Users.Add(tempUser);
+                newLoginInformation.Password = GetMD5(newLoginInformation.Password);
+                newCustomer.LoginInformation = context.LoginInformations.Add(newLoginInformation);
+                newCustomer.Role = "Normal";
+                context.Users.Add(newCustomer);
                 context.SaveChanges();
                 return true;
             }
@@ -38,39 +38,39 @@ namespace TicketManager.Domain.Concrete
             return false;
         }
 
-        public bool IsValidUser(string Username, string Password)
+        public bool IsValidUser(string username, string password)
         {
-            string temp = GetMD5(Password);
-            bool isValid = context.LoginInformations.Any(p => p.Username == Username &&
+            string temp = GetMD5(password);
+            bool isValid = context.LoginInformations.Any(p => p.Username == username &&
                 p.Password == temp);
 
             return isValid;
         }
 
-        public void ModifyUser(User tempUser)
+        public void ModifyUser(User customerToModify)
         {
-            User foundUser = context.Users.FirstOrDefault(p => p.UserID == tempUser.UserID);
+            User foundUser = context.Users.FirstOrDefault(p => p.UserID == customerToModify.UserID);
             if(foundUser == null)
             {
                 return;
             }
 
-            foundUser.Name = tempUser.Name;
-            foundUser.Role = tempUser.Role;
+            foundUser.Name = customerToModify.Name;
+            foundUser.Role = customerToModify.Role;
             context.SaveChanges();
         }
 
-        public User GetUser(int userID)
+        public User GetUser(int customerID)
         {
-            return Users.FirstOrDefault(p => p.UserID == userID);
+            return Users.FirstOrDefault(p => p.UserID == customerID);
         }
 
-        public User GetUser(string tempUsername)
+        public User GetUser(string customerUsername)
         {
-            return Users.FirstOrDefault(p => p.LoginInformation.Username == tempUsername);
+            return Users.FirstOrDefault(p => p.LoginInformation.Username == customerUsername);
         }
 
-        public User DeleteUser(int UserId)
+        public User DeleteUser(int customerID)
         {
             //TODO DELETE USERS
             throw new NotImplementedException();
@@ -92,27 +92,17 @@ namespace TicketManager.Domain.Concrete
             return byte2String;
         }
 
-        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(string tempUsername)
+        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(string customerUsername)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(int userID)
+        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(int customerID)
         {
             
-            var temp = context.Transactions.Where(x => x.UserID == userID).Join(context.Tickets, tran => tran.TicketID, tick => tick.TicketID,
+            return context.Transactions.Where(x => x.UserID == customerID).Join(context.Tickets, tran => tran.TicketID, tick => tick.TicketID,
                 (tran, tick) => new { Trtemp = tran, TickTemp = tick }
-                ).ToList().Select(x => new Tuple<Transaction, Ticket> (x.Trtemp,x.TickTemp) );
-            
-            //TODO WHY LINQ WHY
-            /*
-            var temp = (from trans in context.Transactions
-                       join tick in context.Tickets on trans.TicketID equals tick.TicketID
-                       select new { Trtemp = trans, TickTemp = tick }).ToList().Select(
-                    x => new Transaction { TransactionID = x.Trtemp.TransactionID}
-                );
-            */
-            return temp;
+                ).ToList().Select(x => new Tuple<Transaction, Ticket>(x.Trtemp, x.TickTemp));
         }
     }
 }

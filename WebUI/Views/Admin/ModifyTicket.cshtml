@@ -55,21 +55,21 @@
             <label>
                 Ticket Event Time
             </label>
-            @Html.TextBoxFor(p => p.EventTime, Model.EventTime.ToString("yyyy-MM-dd"), new { type = "date" })
+            @Html.TextBoxFor(p => p.TimeOfEvent, Model.TimeOfEvent.ToString("yyyy-MM-ddTHH:mm"), new { type = "datetime-local" })
         </div>
 
         <div>
             <label>
                 Start of Buy Time
             </label>
-            @Html.TextBoxFor(p => p.StartBuyTime, Model.StartBuyTime.ToString("yyyy-MM-dd"), new { type = "date" })
+            @Html.TextBoxFor(p => p.StartingDateAvailable, Model.StartingDateAvailable.ToString("yyyy-MM-ddTHH:mm"), new { type = "datetime-local" })
         </div>
 
         <div>
             <label>
                 End of Buy Time
             </label>
-            @Html.TextBoxFor(p => p.EndBuyTime, Model.EndBuyTime.ToString("yyyy-MM-dd"), new { type = "date" })
+            @Html.TextBoxFor(p => p.EndDateAvailable, Model.EndDateAvailable.ToString("yyyy-MM-ddTHH:mm"), new { type = "datetime-local" })
         </div>
 
 

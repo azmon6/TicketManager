@@ -34,7 +34,7 @@
             {
                 <div class="My_td wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
                 <div class="My_td wordbreak fontsize18">@tick.Organizer</div>
-                <div class="My_td">@tick.EventTime</div>
+                <div class="My_td">@tick.TimeOfEvent</div>
                 <div class="My_td">@tick.Price.ToString("c")</div>
                 <div class="My_td">
                     <a class="buybtn" onclick="BuyTicket(@tick.TicketID)"> Buy Ticket </a>

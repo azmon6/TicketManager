@@ -83,20 +83,20 @@
             {
                 url: '/Server/GetFinancialStat',
                 data: {},
-                success: function (result) {
+                success: function (data) {
                     var Dates = new Array();
                     var Money = new Array();
-                    for (const temp of Last7Days()) {
+                    for (const dayOfWeek of Last7Days()) {
 
                         var sum = 0;
-                        Dates.push(''.concat(temp.getFullYear(), '-', temp.getMonth()+1, '-', temp.getDate()));
+                        Dates.push(''.concat(dayOfWeek.getFullYear(), '-', dayOfWeek.getMonth() + 1, '-', dayOfWeek.getDate()));
 
-                        for (const temp2 of result) {
+                        for (const transaction of data) {
 
-                            var dateParts = temp2.Date.split("/");
+                            var dateParts = transaction.Date.split("/");
 
                             var dateObject = new Date(+dateParts[2], dateParts[1]-1, +dateParts[0]);
-                            if (sameDay(dateObject, temp))
+                            if (sameDay(dateObject, dayOfWeek))
                             {
                                 sum = sum + temp2.Money;
                             }
@@ -125,21 +125,21 @@
             {
                 url: '/Server/GetFinancialStat',
                 data: {},
-                success: function (result) {
+                success: function (data) {
                     var Dates = new Array();
                     var Money = new Array();
-                    for (const temp of Last8Weeks()) {
+                    for (const week of Last8Weeks()) {
 
                         var sum = 0;
-                        Dates.push(''.concat(temp.getFullYear(), '-', temp.getMonth()+1, '-', temp.getDate()));
+                        Dates.push(''.concat(week.getFullYear(), '-', week.getMonth() + 1, '-', week.getDate()));
 
-                        for (const temp2 of result) {
+                        for (const transaction of data) {
 
-                            var dateParts = temp2.Date.split("/");
+                            var dateParts = transaction.Date.split("/");
 
                             var dateObject = new Date(+dateParts[2], dateParts[1] - 1 , +dateParts[0]);
-                            if (sameWeek(dateObject, temp)) {
-                                sum = sum + temp2.Money;
+                            if (sameWeek(dateObject, week)) {
+                                sum = sum + transaction.Money;
                             }
                         }
                         Money.push(sum);
@@ -168,21 +168,21 @@
             {
                 url: '/Server/GetFinancialStat',
                 data: {},
-                success: function (result) {
+                success: function (data) {
                     var Dates = new Array();
                     var Money = new Array();
-                    for (const temp of Last12Months()) {
+                    for (const month of Last12Months()) {
 
                         var sum = 0;
-                        Dates.push(Months[temp.getMonth()]);
+                        Dates.push(Months[month.getMonth()]);
 
-                        for (const temp2 of result) {
+                        for (const transaction of data) {
 
-                            var dateParts = temp2.Date.split("/");
+                            var dateParts = transaction.Date.split("/");
 
                             var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
-                            if (sameMonth(dateObject, temp)) {
-                                sum = sum + temp2.Money;
+                            if (sameMonth(dateObject, month)) {
+                                sum = sum + transaction.Money;
                             }
                         }
                         Money.push(sum);

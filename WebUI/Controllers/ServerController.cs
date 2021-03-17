@@ -21,11 +21,11 @@ namespace TicketManager.WebUI.Controllers
         {
             //TO DO JSON Serialization
             var temp = MyLoggingServices.GetLogs(startFrom, howMany).Select(x => new { 
-                LogID = x.LogID,
-                LogMessage = x.LogMessage,
-                LogType = x.LogType,
-                Object = x.Object,
-                Priority = x.Priority,
+                x.LogID,
+                x.LogMessage,
+                x.LogType,
+                x.Object,
+                x.Priority,
                 TimeMade = x.TimeMade.ToString("dd/MM/yyyy HH:mm:ss")
             });
             return Json(temp, JsonRequestBehavior.AllowGet);
@@ -34,11 +34,11 @@ namespace TicketManager.WebUI.Controllers
         public JsonResult GetAllLogs()
         {
             var temp = MyLoggingServices.GetAllLogs().Select(x => new {
-                LogID = x.LogID,
-                LogMessage = x.LogMessage,
-                LogType = x.LogType,
-                Object = x.Object,
-                Priority = x.Priority,
+                x.LogID,
+                x.LogMessage,
+                x.LogType,
+                x.Object,
+                x.Priority,
                 TimeMade = x.TimeMade.ToString("dd/MM/yyyy HH:mm:ss")
             });
             return Json(temp, JsonRequestBehavior.AllowGet);
@@ -53,6 +53,7 @@ namespace TicketManager.WebUI.Controllers
         [RolesAuthorize(Mykeys = "Admin")]
         public ActionResult ServerLog()
         {
+            //TODO REMOVE
             MyLoggingServices.TestLog();
             return View();
         }
@@ -60,7 +61,7 @@ namespace TicketManager.WebUI.Controllers
 
         public JsonResult GetFinancialStat()
         {
-            return Json(serverRepository.GetMoney().Select(x => new { Date = x.DateMade, Money = x.PricePaid }).ToList() , JsonRequestBehavior.AllowGet);
+            return Json(serverRepository.Transactions.Select(x => new { Date = x.DateMade, Money = x.PricePaid }).ToList() , JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -23,20 +23,20 @@ namespace TicketManager.WebUI.Controllers
         }
 
         [RolesAuthorize(Mykeys = "Admin")]
-        public ActionResult EditUser(int userID)
+        public ActionResult EditUser(int userToEdit)
         {
-            return View(repository.GetUser(userID));
+            return View(repository.GetUser(userToEdit));
         }
 
         [HttpPost]
-        public ActionResult EditUser(User tempUser)
+        public ActionResult EditUser(User userToEdit)
         {   
             if(ModelState.IsValid)
             {
-                repository.ModifyUser(tempUser);
+                repository.ModifyUser(userToEdit);
                 return RedirectToAction("ViewUsers");
             }
-            return View(tempUser);
+            return View(userToEdit);
         }
         
 
@@ -46,13 +46,13 @@ namespace TicketManager.WebUI.Controllers
             {
                 return RedirectToAction("HomeScreen", "Home");
             }
-            ProfileInfo tempInfo = new ProfileInfo();
-            User tempUser = repository.GetUser(HttpContext.User.Identity.Name);
+            ProfileInfo userProfile = new ProfileInfo();
+            User currentUser = repository.GetUser(HttpContext.User.Identity.Name);
             MyRoleProvider tempRoleProvider = new MyRoleProvider();
-            tempInfo.Roles = tempRoleProvider.GetRolesForUser(HttpContext.User.Identity.Name);
-            tempInfo.DisplayName = tempUser.Name;
-            tempInfo.UserTransactions = repository.GetUserTransactions(tempUser.UserID);
-            return View(tempInfo);
+            userProfile.Roles = tempRoleProvider.GetRolesForUser(HttpContext.User.Identity.Name);
+            userProfile.DisplayName = currentUser.Name;
+            userProfile.UserTransactions = repository.GetUserTransactions(currentUser.UserID);
+            return View(userProfile);
         }
     }
 }

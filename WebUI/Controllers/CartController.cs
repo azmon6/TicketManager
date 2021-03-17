@@ -16,7 +16,7 @@ namespace TicketManager.WebUI.Controllers
             cartRepository = cart;
         }
 
-        public ActionResult BuyTicket(int tickID, int tempPage = 1)
+        public ActionResult BuyTicket(int ticketToBuy, int tempPage = 1)
         {
 
             if(!this.User.Identity.IsAuthenticated)
@@ -24,8 +24,8 @@ namespace TicketManager.WebUI.Controllers
                 return Json(new { redirectToUrl = Url.Action("Login", "Account") }, JsonRequestBehavior.AllowGet);
             }
 
-            User tempUser = cartRepository.UserInfo.FirstOrDefault(p => p.LoginInformation.Username == HttpContext.User.Identity.Name);
-            cartRepository.AddTicketToUser(tempUser.UserID, tickID);
+            User currentUser = cartRepository.UserInfo.FirstOrDefault(p => p.LoginInformation.Username == HttpContext.User.Identity.Name);
+            cartRepository.AddTicketToUser(currentUser.UserID, ticketToBuy);
             return new EmptyResult();
         }
 
@@ -36,21 +36,29 @@ namespace TicketManager.WebUI.Controllers
             {
                 return RedirectToAction("HomeScreen", "Home");
             }
-            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            IQueryable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
-                x.UserID == tempID);
-            IEnumerable<CartViewInfo> temp = tempInfo.
+            int currentUserID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            IQueryable<ShoppingCarts> currentCustomerCart = cartRepository.CartInfo.Where(x =>
+                x.UserID == currentUserID);
+            IEnumerable<CartViewInfo> cartItems = currentCustomerCart.
                 Join(cartRepository.TicketInfo,
                 p => p.TicketID, c => c.TicketID, (p, c) =>
                 new CartViewInfo()
                 {
                     TicketID = p.TicketID,
-                    EventTime = c.EventTime,
+                    EventTime = c.TimeOfEvent,
                     Quantity = p.Quantity,
                     TicketPrice = c.Price,
                     TicketName = c.TicketName
                 }).ToList();
-            return View(temp);
+            ShowCartInfo result = new ShowCartInfo();
+            result.userCartItems = cartItems;
+            return View(result);
+        }
+
+        [HttpPost]
+        public ActionResult ShowCart(ShowCartInfo model)
+        {
+            return View(model);
         }
 
         public ActionResult GetSideCart()
@@ -60,16 +68,16 @@ namespace TicketManager.WebUI.Controllers
                 IEnumerable<CartViewInfo> end = null;
                 return PartialView("_GetSideCart", end );
             }
-            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            IQueryable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
-                x.UserID == tempID);
-            IEnumerable<CartViewInfo> temp = tempInfo.
+            int currentUserID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            IQueryable<ShoppingCarts> customerCart = cartRepository.CartInfo.Where(x =>
+                x.UserID == currentUserID);
+            IEnumerable<CartViewInfo> temp = customerCart.
                 Join(cartRepository.TicketInfo,
                 p => p.TicketID, c => c.TicketID, (p, c) =>
                 new CartViewInfo()
                 {
                     TicketID = p.TicketID,
-                    EventTime = c.EventTime,
+                    EventTime = c.TimeOfEvent,
                     Quantity = p.Quantity,
                     TicketPrice = c.Price,
                     TicketName = c.TicketName
@@ -77,10 +85,10 @@ namespace TicketManager.WebUI.Controllers
             return PartialView("_GetSideCart",temp);
         }
         
-        public ActionResult RemoveLine(int tickId, bool ajax = false)
+        public ActionResult RemoveLine(int ticketToRemoveID, bool ajax = false)
         {
-            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            cartRepository.RemoveItemFromCart( tempID , tickId);
+            int customerID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            cartRepository.RemoveItemFromCart(customerID, ticketToRemoveID);
             if(ajax == true)
             {
                 return new EmptyResult();
@@ -90,43 +98,23 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult Checkout()
         {
-
-            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            IEnumerable<UserCartInformation> tempInfo = cartRepository.CartInformation.Where(x =>
-                x.UserID == tempID).ToList();
-
-            //TODO Move to Repository
-            bool isEverythingAvailable = true;
-            string returnedMessage = "";
-            string resultMessage = "";
-            foreach(var tempLine in tempInfo)
+            int customerID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            if (cartRepository.IsUserAllTicketsReserved(customerID))
             {
-                returnedMessage = cartRepository.SubtractTicket(tempLine);
-                if(returnedMessage != "")
-                {
-                    resultMessage = resultMessage + returnedMessage;
-                    isEverythingAvailable = false;
-                }
-            }
-
-            if(!isEverythingAvailable)
-            {
-                TempData["UnavailableTicketMessage"] = resultMessage;
                 return RedirectToAction("ShowCart");
             }
-
             return View();
         }
 
         [HttpPost]
-        public ActionResult Checkout(CheckoutInfo tempInfo)
+        public ActionResult Checkout(CheckoutInfo checkInfo)
         {
             if(ModelState.IsValid)
             {
                 cartRepository.CheckoutUser(cartRepository.UserInfo.First(p => p.LoginInformation.Username == HttpContext.User.Identity.Name).UserID);
                 return RedirectToAction("HomeScreen","Home");
             }
-            return View(tempInfo);
+            return View(checkInfo);
         }
 
         public ActionResult CartIcon()
@@ -136,15 +124,22 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult ClearCart()
         {
-            int tempID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            cartRepository.ClearCart(tempID);
+            int customerID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            cartRepository.ClearCart(customerID);
             return RedirectToAction("ShowCart");
         }
 
         public ActionResult RefreshOldCarts(string returnUrl = null)
         {
+            //TODO ReturnURL FIX
             cartRepository.RefreshOldCarts();
             return RedirectToAction("HomeScreen", "Home");
+        }
+
+        public ActionResult CheckoutCheck()
+        {
+            int customerID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
+            return Json(new { redirectToUrl = Url.Action("Checkout", "Cart"), unavailableTickets = cartRepository.ReserveTickets(customerID) } , JsonRequestBehavior.AllowGet);
         }
     }
 }

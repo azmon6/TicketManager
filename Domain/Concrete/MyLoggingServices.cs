@@ -43,11 +43,11 @@ namespace TicketManager.Logging
         public static void AddLog(string logType = null, string logMessage = null , int? priority = null, 
             DateTime? timeMade = null, string logObject = null)
         {
-            using (var test = new MyLoggingServices())
+            using (var logServer = new MyLoggingServices())
             {
                 Log temp = new Log(logType,logMessage,priority,timeMade,logObject);
-                test.Logs.Add(temp);
-                test.SaveChanges();
+                logServer.Logs.Add(temp);
+                logServer.SaveChanges();
             }
         }
 
@@ -55,9 +55,9 @@ namespace TicketManager.Logging
         {
             //TODO DO NOT FORGET TO REMOVE
             Thread.Sleep(2000);
-            using (var test = new MyLoggingServices())
+            using (var logServer = new MyLoggingServices())
             {
-                return test.Logs.OrderByDescending(p => p.TimeMade.Year).ThenByDescending(p => p.TimeMade.Month).
+                return logServer.Logs.OrderByDescending(p => p.TimeMade.Year).ThenByDescending(p => p.TimeMade.Month).
                     ThenByDescending(p => p.TimeMade.Day).ThenByDescending(p => p.TimeMade.Hour).ThenByDescending(p => p.TimeMade.Minute).
                     ThenByDescending(p => p.TimeMade.Second).Skip(startFrom).Take(howMany).ToList();
             }
@@ -65,9 +65,9 @@ namespace TicketManager.Logging
 
         public static List<Log> GetAllLogs()
         {
-            using (var test = new MyLoggingServices())
+            using (var logServer = new MyLoggingServices())
             {
-                return test.Logs.OrderByDescending(p => p.TimeMade.Year).ThenByDescending(p => p.TimeMade.Month).
+                return logServer.Logs.OrderByDescending(p => p.TimeMade.Year).ThenByDescending(p => p.TimeMade.Month).
                     ThenByDescending(p => p.TimeMade.Day).ThenByDescending(p => p.TimeMade.Hour).ThenByDescending(p => p.TimeMade.Minute).
                     ThenByDescending(p => p.TimeMade.Second).ToList();
             }

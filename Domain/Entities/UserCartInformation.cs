@@ -4,7 +4,7 @@ using System;
 
 namespace TicketManager.Domain.Entities
 {
-    public class UserCartInformation
+    public class ShoppingCarts
     {
 
         [Key]

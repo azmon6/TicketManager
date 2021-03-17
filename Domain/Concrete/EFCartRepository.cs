@@ -2,15 +2,17 @@
 using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace TicketManager.Domain.Concrete
 {
+    //TODO Double functions Maybe not?
+
     public class EFCartRepository : ICartRepository
     {
-        //TODO Context in constructors
         private EntityContext context = new EntityContext();
 
-        public IQueryable<UserCartInformation> CartInformation
+        public IQueryable<ShoppingCarts> CartInfo
         {
             get
             {
@@ -34,148 +36,146 @@ namespace TicketManager.Domain.Concrete
             }
         }
 
-        public void AddTicketToUser(User tempUser, Ticket tempTick, int quantity = 1)
+        public void AddTicketToUser(User customer, Ticket ticketToBuy, int quantity = 1)
         {
-            AddTicketToUser(tempUser.UserID, tempTick.TicketID, quantity);
+            AddTicketToUser(customer.UserID, ticketToBuy.TicketID, quantity);
         }
 
-        public void AddTicketToUser(int userId, int tickId, int quantity = 1)
+        public void AddTicketToUser(int customerID, int ticketToBuyID, int quantity = 1)
         {
             if (quantity < 1) { return; }
 
-            UserCartInformation tempInfo = CartInformation.FirstOrDefault(
-                p => (p.UserID == userId && p.TicketID == tickId));
-            if (tempInfo != null)
+            ShoppingCarts customerCartLine = CartInfo.FirstOrDefault(
+                p => (p.UserID == customerID && p.TicketID == ticketToBuyID));
+            if (customerCartLine != null)
             {
-                if(tempInfo.CheckOutTime != null)
+                if(customerCartLine.CheckOutTime != null)
                 {
-                    TicketInfo.First(x => x.TicketID == tickId).AmountRemaining += tempInfo.Quantity;
+                    TicketInfo.First(x => x.TicketID == ticketToBuyID).AmountRemaining += customerCartLine.Quantity;
                 }
-                tempInfo.Quantity += quantity;
-                tempInfo.CheckOutTime = null;
+                customerCartLine.Quantity += quantity;
+                customerCartLine.CheckOutTime = null;
             }
             else
             {
-                tempInfo = new UserCartInformation();
-                tempInfo.Quantity = quantity;
-                tempInfo.Ticket = context.Tickets.Find(tickId);
-                tempInfo.User = context.Users.Find(userId);
-                tempInfo.DateAdded = DateTime.Now;
-                context.CartInformation.Add(tempInfo);
+                customerCartLine = new ShoppingCarts();
+                customerCartLine.Quantity = quantity;
+                customerCartLine.Ticket = context.Tickets.Find(ticketToBuyID);
+                customerCartLine.User = context.Users.Find(ticketToBuyID);
+                customerCartLine.DateAdded = DateTime.UtcNow;
+                context.CartInformation.Add(customerCartLine);
             }
             context.SaveChanges();
         }
 
-        public void CheckoutUser(User tempUser)
+        public void CheckoutUser(User customer)
         {
-            CheckoutUser(tempUser.UserID);
+            CheckoutUser(customer.UserID);
         }
 
-        public void CheckoutUser(int userId)
+        public void CheckoutUser(int customerID)
         {
-            Guid testGuid = Guid.NewGuid();
+            Guid TransactionID = Guid.NewGuid();
             
-            IQueryable<UserCartInformation> temp = CartInformation.Where(m => m.UserID == userId);
+            IQueryable<ShoppingCarts> customerCart = CartInfo.Where(m => m.UserID == customerID);
             
-            foreach(var line in temp)
+            foreach(var line in customerCart)
             {
 
                 Transaction tempTrans = new Transaction()
                 {
                     TicketID = line.TicketID,
-                    DateMade = DateTime.Now,
-                    DealID = testGuid.ToString(),
+                    DateMade = DateTime.UtcNow,
+                    DealID = TransactionID.ToString(),
                     UserID = line.UserID,
                     PricePaid = TicketInfo.First(x => x.TicketID == line.TicketID).Price * line.Quantity
                 };
                 context.Transactions.Add(tempTrans);
             }
             context.SaveChanges();
-            RemoveAllFromCart(userId);
+            RemoveAllFromCart(customerID);
         }
 
-        public IQueryable<UserCartInformation> RemoveAllFromCart(int userId)
+        public IQueryable<ShoppingCarts> RemoveAllFromCart(int customerID)
         {
 
-            var temp = context.CartInformation.RemoveRange(CartInformation.Where(x => x.UserID == userId)).AsQueryable();
+            var temp = context.CartInformation.RemoveRange(CartInfo.Where(x => x.UserID == customerID)).AsQueryable();
             context.SaveChanges();
             return temp;
         }
 
-        public IQueryable<UserCartInformation> RemoveAllFromCart(User tempUser)
+        public IQueryable<ShoppingCarts> RemoveAllFromCart(User customer)
         {
-            return RemoveAllFromCart(tempUser.UserID);
+            return RemoveAllFromCart(customer.UserID);
         }
 
-        public UserCartInformation RemoveItemFromCart(int userId, int tickId)
+        public ShoppingCarts RemoveItemFromCart(int customerID, int ticketToRemoveID)
         {
-
-            //TO DO Lazy loading does not work
-            var temp = context.CartInformation.First(x => x.UserID == userId && x.TicketID == tickId);
-            var temptick = context.Tickets.Find(tickId);
-            context.CartInformation.Remove(temp);
-            if(temp.CheckOutTime != null)
+            var CartLineToRemove = context.CartInformation.First(x => x.UserID == customerID && x.TicketID == ticketToRemoveID);
+            context.CartInformation.Remove(CartLineToRemove);
+            if(CartLineToRemove.CheckOutTime != null)
             {
-                temptick.AmountRemaining += temp.Quantity;
+                context.Tickets.Find(ticketToRemoveID).AmountRemaining += CartLineToRemove.Quantity;
             }
             context.SaveChanges();
-            return temp;
+            return CartLineToRemove;
         }
 
-        public UserCartInformation RemoveItemFromCart(User tempUser, Ticket tempTick)
+        public ShoppingCarts RemoveItemFromCart(User customer, Ticket ticketToRemove)
         {   
-            return RemoveItemFromCart(tempUser.UserID, tempTick.TicketID);
+            return RemoveItemFromCart(customer.UserID, ticketToRemove.TicketID);
         }
 
 
-        public string SubtractTicket(UserCartInformation templine)
+        public string SubtractTicket(ShoppingCarts customerCartLine)
         {
 
             //TO DO Bad practice to return the string? Make it side effect?
 
-            if(templine.CheckOutTime != null)
+            if(customerCartLine.CheckOutTime != null)
             {
                 return "";
             }
 
-            if(templine.Ticket.AmountRemaining < templine.Quantity)
+            if(customerCartLine.Ticket.AmountRemaining < customerCartLine.Quantity)
             {
-                return templine.Ticket.TicketName;
+                return customerCartLine.Ticket.TicketName;
             }
 
-            templine.Ticket.AmountRemaining -= templine.Quantity;
-            templine.CheckOutTime = DateTime.UtcNow;
-
-            context.SaveChanges();
+            customerCartLine.Ticket.AmountRemaining -= customerCartLine.Quantity;
+            customerCartLine.CheckOutTime = DateTime.UtcNow;
 
             return "";
         }
 
-
-
-        public void ClearCart(int userID)
+        public bool PreCheckoutCheck(int customerID)
         {
-            var temp = CartInformation.Where(x => x.UserID == userID);
-            foreach(var i in temp)
+            return false;
+        }
+
+        public void ClearCart(int customerID)
+        {
+            var customerCartToClear = CartInfo.Where(x => x.UserID == customerID);
+            foreach(var i in customerCartToClear)
             {
                 if(i.CheckOutTime != null)
                 {
                     i.Ticket.AmountRemaining += i.Quantity;
                 }
             }
-            context.CartInformation.RemoveRange(CartInformation.Where(x => x.UserID == userID));
+            context.CartInformation.RemoveRange(CartInfo.Where(x => x.UserID == customerID));
             context.SaveChanges();
         }
 
         public void RefreshOldCarts()
         {
-            var tempTime = DateTime.Now;
-            foreach (var i in CartInformation)
+            var timeRefreshed = DateTime.UtcNow;
+            foreach (var i in CartInfo)
             {
                 if (i.CheckOutTime != null)
                 {
                     var tempI = i.CheckOutTime.Value;
-                    if ((tempTime-tempI).TotalMinutes >= 1)
+                    if ((timeRefreshed - tempI).TotalMinutes >= 1)
                     {
                         i.Ticket.AmountRemaining += i.Quantity;
                         i.CheckOutTime = null;
@@ -183,6 +183,33 @@ namespace TicketManager.Domain.Concrete
                 }
             }
             context.SaveChanges();
+        }
+
+        public List<string> ReserveTickets(int customerID)
+        {
+            List<string> result = new List<string>();
+
+            IEnumerable<ShoppingCarts> customerCart = CartInfo.Where(x =>
+                x.UserID == customerID).ToList();
+
+            string returnedMessage = "";
+            foreach (var tempLine in customerCart)
+            {
+                returnedMessage = SubtractTicket(tempLine);
+                if (returnedMessage != "")
+                {
+                    result.Add(returnedMessage);
+                }
+            }
+            context.SaveChanges();
+            return result;
+        }
+
+        public bool IsUserAllTicketsReserved(int customerID)
+        {
+            IEnumerable<ShoppingCarts> tempInfo = CartInfo.Where(x =>
+                   x.UserID == customerID && x.CheckOutTime==null).ToList();
+            return !(tempInfo.Count() == 0);
         }
     }
 }

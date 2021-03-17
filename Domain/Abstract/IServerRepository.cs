@@ -5,6 +5,6 @@ namespace TicketManager.Domain.Abstract
 {
     public interface IServerRepository
     {
-        IQueryable<Transaction> GetMoney();
+        IQueryable<Transaction> Transactions { get; }
     }
 }

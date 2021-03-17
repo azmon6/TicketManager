@@ -20,11 +20,11 @@ namespace TicketManager.Domain.Entities
 
         //TODO Make Dates from string to DateTime
         //Use Jquerry for date picker
-        public DateTime StartBuyTime { get; set; }
+        public DateTime StartingDateAvailable { get; set; }
         
-        public DateTime EndBuyTime { get; set; }
+        public DateTime EndDateAvailable { get; set; }
 
-        public DateTime EventTime { get; set; }
+        public DateTime TimeOfEvent { get; set; }
 
         public int AmountRemaining { get; set; }
 

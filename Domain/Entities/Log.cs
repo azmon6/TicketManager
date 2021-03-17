@@ -17,7 +17,7 @@ namespace TicketManager.Domain.Entities
             this.LogMessage ="No Message.";
             this.LogType = "Default";
             this.Priority = 1;
-            this.TimeMade = DateTime.Now;
+            this.TimeMade = DateTime.UtcNow;
             this.Object = "NULL";
         }
 
@@ -27,7 +27,7 @@ namespace TicketManager.Domain.Entities
             this.LogMessage = logType ?? "No Message.";
             this.LogType = logMessage ?? "Default";
             this.Priority = priority ?? 1;
-            this.TimeMade = timeMade ?? DateTime.Now;
+            this.TimeMade = timeMade ?? DateTime.UtcNow;
             this.Object = logObject ?? "NULL";
         }
     }

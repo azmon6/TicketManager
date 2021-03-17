@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TicketManager.WebUI.Models.CartViewInfo>
+﻿@model TicketManager.WebUI.Models.ShowCartInfo
 
 @{
     ViewBag.Title = "ShowCart";
@@ -26,7 +26,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var tick in Model)
+        @foreach (var tick in Model.userCartItems)
         {
             <tr>
                 <td>@tick.TicketName</td>
@@ -41,11 +41,41 @@
 </table>
 
 <div>
-    Total Price: @Model.Sum(e => e.Quantity * e.TicketPrice)
+    Total Price: @Model.userCartItems.Sum(e => e.Quantity * e.TicketPrice)
 </div>
 <div>
-    @Html.ActionLink("Checkout", "Checkout", "Cart")
+    <button onclick="beforeCheckoutCheck()">Checkout</button>
 </div>
 <div>
     @Html.ActionLink("Empty Cart", "ClearCart", "Cart")
 </div>
+
+<script>
+
+    function beforeCheckoutCheck() {
+        $.ajax(
+            {
+                url: '/Cart/CheckoutCheck',
+                data: { },
+                success: function (data) {
+                    console.log(data);
+                    if (data.unavailableTickets.length == 0) {
+                        window.location.href = data.redirectToUrl;
+                    }
+                    else {
+                        makeUnavailableNotification(data.unavailableTickets);
+                    }
+                }
+            }
+        );
+    }
+
+
+    function makeUnavailableNotification(unavailableTickets) {
+        for (var i of unavailableTickets) {
+            const newDiv = document.createElement("div");
+            newDiv.innerHTML = "<b>Warning.</b> ".concat("The ticket \"",i,"\" is unavailable in the amount you want.");
+            $("#NotifactionCenter").append(newDiv);
+        }
+    }
+</script>

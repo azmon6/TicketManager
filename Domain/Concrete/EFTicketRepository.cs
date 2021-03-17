@@ -13,32 +13,32 @@ namespace TicketManager.Domain.Concrete
             get { return context.Tickets; }
         }
 
-        public bool SaveTicket( Ticket tick)
+        public bool SaveTicket( Ticket ticketToSave)
         {
             //TODO Try catch online implementation
-            if(tick.TicketID == 0)
+            if(ticketToSave.TicketID == 0)
             {
-                context.Tickets.Add(tick);
+                context.Tickets.Add(ticketToSave);
             }
             else
             {
-                Ticket Entry = context.Tickets.Find(tick.TicketID);
+                Ticket Entry = context.Tickets.Find(ticketToSave.TicketID);
                 if(Entry != null)
                 {
-                    if (!Entry.RowVersion.SequenceEqual(tick.RowVersion))
+                    if (!Entry.RowVersion.SequenceEqual(ticketToSave.RowVersion))
                     {
-                        tick.RowVersion = Entry.RowVersion;
+                        ticketToSave.RowVersion = Entry.RowVersion;
                         return false;
                     }
 
-                    Entry.TicketName = tick.TicketName;
-                    Entry.Description = tick.Description;
-                    Entry.Organizer = tick.Organizer;
-                    Entry.EventTime = tick.EventTime;
-                    Entry.StartBuyTime = tick.StartBuyTime;
-                    Entry.EndBuyTime = tick.EndBuyTime;
-                    Entry.Price = tick.Price;
-                    Entry.AmountRemaining = tick.AmountRemaining;
+                    Entry.TicketName = ticketToSave.TicketName;
+                    Entry.Description = ticketToSave.Description;
+                    Entry.Organizer = ticketToSave.Organizer;
+                    Entry.TimeOfEvent = ticketToSave.TimeOfEvent;
+                    Entry.StartingDateAvailable = ticketToSave.StartingDateAvailable;
+                    Entry.EndDateAvailable = ticketToSave.EndDateAvailable;
+                    Entry.Price = ticketToSave.Price;
+                    Entry.AmountRemaining = ticketToSave.AmountRemaining;
                     
                 }
             }
@@ -47,9 +47,9 @@ namespace TicketManager.Domain.Concrete
             return true;
         }
 
-        public Ticket DeleteTicket(int tickId)
+        public Ticket DeleteTicket(int ticketToDeleteID)
         {
-            Ticket Entry = context.Tickets.Find(tickId);
+            Ticket Entry = context.Tickets.Find(ticketToDeleteID);
             if(Entry != null)
             {
                 context.Tickets.Remove(Entry);
@@ -65,25 +65,25 @@ namespace TicketManager.Domain.Concrete
 
         public IQueryable<Ticket> GetSpecificPage(int pageSize, int pageNumber, string orderByWhat = "EventTime", string asc = "False")
         {
-            var temp = context.Tickets.AsQueryable();
+            var result = context.Tickets.AsQueryable();
             if (asc == "True")
             {
                 switch (orderByWhat)
                 {
                     case null:
-                        temp = temp.OrderBy(p => p.EventTime);
+                        result = result.OrderBy(p => p.TimeOfEvent);
                         break;
                     case "TicketName":
-                        temp = temp.OrderBy(p => p.TicketName);
+                        result = result.OrderBy(p => p.TicketName);
                         break;
                     case "Price":
-                        temp = temp.OrderBy(p => p.Price);
+                        result = result.OrderBy(p => p.Price);
                         break;
                     case "Organizer":
-                        temp = temp.OrderBy(p => p.Organizer);
+                        result = result.OrderBy(p => p.Organizer);
                         break;
                     default:
-                        temp = temp.OrderBy(p => p.EventTime);
+                        result = result.OrderBy(p => p.TimeOfEvent);
                         break;
                 }
             }
@@ -92,23 +92,23 @@ namespace TicketManager.Domain.Concrete
                 switch (orderByWhat)
                 {
                     case null:
-                        temp = temp.OrderByDescending(p => p.EventTime);
+                        result = result.OrderByDescending(p => p.TimeOfEvent);
                         break;
                     case "TicketName":
-                        temp = temp.OrderByDescending(p => p.TicketName);
+                        result = result.OrderByDescending(p => p.TicketName);
                         break;
                     case "Price":
-                        temp = temp.OrderByDescending(p => p.Price);
+                        result = result.OrderByDescending(p => p.Price);
                         break;
                     case "Organizer":
-                        temp = temp.OrderByDescending(p => p.Organizer);
+                        result = result.OrderByDescending(p => p.Organizer);
                         break;
                     default:
-                        temp = temp.OrderByDescending(p => p.EventTime);
+                        result = result.OrderByDescending(p => p.TimeOfEvent);
                         break;
                 }
             }
-            return temp.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return result.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
     }
 

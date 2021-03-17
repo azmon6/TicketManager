@@ -99,14 +99,14 @@
                     $('#LoadingIcon').show();
                     requestRunning = true;
                 },
-                success: function (result) {
-                    if (result.length == 0) {
+                success: function (data) {
+                    if (data.length == 0) {
                         window.removeEventListener('scroll', AddMoreLogsToPage);
                     }
                     var MapGrid = { "LogType": 0, "LogMessage": 1, "Priority": 2, "TimeMade": 3, "Object": 4 };
                     var ArrayDivs = new Array(5);
                     var contain = $('#LogContainer');
-                    for (var Logs of result) {
+                    for (var Logs of data) {
                         for (var LogInfo in Logs) {
                             if (LogInfo == "LogID") { continue; }
 
@@ -127,7 +127,7 @@
                     }
 
 
-                    console.log(result);
+                    console.log(data);
 
                     LogStartingFrom = LogStartingFrom + LogGetHowMany;
                 },
@@ -153,15 +153,15 @@
             {
                 url: '/Server/GetAllLogs',
                 data: { },
-                success: function (result) {
+                success: function (data) {
                     var csvResult = 'data:text/csv;charset=utf-8,';
-                    for (var temp of result) {
-                        var tempString = '';
-                        for (var temp2 of Object.values(temp)) {
-                            tempString = tempString.concat("\"",temp2,"\"", ',');
+                    for (var Log of data) {
+                        var lineString = '';
+                        for (var temp of Object.values(Log)) {
+                            lineString = tempString.concat("\"",temp,"\"", ',');
                         }
-                        tempString = tempString.slice(0, -1);
-                        tempString = tempString.concat('\n');
+                        lineString = lineString.slice(0, -1);
+                        lineString = lineString.concat('\n');
                         csvResult =  csvResult.concat(tempString);
                     }
                     var encodedUri = encodeURI(csvResult);

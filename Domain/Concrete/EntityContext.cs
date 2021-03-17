@@ -9,7 +9,7 @@ namespace TicketManager.Domain.Concrete
         public DbSet<LoginInformation> LoginInformations { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<UserCartInformation> CartInformation { get; set; }
+        public DbSet<ShoppingCarts> CartInformation { get; set; }
 
         public EntityContext():base("name=EntityContext")
         {
@@ -22,26 +22,26 @@ namespace TicketManager.Domain.Concrete
         {
             //Configure Column
             modelBuilder.Entity<Ticket>()
-                        .Property(p => p.StartBuyTime)
-                        .HasColumnName("StartBuyTime")
+                        .Property(p => p.StartingDateAvailable)
+                        .HasColumnName("StartingDateAvailable")
                         .HasColumnType("datetime2");
 
             modelBuilder.Entity<Ticket>()
-                        .Property(p => p.EndBuyTime)
-                        .HasColumnName("EndBuyTime")
+                        .Property(p => p.EndDateAvailable)
+                        .HasColumnName("EndDateAvailable")
                         .HasColumnType("datetime2");
 
             modelBuilder.Entity<Ticket>()
-                        .Property(p => p.EventTime)
-                        .HasColumnName("EventTime")
+                        .Property(p => p.TimeOfEvent)
+                        .HasColumnName("TimeOfEvent")
                         .HasColumnType("datetime2");
 
-            modelBuilder.Entity<UserCartInformation>()
+            modelBuilder.Entity<ShoppingCarts>()
                         .Property(p => p.DateAdded)
                         .HasColumnName("DateAdded")
                         .HasColumnType("datetime2");
 
-            modelBuilder.Entity<UserCartInformation>()
+            modelBuilder.Entity<ShoppingCarts>()
                         .Property(p => p.CheckOutTime)
                         .HasColumnName("CheckOutTime")
                         .HasColumnType("datetime2");

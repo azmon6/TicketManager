@@ -38,33 +38,32 @@ namespace WebUI.Controllers
                 HttpContext.Response.Cookies["TicketOrderColumn"].Value = "EventTime";
                 HttpContext.Response.Cookies["TicketOrderAsc"].Value = "True";
             }
-            TicketShowModel temp = new TicketShowModel()
+            TicketShowModel ticketShowModel = new TicketShowModel()
             {
                 Tickets = repository.GetSpecificPage(PageSize, page,
                     HttpContext.Request.Cookies["TicketOrderColumn"].Value , HttpContext.Request.Cookies["TicketOrderAsc"].Value),
                 PageNow = page,
                 TotalPages = (int)System.Math.Ceiling((decimal)((decimal)repository.GetSize() / (decimal)PageSize))
             };
-            return PartialView( "_GetTicketTable" ,temp);
+            return PartialView( "_GetTicketTable" , ticketShowModel);
         }       
 
         public ActionResult ShowTickets(int page = 1)
         {
-            TicketShowModel temp = new TicketShowModel()
+            TicketShowModel ticketShowModel = new TicketShowModel()
             {
                 Tickets = null,
                 PageNow = page,
                 TotalPages = (int)System.Math.Ceiling((decimal)((decimal)repository.GetSize() / (decimal)PageSize))
             };
-            return View(temp);
+            return View(ticketShowModel);
         }
 
         [RolesAuthorize(Mykeys ="Admin")]
-        public ViewResult ModifyTicket(int tickID)
+        public ViewResult ModifyTicket(int ticketToModifyID)
         {
-            Ticket tick = repository.Tickets.FirstOrDefault(p => p.TicketID == tickID);
-            ModifyTicketModel temp = new ModifyTicketModel(tick);
-            return View(temp);
+            Ticket tick = repository.Tickets.FirstOrDefault(p => p.TicketID == ticketToModifyID);
+            return View(new ModifyTicketModel(tick));
         }
 
         [HttpPost]
@@ -85,9 +84,9 @@ namespace WebUI.Controllers
         }
 
         [RolesAuthorize(Mykeys = "Admin")]
-        public ActionResult DeleteTicket(int tickID)
+        public ActionResult DeleteTicket(int ticketToDeleteID)
         {
-            repository.DeleteTicket(tickID);
+            repository.DeleteTicket(ticketToDeleteID);
             return RedirectToAction("ShowTickets");
         }
 
@@ -97,9 +96,9 @@ namespace WebUI.Controllers
             return RedirectToAction("ModifyTicket", new { tickId = 0 });
         }
 
-        public ActionResult SingleTicket(int id = 0)
+        public ActionResult SingleTicket(int ID = 0)
         {
-            if(id <= 0)
+            if(ID <= 0)
             {
                 return RedirectToAction("ShowTickets");
             }

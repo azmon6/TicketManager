@@ -8,9 +8,12 @@ namespace TicketManager.Domain.Concrete
     {
         private EntityContext context = new EntityContext();
 
-        public IQueryable<Transaction> GetMoney()
+        public IQueryable<Transaction> Transactions
         {
-            return context.Transactions;
+            get
+            {
+                return context.Transactions;
+            }
         }
     }
 }

@@ -17,9 +17,9 @@ namespace TicketManager.WebUI.Models
         {
             if (tempTick == null)
             {
-                this.StartBuyTime = DateTime.Now;
-                this.EndBuyTime = DateTime.Now;
-                this.EventTime = DateTime.Now;
+                this.StartingDateAvailable = DateTime.UtcNow;
+                this.EndDateAvailable = DateTime.UtcNow;
+                this.TimeOfEvent = DateTime.UtcNow;
                 return;
             }
             this.TicketID = tempTick.TicketID;
@@ -27,9 +27,9 @@ namespace TicketManager.WebUI.Models
             this.Description = tempTick.Description;
             this.Organizer = tempTick.Organizer;
             this.Price = tempTick.Price;
-            this.StartBuyTime = tempTick.StartBuyTime;
-            this.EndBuyTime = tempTick.EndBuyTime;
-            this.EventTime = tempTick.EventTime;
+            this.StartingDateAvailable = tempTick.StartingDateAvailable;
+            this.EndDateAvailable = tempTick.EndDateAvailable;
+            this.TimeOfEvent = tempTick.TimeOfEvent;
             this.AmountRemaining = tempTick.AmountRemaining;
             this.RowVersion = tempTick.RowVersion;
         }
@@ -42,9 +42,9 @@ namespace TicketManager.WebUI.Models
             temp.Description = this.Description;
             temp.Organizer = this.Organizer;
             temp.Price = this.Price;
-            temp.StartBuyTime = this.StartBuyTime;
-            temp.EndBuyTime = this.EndBuyTime;
-            temp.EventTime = this.EventTime;
+            temp.StartingDateAvailable = this.StartingDateAvailable;
+            temp.EndDateAvailable = this.EndDateAvailable;
+            temp.TimeOfEvent = this.TimeOfEvent;
             temp.AmountRemaining = this.AmountRemaining;
             temp.RowVersion = this.RowVersion;
             return temp;
@@ -73,13 +73,13 @@ namespace TicketManager.WebUI.Models
         //TODO Make Dates from string to DateTime
         //Use Jquerry for date picker
         [Required(ErrorMessage = "Enter a Start of buying date")]
-        public DateTime StartBuyTime { get; set; }
+        public DateTime StartingDateAvailable { get; set; }
 
         [Required(ErrorMessage = "Enter a End of bying date")]
-        public DateTime EndBuyTime { get; set; }
+        public DateTime EndDateAvailable { get; set; }
 
         [Required(ErrorMessage = "Enter a Event start time")]
-        public DateTime EventTime { get; set; }
+        public DateTime TimeOfEvent { get; set; }
 
         public byte[] RowVersion { get; set; }
     }
