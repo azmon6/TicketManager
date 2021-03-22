@@ -1,13 +1,13 @@
-﻿@model IEnumerable<TicketManager.WebUI.Models.CartViewInfo>
+﻿@model TicketManager.WebUI.Models.ShowCartInfo
 
-@if (Model == null || Model.Count() == 0)
+@if (Model == null || Model.userCartItems.Count() == 0)
 {
     <span> Your cart is empty.</span>
 }
 else
 {
     double total = 0;
-    foreach (var tick in Model)
+    foreach (var tick in Model.userCartItems)
     {
         total = total + (tick.TicketPrice * tick.Quantity);
         <div class="item">

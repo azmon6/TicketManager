@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Entities;
+using System.Data.Entity.Infrastructure;
 
 namespace TicketManager.Domain.Concrete
 {
@@ -15,7 +16,6 @@ namespace TicketManager.Domain.Concrete
 
         public bool SaveTicket( Ticket ticketToSave)
         {
-            //TODO Try catch online implementation
             if(ticketToSave.TicketID == 0)
             {
                 context.Tickets.Add(ticketToSave);
@@ -43,8 +43,20 @@ namespace TicketManager.Domain.Concrete
                 }
             }
 
-            context.SaveChanges();
-            return true;
+            try
+            {
+                context.SaveChanges();
+                return true;
+            }
+            catch(DbUpdateConcurrencyException ex)
+            {
+                foreach (var entry in ex.Entries)
+                {
+                    var databaseValues = entry.GetDatabaseValues();
+                    entry.OriginalValues.SetValues(databaseValues);
+                }
+                return false;
+            }
         }
 
         public Ticket DeleteTicket(int ticketToDeleteID)

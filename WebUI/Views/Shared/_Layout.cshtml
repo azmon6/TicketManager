@@ -15,7 +15,9 @@
                 <div class="logo" >
                     <a href="/">Ticket Manager</a>
                 </div>
-                @*TODO Dropdown when small screen*@
+                @{ 
+                    //TODO Dropdown when small screen
+                }
                 <ul>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -62,7 +64,7 @@
         </div>
 
         <div class="HGright">
-            <div id="NotifactionCenter"></div>
+            <div id="NotificationCenter"></div>
         </div>
     </div>
 </body>

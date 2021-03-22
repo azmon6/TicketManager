@@ -26,7 +26,7 @@ function DeleteSideCartItem(tickId) {
     $.ajax(
         {
             url: "/Cart/RemoveLine",
-            data: { tickId: tickId, ajax: true },
+            data: { ticketToRemoveID: tickId, ajax: true },
             success: function () {
                 GetSideCart();
             }

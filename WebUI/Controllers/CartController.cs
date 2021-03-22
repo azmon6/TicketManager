@@ -16,7 +16,7 @@ namespace TicketManager.WebUI.Controllers
             cartRepository = cart;
         }
 
-        public ActionResult BuyTicket(int ticketToBuy, int tempPage = 1)
+        public ActionResult BuyTicket(int ticketToBuy)
         {
 
             if(!this.User.Identity.IsAuthenticated)
@@ -31,27 +31,13 @@ namespace TicketManager.WebUI.Controllers
 
         public ActionResult ShowCart()
         {
-            //TODO Move Functionality to Models/Entities
             if(HttpContext.User.Identity.Name == "")
             {
                 return RedirectToAction("HomeScreen", "Home");
             }
             int currentUserID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            IQueryable<ShoppingCarts> currentCustomerCart = cartRepository.CartInfo.Where(x =>
-                x.UserID == currentUserID);
-            IEnumerable<CartViewInfo> cartItems = currentCustomerCart.
-                Join(cartRepository.TicketInfo,
-                p => p.TicketID, c => c.TicketID, (p, c) =>
-                new CartViewInfo()
-                {
-                    TicketID = p.TicketID,
-                    EventTime = c.TimeOfEvent,
-                    Quantity = p.Quantity,
-                    TicketPrice = c.Price,
-                    TicketName = c.TicketName
-                }).ToList();
-            ShowCartInfo result = new ShowCartInfo();
-            result.userCartItems = cartItems;
+
+            ShowCartInfo result = new ShowCartInfo(cartRepository.GetUserCart(currentUserID),cartRepository.TicketInfo);
             return View(result);
         }
 
@@ -69,20 +55,8 @@ namespace TicketManager.WebUI.Controllers
                 return PartialView("_GetSideCart", end );
             }
             int currentUserID = cartRepository.UserInfo.First(x => x.LoginInformation.Username == HttpContext.User.Identity.Name).UserID;
-            IQueryable<ShoppingCarts> customerCart = cartRepository.CartInfo.Where(x =>
-                x.UserID == currentUserID);
-            IEnumerable<CartViewInfo> temp = customerCart.
-                Join(cartRepository.TicketInfo,
-                p => p.TicketID, c => c.TicketID, (p, c) =>
-                new CartViewInfo()
-                {
-                    TicketID = p.TicketID,
-                    EventTime = c.TimeOfEvent,
-                    Quantity = p.Quantity,
-                    TicketPrice = c.Price,
-                    TicketName = c.TicketName
-                }).ToList();
-            return PartialView("_GetSideCart",temp);
+            ShowCartInfo result = new ShowCartInfo(cartRepository.GetUserCart(currentUserID), cartRepository.TicketInfo);
+            return PartialView("_GetSideCart",result);
         }
         
         public ActionResult RemoveLine(int ticketToRemoveID, bool ajax = false)

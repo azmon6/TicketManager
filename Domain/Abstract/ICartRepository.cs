@@ -24,8 +24,9 @@ namespace TicketManager.Domain.Abstract
 
         IQueryable<ShoppingCarts> RemoveAllFromCart(User customer);
         IQueryable<ShoppingCarts> RemoveAllFromCart(int customerID);
-        
-        bool PreCheckoutCheck(int customerID);
+
+        IQueryable<ShoppingCarts> GetUserCart(int customerID);
+
         bool IsUserAllTicketsReserved(int customerID);
 
 

@@ -3,11 +3,11 @@ using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 
 namespace TicketManager.Domain.Concrete
 {
-    //TODO Double functions Maybe not?
-
+    
     public class EFCartRepository : ICartRepository
     {
         private EntityContext context = new EntityContext();
@@ -61,7 +61,7 @@ namespace TicketManager.Domain.Concrete
                 customerCartLine = new ShoppingCarts();
                 customerCartLine.Quantity = quantity;
                 customerCartLine.Ticket = context.Tickets.Find(ticketToBuyID);
-                customerCartLine.User = context.Users.Find(ticketToBuyID);
+                customerCartLine.User = context.Users.Find(customerID);
                 customerCartLine.DateAdded = DateTime.UtcNow;
                 context.CartInformation.Add(customerCartLine);
             }
@@ -129,9 +129,6 @@ namespace TicketManager.Domain.Concrete
 
         public string SubtractTicket(ShoppingCarts customerCartLine)
         {
-
-            //TO DO Bad practice to return the string? Make it side effect?
-
             if(customerCartLine.CheckOutTime != null)
             {
                 return "";
@@ -148,9 +145,55 @@ namespace TicketManager.Domain.Concrete
             return "";
         }
 
-        public bool PreCheckoutCheck(int customerID)
+        private List<string> TryReserveTickets(int customerID)
         {
-            return false;
+            List<string> result = new List<string>();
+
+            IEnumerable<ShoppingCarts> customerCart = CartInfo.Where(x =>
+                x.UserID == customerID).ToList();
+
+            string returnedMessage = "";
+            foreach (var tempLine in customerCart)
+            {
+                returnedMessage = SubtractTicket(tempLine);
+                if (returnedMessage != "")
+                {
+                    result.Add(returnedMessage);
+                }
+            }
+            context.SaveChanges();
+            return result;
+        }
+
+        public List<string> ReserveTickets(int customerID)
+        {
+            for(int i = 0; i<=5;i++)
+            {
+                try
+                {
+                    return TryReserveTickets(customerID);
+                }
+                catch(DbUpdateConcurrencyException ex)
+                {
+                    
+                    foreach (var entry in ex.Entries)
+                    {
+                        var proposedValues = entry.CurrentValues;
+                        var databaseValues = entry.GetDatabaseValues();
+                        var startingValues = entry.OriginalValues;
+                        foreach (var property in proposedValues.PropertyNames)
+                        {
+                            var databaseValue = databaseValues[property];
+
+                            proposedValues[property] = databaseValue;
+                        }
+                        entry.OriginalValues.SetValues(databaseValues);
+                        entry.State = System.Data.Entity.EntityState.Modified;
+                    }
+                }
+            }
+
+            return new List<string> { "NotPossible" };
         }
 
         public void ClearCart(int customerID)
@@ -185,31 +228,17 @@ namespace TicketManager.Domain.Concrete
             context.SaveChanges();
         }
 
-        public List<string> ReserveTickets(int customerID)
-        {
-            List<string> result = new List<string>();
-
-            IEnumerable<ShoppingCarts> customerCart = CartInfo.Where(x =>
-                x.UserID == customerID).ToList();
-
-            string returnedMessage = "";
-            foreach (var tempLine in customerCart)
-            {
-                returnedMessage = SubtractTicket(tempLine);
-                if (returnedMessage != "")
-                {
-                    result.Add(returnedMessage);
-                }
-            }
-            context.SaveChanges();
-            return result;
-        }
-
         public bool IsUserAllTicketsReserved(int customerID)
         {
             IEnumerable<ShoppingCarts> tempInfo = CartInfo.Where(x =>
                    x.UserID == customerID && x.CheckOutTime==null).ToList();
             return !(tempInfo.Count() == 0);
         }
+
+        public IQueryable<ShoppingCarts> GetUserCart(int customerID)
+        {
+            return CartInfo.Where(x => x.UserID == customerID);
+        }
+
     }
 }

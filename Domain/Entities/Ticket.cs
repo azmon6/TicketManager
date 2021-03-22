@@ -6,7 +6,6 @@ namespace TicketManager.Domain.Entities
 
     public class Ticket
     {
-        //TO DO RENAME FIELD/TABLES
 
         public int TicketID { get; set; }
 
@@ -18,7 +17,6 @@ namespace TicketManager.Domain.Entities
         
         public double Price { get; set; }
 
-        //TODO Make Dates from string to DateTime
         //Use Jquerry for date picker
         public DateTime StartingDateAvailable { get; set; }
         

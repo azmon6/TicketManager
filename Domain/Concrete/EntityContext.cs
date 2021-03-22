@@ -13,8 +13,6 @@ namespace TicketManager.Domain.Concrete
 
         public EntityContext():base("name=EntityContext")
         {
-            //TODO Output SQL to output that is not Debug
-            //this.Database.Log = sql => Trace.WriteLine(sql);
             Database.SetInitializer<EntityContext>(new DropCreateDatabaseIfModelChanges<EntityContext>());
         }
 

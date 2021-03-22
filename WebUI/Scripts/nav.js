@@ -29,18 +29,21 @@ function orderColumn(value1) {
     );
 }
 
-function BuyTicket(data) {
+function BuyTicket(ticketID) {
     $.ajax(
         {
             url: "/Cart/BuyTicket",
-            data: { tickId: data },
-            success: function (test) {
-                if (test == "") {
+            data: { ticketToBuy: ticketID },
+            success: function (data) {
+                if (data == "") {
                     GetSideCart();
                 }
                 else {
-                    window.location.href = test.redirectToUrl;
+                    window.location.href = data.redirectToUrl;
                 }
+            },
+            error: function () {
+                alert("Ticket was unable to be bought.");
             }
         }
     );

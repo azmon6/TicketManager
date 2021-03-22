@@ -70,7 +70,6 @@ namespace TicketManager.WebUI.Models
         [Range(0.01, double.MaxValue, ErrorMessage = "Value must be a valid price")]
         public double Price { get; set; }
 
-        //TODO Make Dates from string to DateTime
         //Use Jquerry for date picker
         [Required(ErrorMessage = "Enter a Start of buying date")]
         public DateTime StartingDateAvailable { get; set; }

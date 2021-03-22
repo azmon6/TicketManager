@@ -30,7 +30,6 @@ namespace WebUI.Controllers
             PageSize = 5;
         }
 
-        //TODO Make it work with data in html tags
         public ActionResult GetTicketTable(int page = 1)
         {
             if (HttpContext.Request.Cookies["TicketOrderColumn"] == null || HttpContext.Request.Cookies["TicketOrderAsc"] == null)
@@ -60,7 +59,7 @@ namespace WebUI.Controllers
         }
 
         [RolesAuthorize(Mykeys ="Admin")]
-        public ViewResult ModifyTicket(int ticketToModifyID)
+        public ViewResult ModifyTicket(int ticketToModifyID = 0)
         {
             Ticket tick = repository.Tickets.FirstOrDefault(p => p.TicketID == ticketToModifyID);
             return View(new ModifyTicketModel(tick));

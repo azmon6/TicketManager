@@ -45,8 +45,8 @@
                         <a class="optionsbtn" href=@Url.Content("~/ticket/" + tick.TicketID)>Show</a>
                         @if (HttpContext.Current.User.IsInRole("Admin"))
                         {
-                            <a class="optionsbtn" href=@Url.Action("ModifyTicket","Admin",new { tickID = tick.TicketID})>Edit</a>
-                            <a class="optionsbtn" href=@Url.Action("DeleteTicket","Admin",new { tickID = tick.TicketID})>Delete</a>
+                            <a class="optionsbtn" href=@Url.Action("ModifyTicket","Admin",new { ticketToModifyID = tick.TicketID})>Edit</a>
+                            <a class="optionsbtn" href=@Url.Action("DeleteTicket","Admin",new { ticketToDeleteID = tick.TicketID})>Delete</a>
                         }
                     </div>
                 </div>

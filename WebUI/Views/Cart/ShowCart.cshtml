@@ -33,7 +33,7 @@
                 <td>@tick.EventTime</td>
                 <td>@tick.Quantity</td>
                 <td>@tick.TicketPrice.ToString("c")</td>
-                <td>@Html.ActionLink("Remove", "RemoveLine", "Cart", new { tickId = tick.TicketID }, null)</td>
+                <td>@Html.ActionLink("Remove", "RemoveLine", "Cart", new { ticketToRemoveID = tick.TicketID }, null)</td>
             </tr>
         }
     </tbody>
@@ -74,8 +74,17 @@
     function makeUnavailableNotification(unavailableTickets) {
         for (var i of unavailableTickets) {
             const newDiv = document.createElement("div");
+            newDiv.classList.add("notification");
             newDiv.innerHTML = "<b>Warning.</b> ".concat("The ticket \"",i,"\" is unavailable in the amount you want.");
-            $("#NotifactionCenter").append(newDiv);
+            $("#NotificationCenter").append(newDiv);
+            setTimeout(notificationDisappear, 2000, newDiv);
         }
     }
+    @{
+    //TODO MAKE ANIMATION EASY
+    }
+    function notificationDisappear(el) {
+        el.remove();
+    }
+
 </script>
