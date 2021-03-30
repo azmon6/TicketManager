@@ -8,7 +8,7 @@ namespace TicketManager.Domain.Entities
         public int UserID { get; set; }
 
         public int LoginID { get; set; }
-        public LoginInformation LoginInformation { get; set; }
+        public virtual LoginInformation LoginInformation { get; set; }
 
         public string Name { get; set; }
 

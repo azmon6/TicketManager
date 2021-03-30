@@ -2,28 +2,34 @@
 
 @{
     ViewBag.Title = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "";
 }
+<script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
+<link href="~/Content/LoginStyles.css" rel="stylesheet" />
 
-<div>
-    <div>
-        <h3> Log In</h3>
+<div class="LogInBox">
+    <div class="homeButton">
+        <a href="/"><i class="fas fa-arrow-left"></i> Home</a>
     </div>
-    <div>
-        <p >Please log in to access the administration area:</p>
-        @using (Html.BeginForm())
-        {
-            @Html.ValidationSummary()
-            <div class="form-group">
-                <label>User Name:</label>
-                @Html.TextBoxFor(m => m.Username)
-            </div>
-            <div class="form-group">
-                <label>Password:</label>
-                @Html.PasswordFor(m => m.Password)
-            </div>
-            <input type="submit" value="Log in" class="btn btn-primary" />
-        }
-    </div>
+
+    @using (Html.BeginForm())
+    {
+        <div>
+            <h3>Login</h3>
+        </div>
+        @Html.ValidationSummary()
+
+        <div>
+            <i class="fas fa-user"></i>
+            @Html.TextBoxFor(m => m.Username, new { @class = "enterField", placeholder = "Username" })
+        </div>
+
+        <div>
+            <i class="fas fa-lock"></i>
+            @Html.PasswordFor(m => m.Password, new { @class = "enterField", placeholder = "Password" })
+        </div>
+
+        <input type="submit" value="Login" class="btn btn-primary" />
+    }
 </div>
 

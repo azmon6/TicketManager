@@ -1,0 +1,126 @@
+﻿@model TicketManager.WebUI.Models.ProfileInfo
+
+@{
+    ViewBag.Title = "ShowProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+a:hover {
+    text-decoration: none;
+}
+
+.userName {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.editProfile,
+.editProfile:hover{
+    color: darkorange;
+    font-size:23px;
+}
+
+.clearfix .btn {
+    margin: 10px 0px;
+}
+
+.col-md-6 {
+    max-width:none !important;
+}
+
+.col {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.role {
+    color: white;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+
+</style>
+
+<div class="clearfix" style="margin-top: 20px;">
+
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <img src="https://via.placeholder.com/300" class="float-left">
+            </div>
+            <div class="col">
+                <p class="userName">
+                    @Model.DisplayName
+                    @Html.ActionLink(" ", "EditUser", new { userToEdit = Model.UserID }, new { @class = "bi bi-pencil editProfile" })
+                </p>
+                
+                @if (HttpContext.Current.User.IsInRole("Admin"))
+                {
+                    <div>
+                        @Html.ActionLink("Show All Users", "ViewUsers", "User", new { }, new { @class = "btn btn-primary" })
+                    </div>
+                }
+
+                @{
+                    //MAKE DIFFERENT ROLES HAVE MORE FUNC
+                }
+
+                @if (HttpContext.Current.User.IsInRole("Admin"))
+                {
+                    <div>
+                        @Html.ActionLink("Server Info", "ServerStats", "Server", new { }, new { @class = "btn btn-primary" })
+                    </div>
+
+                    <div>
+                        @Html.ActionLink("Server Logs", "ServerLog", "Server", new { }, new { @class = "btn btn-primary" })
+                    </div>
+
+                    <div>
+                        @Html.ActionLink("Refresh Old Shopping Carts", "RefreshOldCarts", "Cart", new { }, new { @class = "btn btn-primary" })
+                    </div>
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <div style="margin:40px 0px;">
+        <p style="float:left;"><b>Your Roles are : </b> </p>
+        <div>
+            @foreach (var role in Model.Roles)
+            {
+                <i class="badge bg-danger role">@role</i>
+            }
+        </div>
+    </div>
+
+</div>
+
+<p><b> Your transaction history : </b></p>
+
+<table class="table">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Ticket Name</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price Paid</th>
+            <th scope="col">DateMade</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var temp in Model.UserTransactions)
+        {
+            <tr class="table-secondary">
+                <td>@temp.Item2.TicketName</td>
+                <td>@(temp.Item1.PricePaid/temp.Item2.Price)</td>
+                <td>@temp.Item1.PricePaid</td>
+                <td>@temp.Item1.DateMade</td>
+            </tr>
+        }
+    </tbody>
+</table>

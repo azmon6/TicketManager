@@ -1,0 +1,82 @@
+﻿.addbutton {
+    background-color: #e05151;
+    color: white;
+    padding: 15px;
+    border: 1px solid #a13838;
+    border-radius: 10px;
+    border-bottom: 3px solid #a13838;
+    clear: both;
+    margin-top: 45px;
+}
+
+.addbutton:hover {
+    text-decoration: none;
+    color: white;
+    background-color: #a13838;
+}
+
+#ShowTicketsPage a:hover {
+    text-decoration: none;
+}
+
+#ShowTicketsPage .fas {
+    margin-top: 2px;
+}
+
+#ShowTicketsTable {
+    margin: 20px 0px;
+    border: 1px solid gray;
+}
+
+#ShowTicketsTable div > a,
+#ShowTicketsTable div > a:hover {
+    border-top: 0px;
+    font-size: 20px;
+    color: black;
+    font-weight:600;
+}
+
+#ShowTicketsTable div > a:hover {
+    text-decoration: underline;
+}
+
+#ShowTicketsTable .row:nth-child(2n) {
+    background-color:#e9e9e9;
+}
+
+#ShowTicketsTable .row:nth-child(2n+1):not(:first-child) {
+    background-color: #f6f6f6;
+}
+
+#ShowTicketsTable .col {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.6rem;
+    border-right: 1px solid gray;
+    text-align: center;
+}
+
+
+.table-header {
+    background-color: #343a40;
+    color: ghostwhite;
+    font-size: 18px;
+    text-align: center;
+}
+
+.table-header:hover {
+    cursor: pointer;
+}
+
+#tableNav {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.page-item {
+    font-weight:bold;
+    font-size:16px;
+}

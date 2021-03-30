@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TicketManager.Domain.Entities;
 
 namespace TicketManager.Domain.Abstract
@@ -6,10 +8,17 @@ namespace TicketManager.Domain.Abstract
     public interface IUsersRepository
     {
         IQueryable<User> Users { get; }
-        //Bool because we can try to add an existing User
-        bool AddUser(User tempUser, LoginInformation loginInformation);
-        bool IsValidUser(string Username, string Password);
-        User DeleteUser(int UserId);
-        void ModifyUser(User tempUser);
+
+        bool AddUser(User newCustomer, LoginInformation newLoginInformation);
+        bool IsValidUser(string username, string password);
+
+        void ModifyUser(User customerToModify);
+
+        User DeleteUser(int customerID);
+        User GetUser(int customerID);
+        User GetUser(string customerUsername);
+        
+        IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(string customerUsername);
+        IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(int customerID);
     }
 }

@@ -5,6 +5,7 @@ using Ninject;
 using Ninject.Web.Common;
 using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Concrete;
+using TicketManager.Logging;
 
 namespace TicketManager.WebUI.Infrastructure
 {
@@ -31,9 +32,11 @@ namespace TicketManager.WebUI.Infrastructure
         private void AddBindings()
         {
             kernel.Bind<EntityContext>().ToSelf().InRequestScope();
+            kernel.Bind<MyLoggingServices>().ToSelf().InRequestScope();
             kernel.Bind<ITicketRepository>().To<EFTicketRepository>().InTransientScope();
             kernel.Bind<IUsersRepository>().To<EFUserRepository>().InTransientScope();
             kernel.Bind<ICartRepository>().To<EFCartRepository>().InTransientScope();
+            kernel.Bind<IServerRepository>().To<EFServerRepository>().InTransientScope();
         }
     }
 }

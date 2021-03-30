@@ -8,55 +8,87 @@
     };
 }
 
+
 @using (Ajax.BeginForm("GetTicketTable", ajaxOpts))
 {
 
     <div id="ShowTicketsPage">
 
-        <div id="ShowTicketsTable">
-            <div class="My_th" onclick="test('@Url.Action("GetTicketTable", new { page = 1 })')">Ticket Name</div>
-            <div class="My_th">Organizer</div>
-            <div class="My_th">Event Time</div>
-            <div class="My_th">Price</div>
-            <div class="My_th">Actions</div>
-            <div class="My_th"></div>
+        <div class="container-fluid" id="ShowTicketsTable">
+
+            <div class="row table-header">
+                <div class="col" onclick="orderColumn('TicketName')">Ticket Name <i id="TicketNameIcon" class="fas fa-angle-double-down"></i> </div>
+                <div class="col" onclick="orderColumn('Organizer')">Organizer <i id="OrganizerIcon" class="fas fa-angle-double-down"></i></div>
+                <div class="col" onclick="orderColumn('EventTime')">Event Time <i id="EventTimeIcon" class="fas fa-angle-double-down"></i></div>
+                <div class="col" onclick="orderColumn('Price')">Price <i id="PriceIcon" class="fas fa-angle-double-down"></i></div>
+                <div class="col">Actions</div>
+            </div>
+
             @foreach (var tick in Model.Tickets)
             {
-                <div class="My_td wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
-                <div class="My_td wordbreak fontsize18">@tick.Organizer</div>
-                <div class="My_td">@tick.EventTime</div>
-                <div class="My_td">@tick.Price</div>
-                <div class="My_td">
-                    @Html.ActionLink("Buy Ticket", "BuyTicket", "Cart", new { tickID = tick.TicketID, tempPage = Model.PageNow }, new { @class = "buybtn" })
-                </div>
-                <div class="My_td">
-                    <i class="fas fa-align-justify fontsize18" style="float:right"></i>
+                <div class="row">
+                    <div class="col wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
+                    <div class="col wordbreak fontsize18">@tick.Organizer</div>
+                    <div class="col">@tick.TimeOfEvent.ToString("dd-MM-yyyy HH:mm")</div>
+                    <div class="col">@tick.Price.ToString("c")</div>
+                    <div class="col dropend">
+                        <button type="button" class="btn btn-info shadow-none" onclick="buyTicket(@tick.TicketID)">Buy Ticket</button>
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-align-justify fontsize18"></i>
+                        </button>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href=@Url.Content("~/ticket/" + tick.TicketID)>Show</a></li>
+                            @if (HttpContext.Current.User.IsInRole("Admin"))
+                            {
+                                <li><a class="dropdown-item" href=@Url.Action("ModifyTicket", "Admin", new { ticketToModifyID = tick.TicketID })>Edit</a></li>
+                                <li><a class="dropdown-item" href=@Url.Action("DeleteTicket", "Admin", new { ticketToDeleteID = tick.TicketID })>Delete</a></li>
+                            }
+
+                        </ul>
+                    </div>
+
+
                 </div>
             }
         </div>
 
-        <div class="tablenav">
+        <nav id="tableNav" aria-label="Page navigation">
+            <ul class="pagination">
 
-            @Ajax.ActionLink(" ", "GetTicketTable", new { page = 1 }, ajaxOpts, new { @class = "fas fa-backward fontsize18" })
+                <li class="page-item">
+                    @Ajax.ActionLink(" ", "GetTicketTable", new { page = 1 }, ajaxOpts, new { @class = "bi bi-chevron-double-left page-link" })
+                </li>
 
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                if (i == Model.PageNow)
+                @for (int i = 1; i <= Model.TotalPages; i++)
                 {
-                    <div>
-                        @Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { style = "color: red", @class = "navbutton" })
-                    </div>
-                }
-                else
-                {
-                    <div>
-                        @Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { @class = "navbutton" })
-                    </div>
-                }
-            }
+                    if (Model.PageNow == i)
+                    {
+                        <li class="page-item">@Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { @class = "page-link", style = " color:red; " })</li>
+                    }
+                    else
+                    {
+                        <li class="page-item">@Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { @class = "page-link" })</li>
+                    }
 
-            @Ajax.ActionLink(" ", "GetTicketTable", new { page = Model.TotalPages }, ajaxOpts, new { @class = "fas fa-forward fontsize18" })
-        </div>
+                }
+
+                <li class="page-item">
+                    @Ajax.ActionLink(" ", "GetTicketTable", new { page = Model.TotalPages }, ajaxOpts, new { @class = "bi bi-chevron-double-right page-link" })
+                </li>
+            </ul>
+        </nav>
+
 
     </div>
+    <script>
+        $(document).ready(function () {
+            $('.fa-angle-double-down').hide();
+            $('#' + whichColumn + 'Icon').show();
+            if (ascOrder == "1") {
+                $('#' + whichColumn + 'Icon').addClass("fa-angle-double-up");
+                $('#' + whichColumn + 'Icon').removeClass("fa-angle-double-down");
+            }
+        })
+    </script>
 }

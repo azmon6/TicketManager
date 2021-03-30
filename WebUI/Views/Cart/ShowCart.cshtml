@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TicketManager.WebUI.Models.CartViewInfo>
+﻿@model TicketManager.WebUI.Models.ShowCartInfo
 
 @{
     ViewBag.Title = "ShowCart";
@@ -6,35 +6,98 @@
 }
 
 
-<table class="table table-bordered table-condensed table-striped">
+@if(TempData["UnavailableTicketMessage"] != null)
+{
+    <div>
+        @TempData["UnavailableTicketMessage"]
+    </div>
+}
 
-    <thead>
-        <tr>
-            <td>Ticket Name</td>
-            <td>Event Start Time</td>
-            <td>Quantity</td>
-            <td>Ticket Price</td>
-            <td>Remove</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var tick in Model)
-        {
+@if(Model.userCartItems.Count() == 0)
+{
+    <div style="place-items: center; display:grid;">
+        <div class="btn btn-warning mt-5">
+            Your Cart is empty. :(
+        </div>
+    </div>
+}
+else
+{
+
+
+    <table class="table table-bordered table-striped" style="margin-top:50px;">
+
+        <thead class="thead-dark">
             <tr>
-                <td>@tick.TicketName</td>
-                <td>@tick.EventTime</td>
-                <td>@tick.Quantity</td>
-                <td>@tick.TicketPrice</td>
-                <td>@Html.ActionLink("Remove", "RemoveLine", "Cart", new { tickId = tick.TicketID }, null)</td>
+                <th>Ticket Name</th>
+                <th>Event Start Time</th>
+                <th>Quantity</th>
+                <th>Ticket Price</th>
+                <th>Remove</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var tick in Model.userCartItems)
+            {
+                <tr>
+                    <td>@tick.TicketName</td>
+                    <td>@tick.EventTime</td>
+                    <td>@tick.Quantity</td>
+                    <td>@tick.TicketPrice.ToString("c")</td>
+                    <td>@Html.ActionLink("Remove", "RemoveLine", "Cart", new { ticketToRemoveID = tick.TicketID }, null)</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+    <div>
+        Total Price: @Model.userCartItems.Sum(e => e.Quantity * e.TicketPrice).ToString("c")
+    </div>
+    <div>
+        <button onclick="beforeCheckoutCheck()" class="btn btn-primary" style="margin:5px">Checkout</button>
+    </div>
+    <div>
+        @Html.ActionLink("Empty Cart", "ClearCart", "Cart", new { }, new { @class = "btn btn-danger", style = "margin: 5px" })
+    </div>
+
+    <script>
+
+        function beforeCheckoutCheck() {
+            $.ajax(
+                {
+                    url: '/Cart/CheckoutCheck',
+                    data: { },
+                    success: function (data) {
+                        console.log(data);
+                        if (data.unavailableTickets.length == 0) {
+                            window.location.href = data.redirectToUrl;
+                        }
+                        else {
+                            makeUnavailableNotification(data.unavailableTickets);
+                        }
+                    }
+                }
+            );
         }
-    </tbody>
 
-</table>
 
-<div>
-    Total Price: @Model.Sum(e => e.Quantity * e.TicketPrice)
-</div>
-<div>
-    @Html.ActionLink("Checkout", "Checkout", "Cart")
-</div>
+        function makeUnavailableNotification(unavailableTickets) {
+            for (var i of unavailableTickets) {
+                const newDiv = document.createElement("div");
+                newDiv.classList.add("notification");
+                newDiv.innerHTML = "<b>Warning.</b> ".concat("The ticket \"",i,"\" is unavailable in the amount you want.");
+                $("#NotificationCenter").append(newDiv);
+                setTimeout(notificationDisappear, 2000, newDiv);
+            }
+        }
+
+        @{
+        //TODO MAKE ANIMATION EASY
+        }
+        function notificationDisappear(el) {
+            el.remove();
+        }
+
+    </script>
+}

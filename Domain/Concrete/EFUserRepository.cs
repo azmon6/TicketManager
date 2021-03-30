@@ -3,6 +3,7 @@ using System.Linq;
 using TicketManager.Domain.Abstract;
 using TicketManager.Domain.Entities;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 using System.Text;
 
 namespace TicketManager.Domain.Concrete
@@ -19,17 +20,17 @@ namespace TicketManager.Domain.Concrete
             }
         }
 
-        public bool AddUser(User tempUser, LoginInformation loginInformation)
+        public bool AddUser(User newCustomer, LoginInformation newLoginInformation)
         {
 
-            var temp = context.LoginInformations.Where(x => x.Username == loginInformation.Username).ToList();
+            var usersWithUsername = context.LoginInformations.Where(x => x.Username == newLoginInformation.Username).ToList();
 
-            if(tempUser.UserID == 0 && loginInformation.LoginID == 0 && temp.Count == 0)
+            if(newCustomer.UserID == 0 && newLoginInformation.LoginID == 0 && usersWithUsername.Count == 0)
             {
-                loginInformation.Password = GetMD5(loginInformation.Password);
-                tempUser.LoginInformation = context.LoginInformations.Add(loginInformation);
-                tempUser.Role = "Normal";
-                context.Users.Add(tempUser);
+                newLoginInformation.Password = GetMD5(newLoginInformation.Password);
+                newCustomer.LoginInformation = context.LoginInformations.Add(newLoginInformation);
+                newCustomer.Role = "Normal";
+                context.Users.Add(newCustomer);
                 context.SaveChanges();
                 return true;
             }
@@ -37,30 +38,41 @@ namespace TicketManager.Domain.Concrete
             return false;
         }
 
-        public bool IsValidUser(string Username, string Password)
+        public bool IsValidUser(string username, string password)
         {
-            string temp = GetMD5(Password);
-            bool isValid = context.LoginInformations.Any(p => p.Username == Username &&
+            string temp = GetMD5(password);
+            bool isValid = context.LoginInformations.Any(p => p.Username == username &&
                 p.Password == temp);
 
             return isValid;
         }
 
-        public void ModifyUser(User tempUser)
+        public void ModifyUser(User customerToModify)
         {
-            User foundUser = context.Users.FirstOrDefault(p => p.UserID == tempUser.UserID);
+            User foundUser = context.Users.FirstOrDefault(p => p.UserID == customerToModify.UserID);
             if(foundUser == null)
             {
                 return;
             }
 
-            foundUser.Name = tempUser.Name;
-            foundUser.Role = tempUser.Role;
+            foundUser.Name = customerToModify.Name;
+            foundUser.Role = customerToModify.Role;
             context.SaveChanges();
         }
 
-        public User DeleteUser(int UserId)
+        public User GetUser(int customerID)
         {
+            return Users.FirstOrDefault(p => p.UserID == customerID);
+        }
+
+        public User GetUser(string customerUsername)
+        {
+            return Users.FirstOrDefault(p => p.LoginInformation.Username == customerUsername);
+        }
+
+        public User DeleteUser(int customerID)
+        {
+            //TODO DELETE USERS
             throw new NotImplementedException();
             //return new User();
         } 
@@ -80,5 +92,17 @@ namespace TicketManager.Domain.Concrete
             return byte2String;
         }
 
+        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(string customerUsername)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Tuple<Transaction, Ticket>> GetUserTransactions(int customerID)
+        {
+            
+            return context.Transactions.Where(x => x.UserID == customerID).Join(context.Tickets, tran => tran.TicketID, tick => tick.TicketID,
+                (tran, tick) => new { Trtemp = tran, TickTemp = tick }
+                ).ToList().Select(x => new Tuple<Transaction, Ticket>(x.Trtemp, x.TickTemp));
+        }
     }
 }

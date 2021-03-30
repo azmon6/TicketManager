@@ -68,6 +68,5 @@ namespace TicketManager.WebUI.Controllers
             FormsAuthentication.SignOut();
             return Redirect(Url.Action("HomeScreen", "Home"));
         }
-
     }
 }

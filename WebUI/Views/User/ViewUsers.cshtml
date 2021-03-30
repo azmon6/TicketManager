@@ -6,9 +6,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<table class="table table-bordered table-condensed table-striped">
+<table class="table table-bordered table-striped" style="margin-top:50px;">
 
-    <thead>
+    <thead class="thead-dark">
         <tr>
             <th>Name</th>
             <th>Role</th>
@@ -22,7 +22,7 @@
             <tr>
                 <td>@use.Name</td>
                 <td>@use.Role</td>
-                <td>@Html.ActionLink("Edit", "EditUser", new { userID = use.UserID })</td>
+                <td>@Html.ActionLink("Edit", "EditUser", new { userToEdit = use.UserID })</td>
             </tr>
         }
     </tbody>

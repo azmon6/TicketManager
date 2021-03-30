@@ -3,6 +3,7 @@ using System.Web.Routing;
 using System.Data.Entity;
 using TicketManager.Domain.Concrete;
 using System.Web.Optimization;
+using TicketManager.Logging;
 
 namespace WebUI
 {
@@ -13,6 +14,7 @@ namespace WebUI
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             Database.SetInitializer<EntityContext>(null);
+            Database.SetInitializer<MyLoggingServices>(null);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }

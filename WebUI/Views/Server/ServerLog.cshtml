@@ -1,0 +1,195 @@
+﻿
+@{
+    ViewBag.Title = "ServerLog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
+
+<style>
+    #LogContainer {
+        margin-bottom:50px;
+        border: 1px solid gray;
+    }
+
+    #LoadingIcon {
+        height:50px;
+        width:50px;
+        margin:0 auto;
+        display:block;
+    }
+
+    #LoadingIcon i {
+        color: black;
+        font-size: 32px;
+    }
+
+    .dataLog{
+        padding: 3px 6px 3px 8px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+    }
+
+    .errorCode {
+        background-color: red;
+        color: white;
+    }
+
+    .warningCode{
+        background-color: yellow;
+        color: blue;
+    }
+
+    .LogHeader {
+        text-align:center;
+    }
+
+    #LogContainerBody td{
+        border-right: 1px solid gray;
+    }
+
+</style>
+
+<h2 class="mt-2">Logging Service</h2>
+
+<div style="margin:20px 0px;">
+    <a class="btn btn-primary" onclick="loadLogPage()">Load Logs</a>
+    <a class="btn btn-success" onclick="DownloadCSV()">Download CSV</a>
+</div>
+
+<table class="table" id="LogContainer">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">LogType</th>
+            <th scope="col">Message</th>
+            <th scope="col">Priority</th>
+            <th scope="col">TimeMade</th>
+            <th scope="col">Object</th>
+        </tr>
+    </thead>
+    <tbody id="LogContainerBody">
+
+    </tbody>
+</table>
+
+<div id="LoadingIcon">
+    <i class="fas fa-spinner fa-spin"></i>
+</div>
+
+<script defer>
+
+    var LogStartingFrom = 0;
+    var LogGetHowMany = 42;
+
+    $(window).ready(function () {
+        $('#LoadingIcon').hide();
+    });
+
+    var rowCount = 0;
+
+    function sleep(milliseconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+    }
+
+    @{ 
+        //TODO Multiple event calls are made if logs take time to come from the server
+    }
+
+    var requestRunning = false;
+
+    function AddElement() {
+        $.ajax(
+            {
+                url: '/Server/GetLogs',
+                data: { startFrom: LogStartingFrom, howMany: LogGetHowMany },
+                beforeSend: function () {
+                    $('#LoadingIcon').show();
+                    requestRunning = true;
+                },
+                success: function (data) {
+                    if (data.length == 0) {
+                        window.removeEventListener('scroll', AddMoreLogsToPage);
+                    }
+                    var MapGrid = { "LogType": 0, "LogMessage": 1, "Priority": 2, "TimeMade": 3, "Object": 4 };
+                    var ArrayDivs = new Array(5);
+                    var contain = document.getElementById('LogContainer').getElementsByTagName('tbody')[0];;
+                    for (var Logs of data) {
+                        var trEl = contain.insertRow();
+                        for (var LogInfo in Logs) {
+                            if (LogInfo == "LogID") { continue; }
+
+                            ArrayDivs[MapGrid[LogInfo]] = Logs[LogInfo];
+
+                        }
+                        for (var i of ArrayDivs) {
+                            var newCell = trEl.insertCell();
+                            newCell.innerHTML = i;
+                            console.log(i);
+                        }
+                        if (rowCount % 2 == 0) {
+                            trEl.classList.add("table-secondary");
+                        }
+                        rowCount = rowCount + 1;
+                        contain.append(trEl);
+                    }
+
+
+                    console.log(data);
+
+                    LogStartingFrom = LogStartingFrom + LogGetHowMany;
+                },
+                complete: function () {
+                    $('#LoadingIcon').hide();
+                    requestRunning = false;
+                }
+            }
+        );
+    }
+
+    function AddMoreLogsToPage() {
+        if (requestRunning) {
+            return;
+        }
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 75 ) {
+            AddElement();
+        }
+    }
+
+    function DownloadCSV() {
+        $.ajax(
+            {
+                url: '/Server/GetAllLogs',
+                data: { },
+                success: function (data) {
+                    var csvResult = 'data:text/csv;charset=utf-8,';
+                    for (var Log of data) {
+                        var lineString = '';
+                        for (var temp of Object.values(Log)) {
+                            lineString = lineString.concat("\"",temp,"\"", ',');
+                        }
+                        lineString = lineString.slice(0, -1);
+                        lineString = lineString.concat('\n');
+                        csvResult =  csvResult.concat(lineString);
+                    }
+                    var encodedUri = encodeURI(csvResult);
+                    var link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", "my_data.csv");
+                    document.body.appendChild(link);
+                    link.click();
+                }
+            }
+        );
+    }
+
+    function loadLogPage() {
+        AddElement();
+    }
+
+    window.addEventListener('scroll', AddMoreLogsToPage);
+</script>

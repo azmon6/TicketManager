@@ -18,7 +18,9 @@
             @Html.TextBoxFor(m => m.Name)
         </div>
         
-        @* TODO Add More Roles*@
+        { 
+            //TODO Add More Roles
+        }
         <div class="form-group">
             <label>Name shown to other users</label>
             @Html.DropDownListFor(m => m.Role, new SelectList(new[] { "Admin", "Normal" }))

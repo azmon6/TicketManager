@@ -2,32 +2,44 @@
 
 @{
     ViewBag.Title = "SignUp";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "";
 }
 
-<div>
+@*//TODO USE DATA ATTR AND CONTINUAL DATA VALIDATION*@
+
+<script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
+<link href="~/Content/LoginStyles.css" rel="stylesheet" />
+
+<div class="SignUpBox">
+    
+    <div class="homeButton">
+        <a href="/"><i class="fas fa-arrow-left"></i> Home</a>
+    </div>
 
     @using (Html.BeginForm("SignUp", "Account", FormMethod.Post))
     {
+        <div>
+            <h3>Sign Up</h3>
+        </div>
+
         @Html.ValidationSummary()
+
         <div>
-            <label>User Name:</label>
-            @Html.TextBoxFor(m => m.Username)
+            @Html.TextBoxFor(m => m.Username, new { @class = "enterField", placeholder = "Enter Username" })
         </div>
+
         <div>
-            <label>Password:</label>
-            @Html.PasswordFor(m => m.Password)
+            @Html.PasswordFor(m => m.Password, new { @class = "enterField", placeholder = "Enter Password" })
         </div>
+
         <div>
-            <label>ConfirmPassword:</label>
-            @Html.PasswordFor(m => m.ConfirmPassword)
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "enterField", placeholder = "Confirm Password" })
         </div>
+
         <div>
-            <label>Name Shown to other users:</label>
-            @Html.TextBoxFor(m => m.Name)
+            @Html.TextBoxFor(m => m.Name, new { @class = "enterField", placeholder = "Enter Display name" })
         </div>
         <input type="submit" value="Sign Up" class="btn btn-primary" />
     }
 
 </div>
-

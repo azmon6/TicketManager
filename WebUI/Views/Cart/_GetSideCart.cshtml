@@ -1,0 +1,22 @@
+﻿@model TicketManager.WebUI.Models.ShowCartInfo
+
+@if (Model == null || Model.userCartItems.Count() == 0)
+{
+    <div> Your cart is empty.</div>
+}
+else
+{
+    double total = 0;
+    foreach (var tick in Model.userCartItems)
+    {
+        total = total + (tick.TicketPrice * tick.Quantity);
+        <div class="item">
+            <div class="title"> @tick.Quantity X @tick.TicketName</div>
+            <div class="price"> @((tick.TicketPrice*tick.Quantity).ToString("c"))</div>
+            <a class="btn" onclick="DeleteSideCartItem(@tick.TicketID)">X</a>
+        </div>
+    }
+    <div class="totalCost">
+        Total: @total.ToString("c")
+    </div>
+}   

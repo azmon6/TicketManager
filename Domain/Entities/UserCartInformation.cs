@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using System;
 
 namespace TicketManager.Domain.Entities
 {
-    public class UserCartInformation
+    public class ShoppingCarts
     {
 
         [Key]
@@ -13,10 +14,12 @@ namespace TicketManager.Domain.Entities
         public User User { get; set; }
 
         public int TicketID { get; set; }
-        public Ticket Ticket { get; set; }
+        public virtual Ticket Ticket { get; set; }
 
         public int Quantity { get; set; }
 
-        public string DateAdded { get; set; }
+        public DateTime DateAdded { get; set; }
+
+        public DateTime? CheckOutTime { get; set; }
     }
 }

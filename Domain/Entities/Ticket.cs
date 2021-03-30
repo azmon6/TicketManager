@@ -1,9 +1,12 @@
-﻿
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace TicketManager.Domain.Entities
 {
 
     public class Ticket
     {
+
         public int TicketID { get; set; }
 
         public string TicketName { get; set; }
@@ -14,12 +17,16 @@ namespace TicketManager.Domain.Entities
         
         public double Price { get; set; }
 
-        //TODO Make Dates from string to DateTime
         //Use Jquerry for date picker
-        public string StartBuyTime { get; set; }
+        public DateTime StartingDateAvailable { get; set; }
         
-        public string EndBuyTime { get; set; }
+        public DateTime EndDateAvailable { get; set; }
 
-        public string EventTime { get; set; }
+        public DateTime TimeOfEvent { get; set; }
+
+        public int AmountRemaining { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

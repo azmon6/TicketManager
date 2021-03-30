@@ -1,0 +1,304 @@
+﻿
+@{
+    ViewBag.Title = "ServerStats";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/Chart.js"></script>
+
+<h2>Server Statistics</h2>
+
+<h4 id="ChartTitle"> Earnings weekly</h4>
+
+<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+    <label class="btn btn-outline-primary" for="btnradio1">
+        Get Weekly
+        <input onclick="setChartWeek()" type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
+    </label>
+
+    <label class="btn btn-outline-primary" for="btnradio2">
+        Get Monthly
+        <input onclick="setChartMonth()" type="radio" class="btn btn-outline-primary" name="btnradio" id="btnradio2" autocomplete="off">
+    </label>
+
+    <label class="btn btn-outline-primary" for="btnradio3">
+        Get Yearly
+        <input onclick="setChartYear()" type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+    </label>
+</div>
+
+<div></div>
+<canvas id="ServerCanvas" height="450" width="550">
+</canvas>
+
+<script>
+
+    //THIS WORKS FOR DATE FORMAT DD/MM/YYYY
+    var Months = ["Jan", "Feb", "Mar", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    function Last7Days() {
+        var result = [];
+        for (var i = 6; i >= 0; i--) {
+            var d = new Date();
+            d.setDate(d.getDate() - i);
+            result.push(d)
+        }
+
+        return (result);
+    }
+
+    function Last8Weeks() {
+        var result = [];
+        for (var i = 7; i >= 0; i--) {
+            var d = new Date();
+            d.setDate(d.getDate() - (i * 7));
+            result.push(d)
+        }
+
+        return (result);
+    }
+
+    function Last12Months() {
+        var result = [];
+        for (var i = 11; i >= 0; i--) {
+            var d = new Date();
+            const month = d.getMonth();
+            d.setMonth(d.getMonth() - i);
+            while (d.getMonth() === month && i != 0) {
+                d.setDate(d.getDate() - 1);
+            }
+            result.push(d);
+        }
+        console.log(result);
+        return result;
+    }
+
+    function diff_days(dt1, dt2) {
+
+        var Difference_In_Time = dt2.getTime() - dt1.getTime();
+        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+        return Difference_In_Days;
+    }
+
+
+    function sameDay(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth() &&
+            d1.getDate() === d2.getDate();
+    }
+
+    function sameMonth(d1, d2) {
+        return d1.getFullYear() === d2.getFullYear() &&
+            d1.getMonth() === d2.getMonth();
+    }
+
+    function sameWeek(d1, d2) {
+        var temp = diff_days(d1, d2);
+        return (temp >= 0 && temp <= 7);
+    }
+
+
+    function setChartWeek() {
+        $.ajax(
+            {
+                url: '/Server/GetFinancialStat',
+                data: {},
+                success: function (data) {
+                    console.log(data);
+                    var Dates = new Array();
+                    var Money = new Array();
+                    for (const dayOfWeek of Last7Days()) {
+
+                        var sum = 0;
+                        Dates.push(''.concat(dayOfWeek.getFullYear(), '-', dayOfWeek.getMonth() + 1, '-', dayOfWeek.getDate()));
+
+                        for (const transaction of data) {
+
+                            var dateParts = transaction.Date.split("/");
+
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                            if (sameDay(dateObject, dayOfWeek)) {
+                                sum = sum + transaction.Money;
+                            }
+                        }
+                        Money.push(sum);
+                    }
+
+                    var DataSets = [{
+                        data: Money,
+                        label: "Money Get",
+                        pointBorderWidth: 0,
+                        pointBackgroundColor: '#319ede',
+                        pointRadius: 0,
+                        backgroundColor: '#319ede',
+                        borderColor: '#319ede'
+                    }];
+
+                    MakeChart(Dates, DataSets);
+                }
+            }
+        );
+    }
+
+    function setChartMonth() {
+        $.ajax(
+            {
+                url: '/Server/GetFinancialStat',
+                data: {},
+                success: function (data) {
+                    var Dates = new Array();
+                    var Money = new Array();
+                    for (const week of Last8Weeks()) {
+
+                        var sum = 0;
+                        Dates.push(''.concat(week.getFullYear(), '-', week.getMonth() + 1, '-', week.getDate()));
+
+                        for (const transaction of data) {
+
+                            var dateParts = transaction.Date.split("/");
+
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                            if (sameWeek(dateObject, week)) {
+                                sum = sum + transaction.Money;
+                            }
+                        }
+                        Money.push(sum);
+                    }
+
+                    var DataSets = [{
+                        data: Money,
+                        label: "Money Get",
+                        pointBorderWidth: 0,
+                        pointBackgroundColor: '#319ede',
+                        pointRadius: 0,
+                        backgroundColor: '#319ede',
+                        borderColor: '#319ede',
+                        borderWidth: 3
+                    }];
+
+                    MakeChart(Dates, DataSets);
+                }
+            }
+        );
+    }
+
+    function setChartYear() {
+        $.ajax(
+            {
+                url: '/Server/GetFinancialStat',
+                data: {},
+                success: function (data) {
+                    var Dates = new Array();
+                    var Money = new Array();
+                    for (const month of Last12Months()) {
+
+                        var sum = 0;
+                        Dates.push(Months[month.getMonth()]);
+
+                        for (const transaction of data) {
+
+                            var dateParts = transaction.Date.split("/");
+
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                            if (sameMonth(dateObject, month)) {
+                                sum = sum + transaction.Money;
+                            }
+                        }
+                        Money.push(sum);
+                    }
+
+                    var DataSets = [{
+                        data: Money,
+                        label: "Money Get",
+                        pointBorderWidth: 0,
+                        pointBackgroundColor: '#319ede',
+                        pointRadius: 0,
+                        backgroundColor: '#319ede',
+                        borderColor: '#319ede',
+                        borderWidth: 3
+                    }];
+
+                    MakeChart(Dates, DataSets);
+                }
+            }
+        );
+    }
+
+</script>
+
+<script>
+
+    var myChart = null;
+
+    Chart.defaults.LineWithLine = Chart.defaults.line;
+    Chart.controllers.LineWithLine = Chart.controllers.line.extend({
+        draw: function (ease) {
+            Chart.controllers.line.prototype.draw.call(this, ease);
+
+            if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+                var activePoint = this.chart.tooltip._active[0],
+                    ctx = this.chart.ctx,
+                    x = activePoint.tooltipPosition().x,
+                    topY = this.chart.legend.bottom,
+                    bottomY = this.chart.chartArea.bottom;
+
+                // draw line
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, topY);
+                ctx.lineTo(x, bottomY);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#07C';
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+    });
+
+    function MakeChart(ChartLabels, ChartDatasets) {
+
+        var ctx = document.getElementById("ServerCanvas");
+        if (!(myChart === null)) {
+            myChart.destroy();
+        }
+        myChart = new Chart(ctx, {
+            type: 'LineWithLine',
+            data: {
+                labels: ChartLabels,
+                datasets: ChartDatasets
+            },
+            options: {
+                responsive: false,
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    xAxes: [{
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 0,
+                            minRotation: 30
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                },
+                legend: {
+                    display: false,
+                    labels: {
+                        defaultFontSize: 16
+                    }
+                }
+            },
+        });
+    }
+
+</script>

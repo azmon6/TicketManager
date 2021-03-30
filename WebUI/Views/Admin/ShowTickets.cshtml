@@ -10,16 +10,21 @@
     };
 }
 
-@*TODO SEARCH/FILTER*@
+@{
+    //TODO SEARCH/FILTER 
+}
 
 <div>
-
-    <script src="https://kit.fontawesome.com/7bc2b6c846.js" crossorigin="anonymous"></script>
-
+    <link href="~/Content/ShowTickesStyle.css" rel="stylesheet" />
+    <i class="bi bi-info-circle"></i>
     @Html.Action("GetTicketTable", new { page = Model.PageNow })
 
-    <div style="clear: both;
-    margin-top: 45px;">
+    <div>
         @Html.ActionLink("Add Ticket", "Create", "Admin", new { @class = "addbutton" })
     </div>
+
+    <aside>
+        @{ Html.RenderAction("CartIcon", "Cart");}
+    </aside>
+
 </div>

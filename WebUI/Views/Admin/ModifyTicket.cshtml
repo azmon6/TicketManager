@@ -5,38 +5,99 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["TicketModifiedError"] != null)
+{
+    <div>
+        @TempData["TicketModifiedError"]
+    </div>
+}
+
+<style>
+
+#ModifyTicketFrom .col {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+#ModifyTicketFrom .row {
+    margin: 15px 0px;
+}
+
+#ModifyTicketFrom label {
+    font-size: 20px;
+    margin:0px;
+    font-weight: 600;
+}
+
+#ModifyTicketFrom ~ input {
+    padding: 2px 7px;
+}
+</style>
+
 <div>
     @using (Html.BeginForm("ModifyTicket", "Admin", FormMethod.Post))
     {
         @Html.HiddenFor(p => p.TicketID)
+        @Html.HiddenFor(p => p.RowVersion)
         @Html.ValidationSummary()
-        foreach (var property in ViewData.ModelMetadata.Properties)
-        {
-            switch (property.PropertyName)
-            {
-                case "TicketID":
-                    break;
-                case "StartBuyTime":
-                case "EndBuyTime":
-                case "EventTime":
-                    <div>
-                        <label>@property.PropertyName</label>
-                        @Html.TextBox(property.PropertyName, property.Description, new { type = "date" })
-                    </div>
-                    break;
-                default:
-                    <div>
-                        <label>@property.PropertyName</label>
-                        @Html.TextBox(property.PropertyName)
-                    </div>
-                    break;
-            }
-        }
 
-        <div>
-            <input type="submit" value="Save" />
+        <div class="container" id="ModifyTicketFrom">
+            <div class="row">
+                <div class="col">
+                    <label>Ticket Name</label>
+                    @Html.TextBoxFor(p => p.TicketName)
+                </div>
+                <div class="col">
+                    <label>Organizer</label>
+                    @Html.TextBoxFor(p => p.Organizer)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Ticket Price</label>
+                    @Html.TextBoxFor(p => p.Price)
+                </div>
+                <div class="col">
+                    <label>AmountRemaining</label>
+                    @Html.TextBoxFor(p => p.AmountRemaining, new { type = "number" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Start Date</label>
+                    @Html.TextBoxFor(p => p.StartingDateAvailable, Model.StartingDateAvailable.ToString("yyyy-MM-ddTHH:mm"), new { type = "datetime-local" })
+                </div>
+                <div class="col">
+                    <label>End Date</label>
+                    @Html.TextBoxFor(p => p.EndDateAvailable, Model.EndDateAvailable.ToString("yyyy-MM-ddTHH:mm"), new { type = "datetime-local" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Event Date</label>
+                    @Html.TextBoxFor(p => p.TimeOfEvent, Model.TimeOfEvent.ToString("yyyy-MM-ddTHH:mm"), new { type = "datetime-local" })
+                </div>
+                <div class="col">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label>Description</label>
+                    @Html.TextAreaFor(p => p.Description, new { @class = "form-control" , rows = "3" })
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;padding-left:15px;">
+                <input class="btn btn-primary" type="submit" value="Save" />
+            </div>
         </div>
-        
+
     }
 </div>
 
