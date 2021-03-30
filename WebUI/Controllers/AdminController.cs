@@ -5,6 +5,7 @@ using TicketManager.WebUI.Models;
 using System.Linq;
 using TicketManager.WebUI.Infrastructure.Attributes;
 using TicketManager.Logging;
+using System;
 
 namespace WebUI.Controllers
 {
@@ -111,7 +112,7 @@ namespace WebUI.Controllers
 
             ShowTicketModel ticketToShow = new ShowTicketModel();
             ticketToShow.TicketToShow = tick;
-            ticketToShow.OtherTicketsByOrg = repository.Tickets.Where(x => (x.Organizer == tick.Organizer && x.TicketID != ID));
+            ticketToShow.OtherTicketsByOrg = repository.Tickets.Where(x => (x.Organizer == tick.Organizer && x.TicketID != ID)).OrderBy(elem => Guid.NewGuid()).Take(3);
 
             return View("ShowTicket",ticketToShow);
         }

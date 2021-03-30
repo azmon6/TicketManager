@@ -40,6 +40,20 @@
     @{ Html.RenderAction("CartIcon", "Cart");}
 </aside>
 
-<div>
-    @Model.OtherTicketsByOrg.Count()
+<div class="container">
+    
+    <div class="row" style="justify-content:space-evenly">
+        @foreach(var suggested in Model.OtherTicketsByOrg)
+        {
+            <div class="card col-3" style="object-fit: contain;">
+              <img src="https://cdn.buttercms.com/ZF8K2t8hT8OoNR3W42bX" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">@suggested.TicketName</h5>
+                <p class="card-text">@suggested.Description</p>
+                <a href=@Url.Action("SingleTicket", "Admin", new { ID = suggested.TicketID }) class="btn btn-primary">View Ticket</a>
+              </div>
+            </div>
+        }
+    </div>
+
 </div>
