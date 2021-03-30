@@ -2,7 +2,7 @@
 var whichColumn;
 var ascOrder;
 
-function RefreshTable() {
+function refreshTable() {
     $.ajax(
         {
             url: '/Admin/GetTicketTable',
@@ -23,13 +23,13 @@ function orderColumn(value1) {
             success: function (data) {
                 whichColumn = data.col;
                 ascOrder = data.direc;
-                RefreshTable();
+                refreshTable();
             }
         }
     );
 }
 
-function BuyTicket(ticketID) {
+function buyTicket(ticketID) {
     $.ajax(
         {
             url: "/Cart/BuyTicket",
@@ -49,7 +49,7 @@ function BuyTicket(ticketID) {
     );
 }
 
-function DropActions(dropID) {
+function dropActions(dropID) {
     var dropdowns = document.getElementsByClassName("dropdownActions");
     var i;
     for (i = 0; i < dropdowns.length; i++) {

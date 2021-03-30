@@ -4,6 +4,7 @@ using TicketManager.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Core;
 
 namespace TicketManager.Domain.Concrete
 {
@@ -169,26 +170,22 @@ namespace TicketManager.Domain.Concrete
         {
             for(int i = 0; i<=5;i++)
             {
+                //TODO ASK IF THIS BLOWS UP THE WORLD
+                context = new EntityContext();
                 try
                 {
                     return TryReserveTickets(customerID);
                 }
-                catch(DbUpdateConcurrencyException ex)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    
                     foreach (var entry in ex.Entries)
                     {
-                        var proposedValues = entry.CurrentValues;
-                        var databaseValues = entry.GetDatabaseValues();
-                        var startingValues = entry.OriginalValues;
-                        foreach (var property in proposedValues.PropertyNames)
-                        {
-                            var databaseValue = databaseValues[property];
 
-                            proposedValues[property] = databaseValue;
-                        }
+                        var databaseValues = entry.GetDatabaseValues();
+
+                        entry.CurrentValues.SetValues(databaseValues);
                         entry.OriginalValues.SetValues(databaseValues);
-                        entry.State = System.Data.Entity.EntityState.Modified;
+                        
                     }
                 }
             }

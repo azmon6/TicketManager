@@ -52,6 +52,7 @@ namespace TicketManager.WebUI.Controllers
             userProfile.Roles = tempRoleProvider.GetRolesForUser(HttpContext.User.Identity.Name);
             userProfile.DisplayName = currentUser.Name;
             userProfile.UserTransactions = repository.GetUserTransactions(currentUser.UserID);
+            userProfile.UserID = currentUser.UserID;
             return View(userProfile);
         }
     }

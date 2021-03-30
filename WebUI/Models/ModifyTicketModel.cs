@@ -64,6 +64,7 @@ namespace TicketManager.WebUI.Models
         public string Organizer { get; set; }
 
         [Required(ErrorMessage = "Enter how many tickets available.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Value must be a valid amount.")]
         public int AmountRemaining { get; set; }
 
         [Required(ErrorMessage = "Enter a Price")]
@@ -71,6 +72,7 @@ namespace TicketManager.WebUI.Models
         public double Price { get; set; }
 
         //Use Jquerry for date picker
+        //TODO Starting > EndDate
         [Required(ErrorMessage = "Enter a Start of buying date")]
         public DateTime StartingDateAvailable { get; set; }
 

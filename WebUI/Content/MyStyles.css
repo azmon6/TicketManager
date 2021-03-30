@@ -10,18 +10,6 @@
     margin-top: 30px;
 }
 
-.homescreenbuttons a {
-    background-color: #81db27;
-    color: #175587;
-    font-size: 20px;
-    padding: 5px 45px 3px 45px;
-    border-radius: 15px;
-    text-decoration: none;
-    transition-duration: 0.2s;
-    white-space: wrap;
-}
-
 .homescreenbuttons a:hover{
     text-decoration: none;
-    color: #87171d;
 }

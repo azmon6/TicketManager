@@ -68,6 +68,11 @@ namespace WebUI.Controllers
         [HttpPost]
         public ActionResult ModifyTicket(ModifyTicketModel tick)
         {
+            if(tick.StartingDateAvailable > tick.EndDateAvailable)
+            {
+                ModelState.AddModelError("EventEndBuyDate", "End of Buy Time must be after Start of Buy Time. ");
+            }
+
             if (ModelState.IsValid)
             {
                 var tempTick = tick.GetTicket();
@@ -102,7 +107,13 @@ namespace WebUI.Controllers
                 return RedirectToAction("ShowTickets");
             }
 
-            return View("ShowTicket");
+            Ticket tick = repository.Tickets.FirstOrDefault(p => p.TicketID == ID);
+
+            ShowTicketModel ticketToShow = new ShowTicketModel();
+            ticketToShow.TicketToShow = tick;
+            ticketToShow.OtherTicketsByOrg = repository.Tickets.Where(x => (x.Organizer == tick.Organizer && x.TicketID != ID));
+
+            return View("ShowTicket",ticketToShow);
         }
     }
 }

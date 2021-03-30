@@ -3,16 +3,32 @@
     ViewBag.Title = "ServerStats";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <script src="~/Scripts/Chart.js"></script>
-<h2>ServerStats</h2>
 
-<a onclick="setChartWeek()"> Get Weekly</a>
-<a onclick="setChartMonth()"> Get Monthly</a>
-<a onclick="setChartYear()">Get Yearly</a>
+<h2>Server Statistics</h2>
 
-<p id="ChartTitle"> Earnings weekly</p>
+<h4 id="ChartTitle"> Earnings weekly</h4>
+
+<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+    <label class="btn btn-outline-primary" for="btnradio1">
+        Get Weekly
+        <input onclick="setChartWeek()" type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
+    </label>
+
+    <label class="btn btn-outline-primary" for="btnradio2">
+        Get Monthly
+        <input onclick="setChartMonth()" type="radio" class="btn btn-outline-primary" name="btnradio" id="btnradio2" autocomplete="off">
+    </label>
+
+    <label class="btn btn-outline-primary" for="btnradio3">
+        Get Yearly
+        <input onclick="setChartYear()" type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+    </label>
+</div>
+
+<div></div>
 <canvas id="ServerCanvas" height="450" width="550">
-
 </canvas>
 
 <script>
@@ -35,7 +51,7 @@
         var result = [];
         for (var i = 7; i >= 0; i--) {
             var d = new Date();
-            d.setDate(d.getDate() - (i*7));
+            d.setDate(d.getDate() - (i * 7));
             result.push(d)
         }
 
@@ -46,17 +62,22 @@
         var result = [];
         for (var i = 11; i >= 0; i--) {
             var d = new Date();
+            const month = d.getMonth();
             d.setMonth(d.getMonth() - i);
+            while (d.getMonth() === month && i != 0) {
+                d.setDate(d.getDate() - 1);
+            }
             result.push(d);
         }
+        console.log(result);
         return result;
     }
 
     function diff_days(dt1, dt2) {
-        
+
         var Difference_In_Time = dt2.getTime() - dt1.getTime();
-        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
-        
+        var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
         return Difference_In_Days;
     }
 
@@ -69,7 +90,7 @@
 
     function sameMonth(d1, d2) {
         return d1.getFullYear() === d2.getFullYear() &&
-            d1.getMonth() === d2.getMonth() ;
+            d1.getMonth() === d2.getMonth();
     }
 
     function sameWeek(d1, d2) {
@@ -84,6 +105,7 @@
                 url: '/Server/GetFinancialStat',
                 data: {},
                 success: function (data) {
+                    console.log(data);
                     var Dates = new Array();
                     var Money = new Array();
                     for (const dayOfWeek of Last7Days()) {
@@ -95,10 +117,9 @@
 
                             var dateParts = transaction.Date.split("/");
 
-                            var dateObject = new Date(+dateParts[2], dateParts[1]-1, +dateParts[0]);
-                            if (sameDay(dateObject, dayOfWeek))
-                            {
-                                sum = sum + temp2.Money;
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+                            if (sameDay(dateObject, dayOfWeek)) {
+                                sum = sum + transaction.Money;
                             }
                         }
                         Money.push(sum);
@@ -113,7 +134,7 @@
                         backgroundColor: '#319ede',
                         borderColor: '#319ede'
                     }];
-                    
+
                     MakeChart(Dates, DataSets);
                 }
             }
@@ -137,7 +158,7 @@
 
                             var dateParts = transaction.Date.split("/");
 
-                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1 , +dateParts[0]);
+                            var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
                             if (sameWeek(dateObject, week)) {
                                 sum = sum + transaction.Money;
                             }
@@ -153,8 +174,7 @@
                         pointRadius: 0,
                         backgroundColor: '#319ede',
                         borderColor: '#319ede',
-                        borderWidth: 3,
-                        fill: false
+                        borderWidth: 3
                     }];
 
                     MakeChart(Dates, DataSets);
@@ -196,8 +216,7 @@
                         pointRadius: 0,
                         backgroundColor: '#319ede',
                         borderColor: '#319ede',
-                        borderWidth: 3,
-                        fill: false
+                        borderWidth: 3
                     }];
 
                     MakeChart(Dates, DataSets);
@@ -238,7 +257,7 @@
     });
 
     function MakeChart(ChartLabels, ChartDatasets) {
-        
+
         var ctx = document.getElementById("ServerCanvas");
         if (!(myChart === null)) {
             myChart.destroy();

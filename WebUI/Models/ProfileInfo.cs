@@ -7,6 +7,7 @@ namespace TicketManager.WebUI.Models
     public class ProfileInfo
     {
         public string DisplayName { get; set; }
+        public int UserID { get; set; }
         public string[] Roles { get; set; }
         public IEnumerable<Tuple<Transaction, Ticket>> UserTransactions { get; set; }
     }

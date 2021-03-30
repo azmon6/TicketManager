@@ -8,9 +8,8 @@
 
 <style>
     #LogContainer {
-        display: grid;
-        grid-template-columns: 2fr 4fr 1fr 2fr 2fr;
         margin-bottom:50px;
+        border: 1px solid gray;
     }
 
     #LoadingIcon {
@@ -46,22 +45,33 @@
         text-align:center;
     }
 
+    #LogContainerBody td{
+        border-right: 1px solid gray;
+    }
+
 </style>
 
-<h2>ServerLog</h2>
+<h2 class="mt-2">Logging Service</h2>
 
-<div>
-    <a onclick="loadLogPage()">TESTING</a>
-    <a onclick="DownloadCSV()">Download CSV</a>
+<div style="margin:20px 0px;">
+    <a class="btn btn-primary" onclick="loadLogPage()">Load Logs</a>
+    <a class="btn btn-success" onclick="DownloadCSV()">Download CSV</a>
 </div>
 
-<div id="LogContainer">
-    <div class="LogHeader"> LogType </div>
-    <div class="LogHeader"> Message </div>
-    <div class="LogHeader"> Priority </div>
-    <div class="LogHeader"> TimeMade </div>
-    <div class="LogHeader"> Object </div>
-</div>
+<table class="table" id="LogContainer">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">LogType</th>
+            <th scope="col">Message</th>
+            <th scope="col">Priority</th>
+            <th scope="col">TimeMade</th>
+            <th scope="col">Object</th>
+        </tr>
+    </thead>
+    <tbody id="LogContainerBody">
+
+    </tbody>
+</table>
 
 <div id="LoadingIcon">
     <i class="fas fa-spinner fa-spin"></i>
@@ -76,7 +86,7 @@
         $('#LoadingIcon').hide();
     });
 
-    var temp = document.getElementById("LogContainer");
+    var rowCount = 0;
 
     function sleep(milliseconds) {
         const date = Date.now();
@@ -107,25 +117,25 @@
                     }
                     var MapGrid = { "LogType": 0, "LogMessage": 1, "Priority": 2, "TimeMade": 3, "Object": 4 };
                     var ArrayDivs = new Array(5);
-                    var contain = $('#LogContainer');
+                    var contain = document.getElementById('LogContainer').getElementsByTagName('tbody')[0];;
                     for (var Logs of data) {
+                        var trEl = contain.insertRow();
                         for (var LogInfo in Logs) {
                             if (LogInfo == "LogID") { continue; }
 
-                            var dataEntry = document.createElement("div");
-                            dataEntry.innerHTML = Logs[LogInfo];
-                            dataEntry.classList.add("dataLog");
-
-                            if (LogInfo == "LogType") {
-                                dataEntry.classList.add(Logs[LogInfo].toLowerCase().concat("Code"));
-                            }
-
-                            ArrayDivs[MapGrid[LogInfo]] = dataEntry;
+                            ArrayDivs[MapGrid[LogInfo]] = Logs[LogInfo];
 
                         }
                         for (var i of ArrayDivs) {
-                            contain.append(i);
+                            var newCell = trEl.insertCell();
+                            newCell.innerHTML = i;
+                            console.log(i);
                         }
+                        if (rowCount % 2 == 0) {
+                            trEl.classList.add("table-secondary");
+                        }
+                        rowCount = rowCount + 1;
+                        contain.append(trEl);
                     }
 
 
@@ -160,11 +170,11 @@
                     for (var Log of data) {
                         var lineString = '';
                         for (var temp of Object.values(Log)) {
-                            lineString = tempString.concat("\"",temp,"\"", ',');
+                            lineString = lineString.concat("\"",temp,"\"", ',');
                         }
                         lineString = lineString.slice(0, -1);
                         lineString = lineString.concat('\n');
-                        csvResult =  csvResult.concat(tempString);
+                        csvResult =  csvResult.concat(lineString);
                     }
                     var encodedUri = encodeURI(csvResult);
                     var link = document.createElement("a");

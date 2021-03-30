@@ -61,7 +61,9 @@ namespace TicketManager.WebUI.Controllers
 
         public JsonResult GetFinancialStat()
         {
-            return Json(serverRepository.Transactions.Select(x => new { Date = x.DateMade, Money = x.PricePaid }).ToList() , JsonRequestBehavior.AllowGet);
+            var temp = serverRepository.Transactions.Select(x => new { Date = x.DateMade, Money = x.PricePaid }).ToList();
+            var result = temp.Select(x => new { Date = x.Date.ToString("dd/MM/yyyy"), Money = x.Money }).ToList();
+            return Json(result , JsonRequestBehavior.AllowGet);
         }
     }
 }

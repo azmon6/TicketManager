@@ -22,7 +22,7 @@
             <tr>
                 <td>@use.Name</td>
                 <td>@use.Role</td>
-                <td>@Html.ActionLink("Edit", "EditUser", new { userID = use.UserID })</td>
+                <td>@Html.ActionLink("Edit", "EditUser", new { userToEdit = use.UserID })</td>
             </tr>
         }
     </tbody>

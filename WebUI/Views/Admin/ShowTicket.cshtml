@@ -1,4 +1,5 @@
-﻿
+﻿@model TicketManager.WebUI.Models.ShowTicketModel
+
 @{
     ViewBag.Title = "ShowTicket";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -40,5 +41,5 @@
 </aside>
 
 <div>
-    OTHER TICKETS FROM ORGANIZER / TYPE OF EVENT
+    @Model.OtherTicketsByOrg.Count()
 </div>

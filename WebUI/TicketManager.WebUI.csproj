@@ -275,6 +275,7 @@
     <Compile Include="Models\ModifyTicketModel.cs" />
     <Compile Include="Models\ProfileInfo.cs" />
     <Compile Include="Models\ShowCartInfo.cs" />
+    <Compile Include="Models\ShowTicketModel.cs" />
     <Compile Include="Models\SignUpInformation.cs" />
     <Compile Include="Models\TicketShowModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

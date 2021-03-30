@@ -1,4 +1,4 @@
-﻿    @model TicketManager.WebUI.Models.TicketShowModel
+﻿@model TicketManager.WebUI.Models.TicketShowModel
 
 @{
     AjaxOptions ajaxOpts = new AjaxOptions
@@ -11,6 +11,76 @@
 
 @using (Ajax.BeginForm("GetTicketTable", ajaxOpts))
 {
+
+    <div id="ShowTicketsPage">
+
+        <div class="container-fluid" id="ShowTicketsTable">
+
+            <div class="row table-header">
+                <div class="col" onclick="orderColumn('TicketName')">Ticket Name <i id="TicketNameIcon" class="fas fa-angle-double-down"></i> </div>
+                <div class="col" onclick="orderColumn('Organizer')">Organizer <i id="OrganizerIcon" class="fas fa-angle-double-down"></i></div>
+                <div class="col" onclick="orderColumn('EventTime')">Event Time <i id="EventTimeIcon" class="fas fa-angle-double-down"></i></div>
+                <div class="col" onclick="orderColumn('Price')">Price <i id="PriceIcon" class="fas fa-angle-double-down"></i></div>
+                <div class="col">Actions</div>
+            </div>
+
+            @foreach (var tick in Model.Tickets)
+            {
+                <div class="row">
+                    <div class="col wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
+                    <div class="col wordbreak fontsize18">@tick.Organizer</div>
+                    <div class="col">@tick.TimeOfEvent.ToString("dd-MM-yyyy HH:mm")</div>
+                    <div class="col">@tick.Price.ToString("c")</div>
+                    <div class="col dropend">
+                        <button type="button" class="btn btn-info shadow-none" onclick="buyTicket(@tick.TicketID)">Buy Ticket</button>
+                        <button class="btn btn-secondary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-align-justify fontsize18"></i>
+                        </button>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href=@Url.Content("~/ticket/" + tick.TicketID)>Show</a></li>
+                            @if (HttpContext.Current.User.IsInRole("Admin"))
+                            {
+                                <li><a class="dropdown-item" href=@Url.Action("ModifyTicket", "Admin", new { ticketToModifyID = tick.TicketID })>Edit</a></li>
+                                <li><a class="dropdown-item" href=@Url.Action("DeleteTicket", "Admin", new { ticketToDeleteID = tick.TicketID })>Delete</a></li>
+                            }
+
+                        </ul>
+                    </div>
+
+
+                </div>
+            }
+        </div>
+
+        <nav id="tableNav" aria-label="Page navigation">
+            <ul class="pagination">
+
+                <li class="page-item">
+                    @Ajax.ActionLink(" ", "GetTicketTable", new { page = 1 }, ajaxOpts, new { @class = "bi bi-chevron-double-left page-link" })
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (Model.PageNow == i)
+                    {
+                        <li class="page-item">@Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { @class = "page-link", style = " color:red; " })</li>
+                    }
+                    else
+                    {
+                        <li class="page-item">@Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { @class = "page-link" })</li>
+                    }
+
+                }
+
+                <li class="page-item">
+                    @Ajax.ActionLink(" ", "GetTicketTable", new { page = Model.TotalPages }, ajaxOpts, new { @class = "bi bi-chevron-double-right page-link" })
+                </li>
+            </ul>
+        </nav>
+
+
+    </div>
     <script>
         $(document).ready(function () {
             $('.fa-angle-double-down').hide();
@@ -21,60 +91,4 @@
             }
         })
     </script>
-    <div id="ShowTicketsPage">
-
-        <div id="ShowTicketsTable">
-            <div class="My_th" onclick="orderColumn('TicketName')">Ticket Name <i id="TicketNameIcon" class="fas fa-angle-double-down"></i> </div>
-            <div class="My_th" onclick="orderColumn('Organizer')">Organizer <i  id="OrganizerIcon" class="fas fa-angle-double-down"></i></div>
-            <div class="My_th" onclick="orderColumn('EventTime')">Event Time <i id="EventTimeIcon" class="fas fa-angle-double-down"></i></div>
-            <div class="My_th" onclick="orderColumn('Price')">Price <i id="PriceIcon" class="fas fa-angle-double-down"></i></div>
-            <div class="My_th">Actions</div>
-            <div class="My_th"></div>
-            @foreach (var tick in Model.Tickets)
-            {
-                <div class="My_td wordbreak fontsize18"> <a href=@Url.Content("~/ticket/" + tick.TicketID)> @tick.TicketName </a></div>
-                <div class="My_td wordbreak fontsize18">@tick.Organizer</div>
-                <div class="My_td">@tick.TimeOfEvent</div>
-                <div class="My_td">@tick.Price.ToString("c")</div>
-                <div class="My_td">
-                    <a class="buybtn" onclick="BuyTicket(@tick.TicketID)"> Buy Ticket </a>
-                </div>
-                <div class="My_td" style="position:relative;">
-                    <i class="fas fa-align-justify fontsize18 dropbtn" style="float:right" onclick="DropActions('@("drop" +tick.TicketID.ToString())')"></i>
-                    <div id="@("drop" +tick.TicketID.ToString())" class="dropdownActions">
-                        <a class="optionsbtn" href=@Url.Content("~/ticket/" + tick.TicketID)>Show</a>
-                        @if (HttpContext.Current.User.IsInRole("Admin"))
-                        {
-                            <a class="optionsbtn" href=@Url.Action("ModifyTicket","Admin",new { ticketToModifyID = tick.TicketID})>Edit</a>
-                            <a class="optionsbtn" href=@Url.Action("DeleteTicket","Admin",new { ticketToDeleteID = tick.TicketID})>Delete</a>
-                        }
-                    </div>
-                </div>
-            }
-        </div>
-
-        <div class="tablenav">
-
-            @Ajax.ActionLink(" ", "GetTicketTable", new { page = 1 }, ajaxOpts, new { @class = "fas fa-backward fontsize18" })
-
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                if (i == Model.PageNow)
-                {
-                    <div>
-                        @Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { style = "color: red", @class = "navbutton" })
-                    </div>
-                }
-                else
-                {
-                    <div>
-                        @Ajax.ActionLink(i.ToString(), "GetTicketTable", new { page = i }, ajaxOpts, new { @class = "navbutton" })
-                    </div>
-                }
-            }
-
-            @Ajax.ActionLink(" ", "GetTicketTable", new { page = Model.TotalPages }, ajaxOpts, new { @class = "fas fa-forward fontsize18" })
-        </div>
-
-    </div>
 }
